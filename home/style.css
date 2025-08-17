@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #101318;
+  height: 200vh;
+}
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: azure;
+  padding: 5px 20px;
+  transition: transform 0.3s ease;
+  font-family: "Poppins", sans-serif;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+}
+
+.navbar_content {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  white-space: nowrap;
+  margin-left: 30px;
+}
+
+.navbar_copyright {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-right: 30px;
+}
+
+.navbar_content a {
+  color: azure;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: opacity .2s ease, background .2s ease;
+}
+
+.navbar_content a:hover {
+  opacity: 1; background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar.hide {
+  transform: translateY(-100%);
+}
+
+.title_space {
+    height: 80px;
+}
+
+.intro {
+    margin: auto;
+    padding: 10px 60px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+.intro img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.intro_text p {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #ccc;
+}
+
+.intro_text h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+.projects {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: auto;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+.projects h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+.projects_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.project_card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+transition: 
+    transform 0.3s ease, 
+    box-shadow 0.3s ease, 
+    background 0.5s ease;
+
+}
+
+.project_card img {
+  width: 100%;
+  display: block;
+}
+
+.project_card video {
+  width: 100%;
+  display: block;
+}
+
+.project_card h3 {
+  margin: 15px;
+  font-size: 1.2rem;
+}
+
+.project_card p {
+  margin: 0 15px 20px 15px;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.project_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  background-color: rgba(255, 255, 255, 0.1);;
+}
