@@ -1,40 +1,3 @@
-let lastScroll = 0;
-const navbar = document.querySelector('.navbar');
-const title = document.querySelector('.title_space');
-
-const hamburger = document.querySelector(".hamburger");
-const navContent = document.querySelector(".navbar_content");
-
-hamburger.addEventListener("click", () => {
-  hamburger.classList.toggle("active");
-  navContent.classList.toggle("active");
-});
-
-function isTitleVisible() {
-  const rect = title.getBoundingClientRect();
-  return rect.bottom > 0;
-}
-
-window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-
-  if (isTitleVisible()) {
-    navbar.classList.remove('hide');
-  } else {
-    if (currentScroll > lastScroll) {
-      navbar.classList.add('hide');
-      if (hamburger.classList.contains("active")) {
-        hamburger.classList.toggle("active");
-        navContent.classList.toggle("active");
-      }
-    } else {
-      navbar.classList.remove('hide');
-    }
-  }
-
-  lastScroll = currentScroll;
-});
-
 const modal = document.getElementById("projectModal");
 const modalVideo = document.getElementById("modalVideo");
 const modalTitle = document.getElementById("modalTitle");
@@ -76,6 +39,3 @@ window.addEventListener("keydown", (e) => {
     modalVideo.src = "";
   }
 });
-
-
-
