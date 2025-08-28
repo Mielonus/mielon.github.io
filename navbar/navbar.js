@@ -38,7 +38,7 @@ function initNavbar() {
 }
 
 function loadNavbar() {
-  fetch("navbar/navbar.html")
+  fetch("navbar/navbar.html?v=1")
     .then(res => res.text())
     .then(html => {
       document.getElementById("navbar").innerHTML = html;
