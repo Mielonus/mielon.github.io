@@ -6,10 +6,8 @@
 
 
 
-
-
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,6 +22,7 @@
             --border: #414868;
             --hover: #3b4261;
             --header-height: 36px;
+            --danger: #f7768e;
         }
 
         * { box-sizing: border-box; user-select: none; outline: none; }
@@ -269,31 +268,31 @@
 <body>
 
     <div class="toolbar">
-        <input type="color" id="colorPicker" value="#000000" title="Kolor">
+        <input type="color" id="colorPicker" value="#000000" title="Color">
         
         <div class="tool-btn active" onclick="setTool('pen')">
-            <span class="tool-icon">✏️</span><span class="tool-label">Ołówek</span>
+            <span class="tool-icon">✏️</span><span class="tool-label">Pencil</span>
         </div>
         <div class="tool-btn" onclick="setTool('eraser')">
-            <span class="tool-icon">🧽</span><span class="tool-label">Gumka</span>
+            <span class="tool-icon">🧽</span><span class="tool-label">Eraser</span>
         </div>
         <div class="tool-btn" onclick="setTool('bucket')">
-            <span class="tool-icon">🪣</span><span class="tool-label">Wiadro</span>
+            <span class="tool-icon">🪣</span><span class="tool-label">Bucket</span>
         </div>
         
         <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
             <div class="tool-btn" onclick="setTool('select')">
-                <span class="tool-icon">⛝</span><span class="tool-label">Zaznacz</span>
+                <span class="tool-icon">⛝</span><span class="tool-label">Select</span>
             </div>
-            <button class="btn-mini" style="width: 50px;" onclick="clearSelection()" title="Wyczyść zaznaczenie">Odznacz</button>
+            <button class="btn-mini" style="width: 50px;" onclick="clearSelection()" title="Clear Selection">Deselect</button>
         </div>
 
         <div class="tool-btn" onclick="setTool('move')">
-            <span class="tool-icon">✥</span><span class="tool-label">Przesuń</span>
+            <span class="tool-icon">✥</span><span class="tool-label">Move</span>
         </div>
 
         <div class="tool-btn" onclick="setTool('picker')">
-            <span class="tool-icon">💉</span><span class="tool-label">Pipeta</span>
+            <span class="tool-icon">💉</span><span class="tool-label">Picker</span>
         </div>
 
         <div style="height: 1px; background: var(--border); width: 80%; margin: 5px 0;"></div>
@@ -308,12 +307,12 @@
 
     <div class="top-bar">
         <div class="menu-item">
-            <button class="menu-btn">Plik ▾</button>
+            <button class="menu-btn">File ▾</button>
             <div class="dropdown-content">
-                <div onclick="triggerLoadProject()">📂 Otwórz Projekt</div>
-                <div onclick="openSaveDialog()">💾 Zapisz Projekt</div>
-                <div onclick="triggerImportPNG()">🖼️ Importuj PNG</div>
-                <div onclick="openExportDialog()">📤 Eksportuj PNG</div>
+                <div onclick="triggerLoadProject()">📂 Open Project</div>
+                <div onclick="openSaveDialog()">💾 Save Project</div>
+                <div onclick="triggerImportPNG()">🖼️ Import PNG</div>
+                <div onclick="openExportDialog()">📤 Export PNG</div>
             </div>
         </div>
     </div>
@@ -327,29 +326,29 @@
 
     <div class="sidebar">
         <div>
-            <div class="panel-title">Podgląd Kafelkowania</div>
+            <div class="panel-title">Tiling Preview</div>
             <div class="preview-wrapper">
                 <canvas id="previewCanvas" width="48" height="48"></canvas>
                 <canvas id="previewGrid" width="48" height="48"></canvas>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="gridCheck" onchange="updatePreview()">
-                <label for="gridCheck">Pokaż siatkę (Podgląd)</label>
+                <label for="gridCheck">Show Grid (Preview)</label>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="mainGridCheck" onchange="requestRender()">
-                <label for="mainGridCheck">Siatka pikseli (Edytor)</label>
+                <label for="mainGridCheck">Pixel Grid (Editor)</label>
             </div>
         </div>
 
         <div>
             <div class="panel-title">
-                Warstwy
-                <button class="btn-small" style="flex:0; width: auto;" onclick="openFilters()">🎨 Korekta</button>
+                Layers
+                <button class="btn-small" style="flex:0; width: auto;" onclick="openFilters()">🎨 Adjust</button>
             </div>
             <div style="display:flex; gap:2px; margin-bottom:5px;">
-                <button class="btn-small" onclick="addLayer()">+ Dodaj</button>
-                <button class="btn-small" onclick="deleteLayer()">- Usuń</button>
+                <button class="btn-small" onclick="addLayer()">+ Add</button>
+                <button class="btn-small" onclick="deleteLayer()">- Remove</button>
                 <button class="btn-small" onclick="moveLayer(1)">⬆</button>
                 <button class="btn-small" onclick="moveLayer(-1)">⬇</button>
             </div>
@@ -362,22 +361,22 @@
 
     <div id="saveModal" class="modal-backdrop">
         <div class="modal-content">
-            <div class="modal-header">Zapisz Projekt</div>
-            <label style="font-size:12px;">Nazwa pliku:</label>
-            <input type="text" id="saveFilename" value="moj_projekt">
+            <div class="modal-header">Save Project</div>
+            <label style="font-size:12px;">Filename:</label>
+            <input type="text" id="saveFilename" value="my_project">
             <div class="modal-actions">
-                <button class="btn-small" onclick="closeModal('saveModal')">Anuluj</button>
-                <button class="btn-small" style="background:var(--accent); color:#1e1e2e; font-weight:bold;" onclick="confirmSaveProject()">Zapisz</button>
+                <button class="btn-small" onclick="closeModal('saveModal')">Cancel</button>
+                <button class="btn-small" style="background:var(--accent); color:#1e1e2e; font-weight:bold;" onclick="confirmSaveProject()">Save</button>
             </div>
         </div>
     </div>
 
     <div id="exportModal" class="modal-backdrop">
         <div class="modal-content">
-            <div class="modal-header">Eksportuj PNG</div>
-            <label style="font-size:12px;">Nazwa pliku:</label>
+            <div class="modal-header">Export PNG</div>
+            <label style="font-size:12px;">Filename:</label>
             <input type="text" id="exportFilename" value="texture">
-            <label style="font-size:12px;">Rozdzielczość:</label>
+            <label style="font-size:12px;">Resolution:</label>
             <select id="exportSize">
                 <option value="1">16x16 (x1)</option>
                 <option value="2">32x32 (x2)</option>
@@ -387,26 +386,26 @@
                 <option value="32" selected>512x512 (x32)</option>
             </select>
             <div class="modal-actions">
-                <button class="btn-small" onclick="closeModal('exportModal')">Anuluj</button>
-                <button class="btn-small" style="background:var(--accent); color:#1e1e2e; font-weight:bold;" onclick="confirmExportPNG()">Pobierz</button>
+                <button class="btn-small" onclick="closeModal('exportModal')">Cancel</button>
+                <button class="btn-small" style="background:var(--accent); color:#1e1e2e; font-weight:bold;" onclick="confirmExportPNG()">Download</button>
             </div>
         </div>
     </div>
 
     <div id="filterWindow" class="float-window">
         <div class="fw-header" id="fwHeader">
-            <span>Korekta Kolorów</span>
+            <span>Color Adjustments</span>
             <span style="cursor:pointer;" onclick="closeFilters(false)">✕</span>
         </div>
         <div class="fw-body">
-            <div class="slider-container"><div class="slider-label"><span>Jasność</span><span id="valBri">0</span></div><input type="range" min="-100" max="100" value="0" id="slBri" oninput="previewFilters()"></div>
-            <div class="slider-container"><div class="slider-label"><span>Kontrast</span><span id="valCon">0</span></div><input type="range" min="-100" max="100" value="0" id="slCon" oninput="previewFilters()"></div>
-            <div class="slider-container"><div class="slider-label"><span>Nasycenie</span><span id="valSat">0</span></div><input type="range" min="-100" max="100" value="0" id="slSat" oninput="previewFilters()"></div>
-            <div class="slider-container"><div class="slider-label"><span>Odcień</span><span id="valHue">0</span></div><input type="range" min="-180" max="180" value="0" id="slHue" oninput="previewFilters()"></div>
+            <div class="slider-container"><div class="slider-label"><span>Brightness</span><span id="valBri">0</span></div><input type="range" min="-100" max="100" value="0" id="slBri" oninput="previewFilters()"></div>
+            <div class="slider-container"><div class="slider-label"><span>Contrast</span><span id="valCon">0</span></div><input type="range" min="-100" max="100" value="0" id="slCon" oninput="previewFilters()"></div>
+            <div class="slider-container"><div class="slider-label"><span>Saturation</span><span id="valSat">0</span></div><input type="range" min="-100" max="100" value="0" id="slSat" oninput="previewFilters()"></div>
+            <div class="slider-container"><div class="slider-label"><span>Hue</span><span id="valHue">0</span></div><input type="range" min="-180" max="180" value="0" id="slHue" oninput="previewFilters()"></div>
         </div>
         <div style="padding:10px; display:flex; gap:5px; justify-content:flex-end;">
-            <button class="btn-small" onclick="closeFilters(false)">Anuluj</button>
-            <button class="btn-small" style="background:var(--accent); color:#1e1e2e;" onclick="closeFilters(true)">Zastosuj</button>
+            <button class="btn-small" onclick="closeFilters(false)">Cancel</button>
+            <button class="btn-small" style="background:var(--accent); color:#1e1e2e;" onclick="closeFilters(true)">Apply</button>
         </div>
     </div>
 
@@ -451,7 +450,7 @@
         const mainGridCheck = document.getElementById('mainGridCheck');
 
         function init() {
-            addLayer('Tło', false);
+            addLayer('Background', false);
             saveHistory();
 
             const wrapper = document.getElementById('canvasWrapper');
@@ -628,7 +627,7 @@
         function pasteSelection() {
             if(!clipboard) return;
             
-            addLayer('Wklejone', false);
+            addLayer('Pasted', false);
             const l = getActiveLayer();
             
             const px = selection ? selection.x : 0;
@@ -646,7 +645,7 @@
         class Layer {
             constructor(name, id=null) {
                 this.id = id !== null ? id : layerCounter++;
-                this.name = name || `Warstwa ${this.id}`;
+                this.name = name || `Layer ${this.id}`;
                 this.canvas = document.createElement('canvas');
                 this.canvas.width = SIZE; this.canvas.height = SIZE;
                 this.ctx = this.canvas.getContext('2d');
@@ -689,7 +688,7 @@
             renderLayerList(); render(); if(s) saveHistory(); 
         }
         function deleteLayer() {
-            if(layers.length<=1) return alert("Brak warstw do usunięcia");
+            if(layers.length<=1) return alert("No layers to delete");
             const idx = layers.findIndex(l=>l.id===activeLayerId);
             layers.splice(idx,1);
             activeLayerId=layers[Math.max(0,idx-1)].id;
@@ -840,7 +839,7 @@
         function openExportDialog() { document.getElementById('exportModal').classList.add('open'); }
 
         function confirmSaveProject() {
-            const name = document.getElementById('saveFilename').value || 'projekt';
+            const name = document.getElementById('saveFilename').value || 'my_project';
             const data = {
                 size: SIZE, activeId: activeLayerId,
                 layers: layers.map(l => ({ id: l.id, name: l.name, visible: l.visible, data: l.canvas.toDataURL() }))
@@ -876,7 +875,7 @@
                     history=[]; historyIndex=-1;
                     loadHistoryState({activeId: p.activeId, layers: p.layers});
                     setTimeout(()=>{history=[];saveHistory();},200);
-                } catch(err){alert("Błąd pliku");}
+                } catch(err){alert("File Error");}
             };
             r.readAsText(f); inp.value='';
         }
@@ -887,7 +886,7 @@
             r.onload = (e) => {
                 const i = new Image();
                 i.onload = () => {
-                    if(i.width!==16 || i.height!==16) return alert("Wymagane 16x16 px");
+                    if(i.width!==16 || i.height!==16) return alert("16x16 px required");
                     addLayer(f.name.replace('.png',''), false);
                     getActiveLayer().ctx.drawImage(i,0,0);
                     render(); saveHistory();
