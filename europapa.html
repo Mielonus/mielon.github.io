@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>mielon.eu - Europe Quiz</title>
+
+    <link rel="icon" href="https://winterforest.mielon.eu/assets/favicon.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        :root {
+            --ui-height: 60px;
+            --ui-spacing: 20px;
+
+            --elastic-bezier: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            --snap-bezier: cubic-bezier(0.19, 1, 0.22, 1);
+            --anim-speed: 0.35s;
+
+            --accent-cyan: #00f2ff;
+            --accent-red: #ff0055;
+            --text-muted: #a0a0b0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            color: #fff;
+            background: radial-gradient(circle at 50% -20%, #121225 0%, #000000 100%);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.35);
+
+            box-shadow:
+                inset 0 0 30px rgba(255, 255, 255, 0.02),
+                0 15px 40px rgba(0, 0, 0, 0.4);
+
+            border-radius: 24px;
+        }
+
+        .top-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            z-index: 500;
+        }
+
+        #game-bar-wrapper {
+            position: absolute;
+            top: var(--ui-spacing);
+            left: var(--ui-spacing);
+            height: var(--ui-height);
+            display: flex;
+        }
+
+        #game-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 0 25px;
+            border-radius: 50px;
+            pointer-events: auto;
+
+            transform: translateY(-150%);
+            transition: transform 0.6s var(--elastic-bezier);
+
+            width: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            will-change: width;
+        }
+
+        #game-bar.visible {
+            transform: translateY(0);
+        }
+
+        #game-bar.animating-width {
+            transition: width 0.3s var(--snap-bezier);
+        }
+
+        .task-group {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .task-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .target-country {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+
+        .progress-pill {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        #lang-wrapper {
+            position: absolute;
+            top: var(--ui-spacing);
+            right: var(--ui-spacing);
+            z-index: 2000;
+            pointer-events: auto;
+        }
+
+        #lang-morph {
+            width: var(--ui-height);
+            height: var(--ui-height);
+            border-radius: 50%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+
+            transition:
+                width var(--anim-speed) var(--elastic-bezier),
+                height var(--anim-speed) var(--elastic-bezier),
+                border-radius var(--anim-speed) var(--elastic-bezier),
+                background 0.3s;
+        }
+
+        #lang-morph:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        #lang-morph.expanded {
+            width: 150px;
+            height: 126px;
+            border-radius: 22px;
+
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-color: rgba(255, 255, 255, 0.3);
+
+            cursor: default;
+        }
+
+        .morph-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: var(--ui-height);
+            height: var(--ui-height);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            transition: opacity 0.15s, transform 0.3s var(--elastic-bezier);
+            pointer-events: none;
+        }
+
+        #lang-morph.expanded .morph-icon {
+            opacity: 0;
+            transform: scale(0.5) rotate(90deg);
+        }
+
+        .morph-content {
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            gap: 6px;
+            transform: translateY(10px);
+            transition: opacity 0.2s ease 0.1s, transform 0.3s var(--elastic-bezier) 0.1s;
+            pointer-events: none;
+        }
+
+        #lang-morph.expanded .morph-content {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .lang-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #ddd;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding-left: 16px;
+        }
+
+        .lang-btn.active {
+            background: rgba(0, 242, 255, 0.2);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.15);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --ui-height: 50px;
+                --ui-spacing: 15px;
+            }
+
+            #game-bar-wrapper {
+                right: 80px;
+                width: auto;
+                display: block;
+            }
+
+            #game-bar {
+                max-width: 100%;
+                padding: 0 15px;
+                gap: 10px;
+            }
+
+            .task-label {
+                display: none;
+            }
+
+            .target-country {
+                font-size: 1.1rem;
+            }
+
+            .progress-pill {
+                padding: 4px 10px;
+                font-size: 0.8rem;
+            }
+
+            #lang-wrapper {
+                right: 15px;
+                top: 15px;
+            }
+
+            #lang-morph.expanded {
+                transform-origin: top right;
+            }
+        }
+
+        #map-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 2, 5, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 450px;
+            padding: 35px;
+            text-align: center;
+            transform: translateY(40px) scale(0.95);
+            transition: transform 0.5s var(--elastic-bezier);
+            background: rgba(15, 15, 25, 0.85);
+        }
+
+        .overlay.active .card {
+            transform: translateY(0) scale(1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            background: linear-gradient(180deg, #fff, #889);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 18px;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-color: #fff;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-hard {
+            background-color: rgba(225, 29, 72, 0.3);
+        }
+
+        .btn-restart {
+            background-color: rgba(5, 150, 105, 0.3);
+            margin-top: 20px;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .option-bead {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 18px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-bead:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-cyan);
+            transform: scale(1.02);
+        }
+
+        .option-bead.correct {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: white;
+            box-shadow: 0 0 25px var(--accent-cyan);
+        }
+
+        .option-bead.wrong {
+            background: var(--accent-red);
+            border-color: white;
+            opacity: 0.6;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-submit {
+            padding: 0 20px;
+            border-radius: 14px;
+            border: none;
+            background: var(--accent-cyan);
+            color: #000;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .spinner {
+            width: 35px;
+            height: 35px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-layer">
+
+        <div id="game-bar-wrapper">
+            <div id="game-bar" class="liquid-glass">
+                <div class="task-group">
+                    <span class="task-label" id="ui-find">Target:</span>
+                    <span id="target-name" class="target-country">...</span>
+                </div>
+                <div class="progress-pill" id="progress-counter">0 / 0</div>
+            </div>
+        </div>
+
+        <div id="lang-wrapper">
+            <div id="lang-morph" class="liquid-glass" onclick="toggleMorph(event)">
+
+                <div class="morph-icon">
+                    <span style="font-size:1.4rem; font-weight:700;">GB</span>
+                </div>
+
+                <div class="morph-content">
+                    <div class="lang-btn active" id="btn-en" onclick="setLang('en', event)">
+                        <span>🇬🇧</span> English
+                    </div>
+                    <div class="lang-btn" id="btn-pl" onclick="setLang('pl', event)">
+                        <span>🇵🇱</span> Polski
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="start-screen" class="overlay active">
+        <div class="card liquid-glass">
+            <div style="font-size: 4rem; margin-bottom: 10px;">🌍</div>
+            <h1 id="ui-title">Europe Quiz</h1>
+            <p id="ui-subtitle" style="color: var(--text-muted); margin-bottom: 40px;">Liquid Edition</p>
+
+            <button class="btn btn-primary" onclick="startGame('easy')">
+                <span id="ui-btn-easy">Normal Mode</span>
+            </button>
+            <button class="btn btn-hard" onclick="startGame('hard')">
+                <span id="ui-btn-hard">Hard Mode</span>
+            </button>
+
+            <div id="loader" class="hidden">
+                <div class="spinner"></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);" id="ui-loading">Initializing...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+
+    <div id="quiz-modal" class="overlay">
+        <div class="card liquid-glass">
+            <h2 id="quiz-title" style="margin-bottom: 5px; color:white; font-size: 2rem;">Excellent!</h2>
+            <p style="color: var(--text-muted); margin: 0 0 25px 0;">
+                <span id="ui-cap-q">Capital of</span>
+                <b id="quiz-country" style="color:white; font-size:1.2em;"></b>
+            </p>
+
+            <div id="easy-mode-ui" class="quiz-grid"></div>
+
+            <div id="hard-mode-ui" class="hidden">
+                <div style="margin-top:15px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+                    <div id="hint-text"
+                        style="font-family:'JetBrains Mono', monospace; font-size:1.8rem; letter-spacing:5px; color:var(--accent-gold); min-height:40px;">
+                    </div>
+                    <button id="btn-hint"
+                        style="background:transparent; border:1px solid gold; color:gold; padding:6px 18px; border-radius:50px; cursor:pointer; font-weight:700;"
+                        onclick="useHint()">
+                        💡 <span id="ui-hint-btn">Hint</span> (0 pts)
+                    </button>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="hard-input" placeholder="..." autocomplete="off">
+                    <button id="hard-submit" class="btn-submit">➜</button>
+                </div>
+            </div>
+
+            <div id="feedback-msg" style="height: 20px; font-weight:800; margin-top:25px; font-size: 1rem;"></div>
+        </div>
+    </div>
+
+    <div id="summary-screen" class="overlay">
+        <div class="card liquid-glass">
+            <div style="font-size: 5rem; margin-bottom: 15px;">🏆</div>
+            <h2 id="ui-end-title" style="font-size: 2.2rem; color:white; margin:0;">Complete</h2>
+            <div style="margin-top: 35px; text-align: left; padding: 0 10px;">
+                <div
+                    style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <span id="ui-stat-map">Map Accuracy</span><span id="stat-map"
+                        style="color:var(--accent-cyan); font-weight:bold;">0%</span>
+                </div>
+                <div
+                    style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
+                    <span id="ui-stat-cap">Capital Accuracy</span><span id="stat-cap"
+                        style="color:var(--accent-cyan); font-weight:bold;">0%</span>
+                </div>
+                <div
+                    style="display:flex; justify-content:space-between; padding:12px 0; margin-top:15px; font-size:1.4rem; color:white;">
+                    <span id="ui-stat-total">Total Score</span><span id="stat-total">0</span>
+                </div>
+            </div>
+            <button class="btn btn-restart" onclick="location.reload()"><span id="ui-btn-restart">Play
+                    Again</span></button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: "Europe Quiz", subtitle: "Liquid Edition",
+                btnEasy: "Normal Mode", btnHard: "Hard Mode", loading: "Loading Map...",
+                find: "Target", capitalOf: "What is the capital of",
+                hint: "Hint", placeholder: "Type capital city...",
+                endTitle: "Session Complete", statMap: "Map Accuracy", statCap: "Capital Accuracy", statTotal: "Total Score",
+                btnRestart: "Play Again",
+                good: "Perfect!", bad: "Missed!", mapFail: "Map Missed",
+                correctMsg: "Correct! +1 Pt", correctNoPt: "Correct (No Points)",
+                wrongMsg: "Wrong! It is:",
+                mapError: "Not quite. That is", langCode: "🌐"
+            },
+            pl: {
+                title: "Quiz o Europie", subtitle: "Edycja Płynna",
+                btnEasy: "Tryb Normalny", btnHard: "Tryb Trudny", loading: "Ładowanie mapy...",
+                find: "Cel", capitalOf: "Jaka jest stolica kraju",
+                hint: "Podpowiedź", placeholder: "Wpisz stolicę...",
+                endTitle: "Koniec Sesji", statMap: "Celność Mapy", statCap: "Wiedza o Stolicach", statTotal: "Wynik Łączny",
+                btnRestart: "Zagraj Ponownie",
+                good: "Doskonale!", bad: "Pudło!", mapFail: "Błąd na mapie",
+                correctMsg: "Poprawnie! +1 Pkt", correctNoPt: "Dobrze (0 pkt)",
+                wrongMsg: "Błąd! Poprawnie:",
+                mapError: "Pudło. To jest", langCode: "🌐"
+            }
+        };
+
+        const countriesDB = {
+            "AL": { n: { en: "Albania", pl: "Albania" }, c: { en: "Tirana", pl: "Tirana" } },
+            "AD": { n: { en: "Andorra", pl: "Andora" }, c: { en: "Andorra la Vella", pl: "Andora" } },
+            "AT": { n: { en: "Austria", pl: "Austria" }, c: { en: "Vienna", pl: "Wiedeń" } },
+            "BY": { n: { en: "Belarus", pl: "Białoruś" }, c: { en: "Minsk", pl: "Mińsk" } },
+            "BE": { n: { en: "Belgium", pl: "Belgia" }, c: { en: "Brussels", pl: "Bruksela" } },
+            "BA": { n: { en: "Bosnia and Herzegovina", pl: "Bośnia i Hercegowina" }, c: { en: "Sarajevo", pl: "Sarajewo" } },
+            "BG": { n: { en: "Bulgaria", pl: "Bułgaria" }, c: { en: "Sofia", pl: "Sofia" } },
+            "HR": { n: { en: "Croatia", pl: "Chorwacja" }, c: { en: "Zagreb", pl: "Zagrzeb" } },
+            "CZ": { n: { en: "Czechia", pl: "Czechy" }, c: { en: "Prague", pl: "Praga" } },
+            "DK": { n: { en: "Denmark", pl: "Dania" }, c: { en: "Copenhagen", pl: "Kopenhaga" } },
+            "EE": { n: { en: "Estonia", pl: "Estonia" }, c: { en: "Tallinn", pl: "Tallinn" } },
+            "FI": { n: { en: "Finland", pl: "Finlandia" }, c: { en: "Helsinki", pl: "Helsinki" } },
+            "FR": { n: { en: "France", pl: "Francja" }, c: { en: "Paris", pl: "Paryż" } },
+            "DE": { n: { en: "Germany", pl: "Niemcy" }, c: { en: "Berlin", pl: "Berlin" } },
+            "GR": { n: { en: "Greece", pl: "Grecja" }, c: { en: "Athens", pl: "Ateny" } },
+            "HU": { n: { en: "Hungary", pl: "Węgry" }, c: { en: "Budapest", pl: "Budapeszt" } },
+            "IS": { n: { en: "Iceland", pl: "Islandia" }, c: { en: "Reykjavik", pl: "Reykjavik" } },
+            "IE": { n: { en: "Ireland", pl: "Irlandia" }, c: { en: "Dublin", pl: "Dublin" } },
+            "IT": { n: { en: "Italy", pl: "Włochy" }, c: { en: "Rome", pl: "Rzym" } },
+            "LV": { n: { en: "Latvia", pl: "Łotwa" }, c: { en: "Riga", pl: "Ryga" } },
+            "LI": { n: { en: "Liechtenstein", pl: "Liechtenstein" }, c: { en: "Vaduz", pl: "Vaduz" } },
+            "LT": { n: { en: "Lithuania", pl: "Litwa" }, c: { en: "Vilnius", pl: "Wilno" } },
+            "LU": { n: { en: "Luxembourg", pl: "Luksemburg" }, c: { en: "Luxembourg", pl: "Luksemburg" } },
+            "MT": { n: { en: "Malta", pl: "Malta" }, c: { en: "Valletta", pl: "Valletta" } },
+            "MD": { n: { en: "Moldova", pl: "Mołdawia" }, c: { en: "Chisinau", pl: "Kiszyniów" } },
+            "MC": { n: { en: "Monaco", pl: "Monako" }, c: { en: "Monaco", pl: "Monako" } },
+            "ME": { n: { en: "Montenegro", pl: "Czarnogóra" }, c: { en: "Podgorica", pl: "Podgorica" } },
+            "NL": { n: { en: "Netherlands", pl: "Holandia" }, c: { en: "Amsterdam", pl: "Amsterdam" } },
+            "MK": { n: { en: "North Macedonia", pl: "Macedonia Płn." }, c: { en: "Skopje", pl: "Skopje" } },
+            "NO": { n: { en: "Norway", pl: "Norwegia" }, c: { en: "Oslo", pl: "Oslo" } },
+            "PL": { n: { en: "Poland", pl: "Polska" }, c: { en: "Warsaw", pl: "Warszawa" } },
+            "PT": { n: { en: "Portugal", pl: "Portugalia" }, c: { en: "Lisbon", pl: "Lizbona" } },
+            "RO": { n: { en: "Romania", pl: "Rumunia" }, c: { en: "Bucharest", pl: "Bukareszt" } },
+            "RU": { n: { en: "Russia", pl: "Rosja" }, c: { en: "Moscow", pl: "Moskwa" } },
+            "SM": { n: { en: "San Marino", pl: "San Marino" }, c: { en: "San Marino", pl: "San Marino" } },
+            "RS": { n: { en: "Serbia", pl: "Serbia" }, c: { en: "Belgrade", pl: "Belgrad" } },
+            "SK": { n: { en: "Slovakia", pl: "Słowacja" }, c: { en: "Bratislava", pl: "Bratysława" } },
+            "SI": { n: { en: "Slovenia", pl: "Słowenia" }, c: { en: "Ljubljana", pl: "Lublana" } },
+            "ES": { n: { en: "Spain", pl: "Hiszpania" }, c: { en: "Madrid", pl: "Madryt" } },
+            "SE": { n: { en: "Sweden", pl: "Szwecja" }, c: { en: "Stockholm", pl: "Sztokholm" } },
+            "CH": { n: { en: "Switzerland", pl: "Szwajcaria" }, c: { en: "Bern", pl: "Berno" } },
+            "UA": { n: { en: "Ukraine", pl: "Ukraina" }, c: { en: "Kyiv", pl: "Kijów" } },
+            "GB": { n: { en: "United Kingdom", pl: "Wielka Brytania" }, c: { en: "London", pl: "Londyn" } },
+            "VA": { n: { en: "Vatican City", pl: "Watykan" }, c: { en: "Vatican City", pl: "Watykan" } },
+            "TR": { n: { en: "Turkey", pl: "Turcja" }, c: { en: "Ankara", pl: "Ankara" } }
+        };
+
+        let currentLang = 'en';
+        let map, geoJsonLayer;
+        let gameMode = 'easy';
+        let queue = [];
+        let currentIso = null;
+        let mapMistakes = 0;
+        let results = { map: 0, capital: 0 };
+        let isMapLoaded = false;
+        let hintUsed = false;
+        let hintRevealedIndices = [];
+        let currentCapitalClean = "";
+
+        function toggleMorph(e) {
+            e.stopPropagation();
+            const morph = document.getElementById('lang-morph');
+            morph.classList.toggle('expanded');
+        }
+
+        document.addEventListener('click', function (e) {
+            const morph = document.getElementById('lang-morph');
+            if (morph.classList.contains('expanded') && !morph.contains(e.target)) {
+                morph.classList.remove('expanded');
+            }
+        });
+
+        function setLang(lang, e) {
+            if (e) e.stopPropagation();
+            currentLang = lang;
+            const t = translations[lang];
+
+            document.querySelectorAll('.lang-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+
+            const icon = document.querySelector('.morph-icon span');
+            icon.innerText = t.langCode;
+
+            document.getElementById('lang-morph').classList.remove('expanded');
+
+            updateText(t);
+        }
+
+        function updateText(t) {
+            document.getElementById('ui-title').innerText = t.title;
+            document.getElementById('ui-subtitle').innerText = t.subtitle;
+            document.getElementById('ui-btn-easy').innerText = t.btnEasy;
+            document.getElementById('ui-btn-hard').innerText = t.btnHard;
+            document.getElementById('ui-loading').innerText = t.loading;
+            document.getElementById('ui-find').innerText = t.find;
+            document.getElementById('ui-cap-q').innerText = t.capitalOf;
+            document.getElementById('ui-hint-btn').innerText = t.hint;
+            document.getElementById('hard-input').placeholder = t.placeholder;
+            document.getElementById('ui-end-title').innerText = t.endTitle;
+            document.getElementById('ui-stat-map').innerText = t.statMap;
+            document.getElementById('ui-stat-cap').innerText = t.statCap;
+            document.getElementById('ui-stat-total').innerText = t.statTotal;
+            document.getElementById('ui-btn-restart').innerText = t.btnRestart;
+
+            if (currentIso) {
+                updateBarContent(countriesDB[currentIso].n[currentLang]);
+            }
+        }
+
+        function updateBarContent(newText, isError = false) {
+            const bar = document.getElementById('game-bar');
+            const textEl = document.getElementById('target-name');
+
+            const startWidth = bar.offsetWidth;
+            bar.style.width = startWidth + 'px';
+            bar.classList.add('animating-width');
+
+            textEl.innerText = newText;
+            if (isError) textEl.style.color = 'var(--accent-red)';
+            else textEl.style.color = '';
+
+            requestAnimationFrame(() => {
+                bar.style.width = 'auto';
+                const endWidth = bar.offsetWidth;
+
+                bar.style.width = startWidth + 'px';
+
+                requestAnimationFrame(() => {
+                    bar.style.width = endWidth + 'px';
+                });
+            });
+
+            setTimeout(() => {
+                bar.style.width = 'auto';
+                bar.classList.remove('animating-width');
+            }, 400);
+        }
+
+        function startGame(mode) {
+            gameMode = mode;
+            document.getElementById('loader').classList.remove('hidden');
+            if (!isMapLoaded) initMap();
+            else startRound();
+        }
+
+        async function initMap() {
+            map = L.map('map', { center: [50.0, 15.0], zoom: 4, minZoom: 3, zoomControl: false, maxBounds: [[30, -30], [75, 60]] });
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', { attribution: '&copy; CartoDB', maxZoom: 19 }).addTo(map);
+
+            try {
+                const res = await fetch('https://raw.githubusercontent.com/leakyMirror/map-of-europe/master/GeoJSON/europe.geojson');
+                const data = await res.json();
+                const features = data.features.filter(f => countriesDB.hasOwnProperty(f.properties.ISO2));
+
+                geoJsonLayer = L.geoJSON({ type: "FeatureCollection", features: features }, {
+                    style: { fillColor: '#1e293b', weight: 1, color: '#475569', fillOpacity: 0.6 },
+                    onEachFeature: (f, l) => {
+                        l.on('mouseover', () => { if (l.feature.properties.ISO2 !== currentIso && !l.options.locked) l.setStyle({ fillColor: '#334155', fillOpacity: 0.8 }); });
+                        l.on('mouseout', () => { if (l.feature.properties.ISO2 !== currentIso && !l.options.locked) geoJsonLayer.resetStyle(l); });
+                        l.on('click', handleMapClick);
+                    }
+                }).addTo(map);
+                isMapLoaded = true; startRound();
+            } catch (err) { alert("Error loading map data."); }
+        }
+
+        function startRound() {
+            document.getElementById('start-screen').classList.remove('active');
+            const gb = document.getElementById('game-bar');
+            gb.classList.remove('hidden');
+            setTimeout(() => gb.classList.add('visible'), 50);
+            queue = Object.keys(countriesDB).sort(() => 0.5 - Math.random());
+            results = { map: 0, capital: 0 };
+            nextCountry();
+        }
+
+        function nextCountry() {
+            if (queue.length === 0) return endGame();
+            currentIso = queue.pop(); mapMistakes = 0;
+
+            updateBarContent(countriesDB[currentIso].n[currentLang]);
+
+            const total = Object.keys(countriesDB).length;
+            document.getElementById('progress-counter').innerText = `${total - queue.length} / ${total}`;
+            geoJsonLayer.eachLayer(l => { l.options.locked = false; geoJsonLayer.resetStyle(l); });
+        }
+
+        function handleMapClick(e) {
+            if (document.getElementById('quiz-modal').classList.contains('active')) return;
+            const clickedIso = e.target.feature.properties.ISO2; const layer = e.target;
+            if (clickedIso === currentIso) {
+                layer.setStyle({ fillColor: '#00f2ff', fillOpacity: 0.8, color: '#fff', weight: 2 });
+                layer.bringToFront(); layer.options.locked = true;
+                if (mapMistakes === 0) results.map++;
+                setTimeout(() => openQuiz(true), 600);
+            } else {
+                mapMistakes++;
+                layer.setStyle({ fillColor: '#ff0055', fillOpacity: 0.8, color: '#ff0055' });
+                const clickedName = countriesDB[clickedIso] ? countriesDB[clickedIso].n[currentLang] : "???";
+
+                const errMsg = `${translations[currentLang].mapError} ${clickedName}`;
+                updateBarContent(errMsg, true);
+
+                setTimeout(() => {
+                    geoJsonLayer.resetStyle(layer);
+                    updateBarContent(countriesDB[currentIso].n[currentLang]);
+                }, 1500);
+
+                if (mapMistakes >= 3) { highlightCorrect(); setTimeout(() => openQuiz(false), 1500); }
+            }
+        }
+
+        function highlightCorrect() {
+            geoJsonLayer.eachLayer(l => {
+                if (l.feature.properties.ISO2 === currentIso) {
+                    l.setStyle({ fillColor: '#ffd700', fillOpacity: 0.9, weight: 2, color: '#fff' });
+                    l.bringToFront(); l.options.locked = true;
+                }
+            });
+        }
+
+        function openQuiz(mapSuccess) {
+            const modal = document.getElementById('quiz-modal');
+            const title = document.getElementById('quiz-title');
+            const msg = document.getElementById('feedback-msg');
+            const t = translations[currentLang];
+            modal.classList.add('active'); msg.innerText = "";
+            document.getElementById('quiz-country').innerText = countriesDB[currentIso].n[currentLang];
+            title.innerText = mapSuccess ? t.good : t.mapFail;
+            title.style.color = mapSuccess ? "var(--accent-cyan)" : "var(--accent-red)";
+            const correctCapital = countriesDB[currentIso].c[currentLang];
+            if (gameMode === 'easy') setupEasyMode(correctCapital); else setupHardMode(correctCapital);
+        }
+
+        function setupEasyMode(correct) {
+            document.getElementById('easy-mode-ui').classList.remove('hidden');
+            document.getElementById('hard-mode-ui').classList.add('hidden');
+            const container = document.getElementById('easy-mode-ui'); container.innerHTML = '';
+            let opts = getDistractors(correct); opts.push(correct); opts.sort(() => 0.5 - Math.random());
+            opts.forEach(opt => {
+                const btn = document.createElement('div'); btn.className = 'option-bead'; btn.innerText = opt;
+                btn.onclick = () => finalizeAnswer(opt === correct, btn, correct);
+                container.appendChild(btn);
+            });
+        }
+
+        function setupHardMode(correct) {
+            document.getElementById('easy-mode-ui').classList.add('hidden');
+            document.getElementById('hard-mode-ui').classList.remove('hidden');
+            currentCapitalClean = correct; hintUsed = false; hintRevealedIndices = [];
+            document.getElementById('hint-text').innerText = "";
+            document.getElementById('btn-hint').disabled = false;
+            const input = document.getElementById('hard-input');
+            input.value = ""; input.focus(); input.style.borderColor = "rgba(255,255,255,0.2)";
+            document.getElementById('hard-submit').onclick = () => {
+                const val = input.value.trim(); if (!val) return;
+                finalizeAnswer(checkFuzzy(val, correct), input, correct);
+            };
+            input.onkeypress = (e) => { if (e.key === 'Enter') document.getElementById('hard-submit').click(); };
+        }
+
+        function useHint() {
+            const display = document.getElementById('hint-text'); const cleanCap = currentCapitalClean; const len = cleanCap.length;
+            if (hintRevealedIndices.length === 0 && display.innerText === "") {
+                hintUsed = true; let placeholder = "";
+                for (let i = 0; i < len; i++) {
+                    if (cleanCap[i] === ' ' || cleanCap[i] === '-') { placeholder += cleanCap[i]; hintRevealedIndices.push(i); }
+                    else placeholder += "_";
+                }
+                display.innerText = placeholder; return;
+            }
+            let available = []; for (let i = 0; i < len; i++) if (!hintRevealedIndices.includes(i)) available.push(i);
+            if (available.length > 0) {
+                const rand = available[Math.floor(Math.random() * available.length)];
+                hintRevealedIndices.push(rand); let newStr = "";
+                for (let i = 0; i < len; i++) newStr += hintRevealedIndices.includes(i) ? cleanCap[i] : "_";
+                display.innerText = newStr; if (hintRevealedIndices.length === len) document.getElementById('btn-hint').disabled = true;
+            }
+        }
+
+        function finalizeAnswer(isCorrect, element, correctText) {
+            const msg = document.getElementById('feedback-msg');
+            const modal = document.getElementById('quiz-modal');
+            const t = translations[currentLang];
+            if (isCorrect) {
+                if (gameMode === 'hard' && hintUsed) {
+                    msg.innerText = t.correctNoPt; msg.style.color = "var(--accent-gold)";
+                    if (element.tagName === 'INPUT') element.style.borderColor = "var(--accent-gold)";
+                } else {
+                    msg.innerText = t.correctMsg; msg.style.color = "var(--accent-cyan)";
+                    if (gameMode === 'easy') element.classList.add('correct');
+                    else element.style.borderColor = "var(--accent-cyan)";
+                    results.capital++;
+                }
+            } else {
+                msg.innerText = `${t.wrongMsg} ${correctText}`; msg.style.color = "var(--accent-red)";
+                if (gameMode === 'easy') element.classList.add('wrong'); else element.style.borderColor = "var(--accent-red)";
+            }
+            setTimeout(() => { modal.classList.remove('active'); nextCountry(); }, 2200);
+        }
+
+        function getDistractors(correct) {
+            const all = Object.values(countriesDB).map(x => x.c[currentLang]).filter(c => c !== correct);
+            return all.sort(() => 0.5 - Math.random()).slice(0, 3);
+        }
+
+        function checkFuzzy(input, correct) {
+            const a = input.toLowerCase().trim(); const b = correct.toLowerCase().trim();
+            if (a === b) return true; if (Math.abs(a.length - b.length) > 2) return false;
+            let costs = []; for (let i = 0; i <= a.length; i++) { let last = i; for (let j = 0; j <= b.length; j++) { if (i == 0) costs[j] = j; else { if (j > 0) { let newValue = costs[j - 1]; if (a.charAt(i - 1) != b.charAt(j - 1)) newValue = Math.min(Math.min(newValue, last), costs[j]) + 1; costs[j - 1] = last; last = newValue; } } } if (i > 0) costs[b.length] = last; }
+            return costs[b.length] <= (b.length > 5 ? 2 : 1);
+        }
+
+        function endGame() {
+            document.getElementById('summary-screen').classList.add('active');
+            const gb = document.getElementById('game-bar'); gb.classList.remove('visible');
+            const total = Object.keys(countriesDB).length;
+            document.getElementById('stat-map').innerText = `${results.map}/${total}`;
+            document.getElementById('stat-cap').innerText = `${results.capital}/${total}`;
+            document.getElementById('stat-total').innerText = `${results.map + results.capital}`;
+        }
+
+        setLang('en');
+    </script>
+</body>
+
+</html>
