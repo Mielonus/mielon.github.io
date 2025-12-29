@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mielon.eu - Symulator Stania w Miejscu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; overflow: hidden; 
+            font-family: 'Fredoka One', cursive;
+            user-select: none; background: #1a1a2e;
+        }
+        
+        /* --- MENU GŁÓWNE --- */
+        #main-menu {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            transition: opacity 0.5s;
+        }
+
+        .logo-container {
+            text-align: center; margin-bottom: 30px;
+            animation: floatLogo 3s ease-in-out infinite;
+        }
+
+        .game-title {
+            font-size: 80px; color: #ff6b81;
+            text-shadow: 4px 4px 0 #fff, 8px 8px 0 #000;
+            margin: 0; letter-spacing: 2px;
+        }
+
+        .game-subtitle {
+            font-size: 30px; color: #ffd700;
+            text-shadow: 2px 2px 0 #000;
+            margin-top: -10px;
+        }
+
+        .disclaimer {
+            margin-top: 10px; font-size: 14px; color: rgba(255,255,255,0.4);
+            transform: rotate(-5deg); border: 2px dashed rgba(255,255,255,0.2);
+            padding: 5px 15px; border-radius: 10px;
+        }
+
+        #play-btn {
+            padding: 20px 80px;
+            font-size: 40px; font-family: 'Fredoka One', cursive;
+            background: linear-gradient(to bottom, #2ecc71, #27ae60);
+            color: white; border: 4px solid white; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 10px 0 #1e8449, 0 10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.1s, filter 0.2s;
+            text-transform: uppercase;
+        }
+        #play-btn:hover { filter: brightness(1.1); transform: scale(1.05); }
+        #play-btn:active { transform: scale(0.95) translateY(10px); box-shadow: 0 0 0 #1e8449; }
+
+        .reset-btn {
+            margin-top: 20px;
+            background: transparent; border: 2px solid #e74c3c; color: #e74c3c;
+            padding: 10px 20px; border-radius: 10px; cursor: pointer; font-family: inherit;
+            transition: 0.3s;
+        }
+        .reset-btn:hover { background: #e74c3c; color: white; }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        /* --- UI GRY --- */
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; display: none; flex-direction: column; justify-content: space-between;
+        }
+
+        #top-bar {
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            color: white; padding: 25px; display: flex; justify-content: space-between; align-items: flex-start;
+        }
+
+        #stats-container { display: flex; gap: 30px; font-size: 20px; text-shadow: 2px 2px 0 #000; flex-wrap: wrap; }
+
+        #lang-switch {
+            pointer-events: auto; cursor: pointer; font-size: 24px; 
+            background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 10px;
+            border: 2px solid white;
+        }
+
+        #interaction-prompt {
+            position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); color: #ffd700; padding: 15px 30px; border-radius: 20px;
+            font-size: 24px; border: 3px solid white; display: none; pointer-events: none;
+            text-shadow: 2px 2px 0 #000; z-index: 10;
+        }
+
+        #notification {
+            position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 40px; border-radius: 40px;
+            font-size: 22px; opacity: 0; transition: opacity 0.3s; text-align: center;
+            border: 3px solid rgba(255,255,255,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100;
+        }
+
+        #controls-ui {
+            pointer-events: auto; position: absolute; bottom: 30px; right: 30px;
+            display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+        }
+        .btn-action {
+            font-family: 'Fredoka One', cursive; background: #fff; border: 4px solid #333; 
+            padding: 10px 25px; border-radius: 20px; font-size: 16px; cursor: pointer;
+            box-shadow: 0 4px 0 #333; transition: 0.1s; color: #333;
+        }
+        .btn-action:active { transform: translateY(4px); box-shadow: none; }
+        .btn-action:hover { background: #ffeaa7; }
+        
+        .toggle-btn { background: #e74c3c; color: white; display: none; }
+        .toggle-btn.active { background: #2ecc71; }
+
+        /* --- OKNA (MODALS) --- */
+        .modal {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60%; height: 70%; background: rgba(20, 20, 35, 0.95);
+            border: 5px solid #ffd700; border-radius: 20px;
+            display: none; flex-direction: column; padding: 20px; pointer-events: auto;
+            color: white; z-index: 1500; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #555; padding-bottom: 10px;}
+        .modal-content { overflow-y: auto; flex-grow: 1; padding: 10px; }
+
+        /* Inventory Grid */
+        .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        .pet-card {
+            background: #333; border: 2px solid #555; border-radius: 10px;
+            padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .pet-card:hover { border-color: white; background: #444; }
+        .pet-card.equipped { border-color: #2ecc71; background: #1e3a2a; }
+        .pet-card .rarity { font-size: 12px; margin-top: 5px; color: #aaa; }
+        .pet-icon { width: 50px; height: 50px; margin: 0 auto; background: #222; border-radius: 50%; }
+
+        /* Teleport Grid */
+        .tp-grid { display: flex; flex-direction: column; gap: 10px; }
+        .tp-btn {
+            background: #34495e; color: white; padding: 15px; border-radius: 10px; cursor: pointer;
+            border: 2px solid #555; text-align: left; font-family: inherit; font-size: 18px;
+            transition: 0.2s; display: flex; justify-content: space-between;
+        }
+        .tp-btn:hover { background: #2980b9; border-color: white; }
+        .tp-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+        /* Cookie Consent */
+        #cookie-consent {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.9);
+            color: white; padding: 15px; display: none; justify-content: center; align-items: center;
+            gap: 20px; z-index: 3000; border-top: 2px solid #555; text-align: center; font-size: 14px;
+        }
+        
+        /* Secret Animation */
+        #secret-anim {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: black; z-index: 9999; display: none;
+            justify-content: center; align-items: center; flex-direction: column; overflow: hidden;
+        }
+        .rays {
+            position: absolute; width: 200vmax; height: 200vmax;
+            background: repeating-conic-gradient(from 0deg, #000 0deg 10deg, #1a1a1a 10deg 20deg);
+            animation: spin 10s linear infinite; opacity: 0.5;
+        }
+        .secret-content { position: relative; text-align: center; z-index: 2; animation: glitchScale 0.2s infinite; }
+        .secret-title {
+            font-size: 100px; color: #00ff00; margin: 0; font-family: 'Courier New', monospace; font-weight: bold;
+            text-shadow: 5px 5px 0px #ff00ff, -5px -5px 0px #00ffff;
+        }
+        .secret-sub { font-size: 30px; color: white; letter-spacing: 5px; margin-top: 20px; }
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes glitchScale {
+            0% { transform: scale(1); } 20% { transform: scale(1.02) translate(-2px, 2px); }
+            40% { transform: scale(0.98) translate(2px, -2px); } 60% { transform: scale(1.01) translate(-2px, -2px); }
+            80% { transform: scale(0.99) translate(2px, 2px); } 100% { transform: scale(1); }
+        }
+
+        #error-console { display: none; position: fixed; top: 0; background: red; color: white; z-index: 9999; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="error-console"></div>
+
+    <div id="secret-anim">
+        <div class="rays"></div>
+        <div class="secret-content">
+            <h1 class="secret-title">SECRET<br>HATCHED</h1>
+            <div class="secret-sub">GLITCH OVERLORD</div>
+        </div>
+    </div>
+
+    <div id="cookie-consent">
+        <div>
+            🍪 This site uses cookies to save your game progress locally. No data is sent to any servers.<br>
+            <small>Ta strona używa plików cookies do zapisu gry. Żadne dane nie są wysyłane.</small>
+        </div>
+        <button class="btn-action" onclick="acceptCookies()">OK, I UNDERSTAND</button>
+    </div>
+
+    <div id="inventory-modal" class="modal">
+        <div class="modal-header">
+            <h2 id="txt-inv-title">PETS</h2>
+            <button class="btn-action" onclick="closeAllModals()">X</button>
+        </div>
+        <div id="inv-grid" class="modal-content inv-grid"></div>
+    </div>
+
+    <div id="teleport-modal" class="modal">
+        <div class="modal-header">
+            <h2 id="txt-tp-title">TELEPORT</h2>
+            <button class="btn-action" onclick="closeAllModals()">X</button>
+        </div>
+        <div id="tp-grid" class="modal-content tp-grid"></div>
+    </div>
+
+    <div id="main-menu">
+        <div class="logo-container">
+            <h1 class="game-title">STANDING STILL</h1>
+            <h2 class="game-subtitle">SIMULATOR</h2>
+            <div class="disclaimer">rumble studios pls dont sue me</div>
+        </div>
+        <button id="play-btn" onclick="startGame()">PLAY ▶</button>
+        <p style="color:white; margin-top:20px; opacity:0.7;">v 1.0</p>
+        <button class="reset-btn" onclick="resetGameData()">RESET DATA</button>
+    </div>
+
+    <div id="ui-layer">
+        <div id="top-bar">
+            <div id="stats-container">
+                <div>💰 <span id="ui-coins">0</span></div>
+                <div>🎈 <span id="ui-bubble">0</span> / <span id="ui-capacity">20</span></div>
+                <div>⚡ x<span id="ui-power">1</span></div>
+                <div>🐾 <span id="ui-pet">-</span></div>
+            </div>
+            <div id="lang-switch" onclick="toggleLanguage()">🇺🇸 EN</div>
+        </div>
+        
+        <div id="interaction-prompt">[E] USE</div>
+        <div id="notification">Info</div>
+
+        <div id="controls-ui">
+            <button id="btn-autoblow" class="btn-action toggle-btn" onclick="toggleAutoBlow()">💨 AUTO BLOW: OFF</button>
+            <button id="btn-autohatch" class="btn-action toggle-btn" onclick="toggleAutoHatch()">🥚 AUTO HATCH: OFF</button>
+            <button id="btn-tp" class="btn-action" onclick="openTeleport()">🗺️ MAP</button>
+            <button id="btn-inv" class="btn-action" onclick="openInventory()">🐾 PETS</button>
+            <button id="btn-sell" class="btn-action" onclick="window.sellBubbles()">💰 SELL</button>
+        </div>
+    </div>
+
+    <audio id="bg-music" loop>
+        <source src="bubbles.mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- LOCALIZATION ---
+        const LANG = {
+            en: {
+                play: "PLAY ▶", reset: "⚠ RESET DATA", coins: "Coins", bubble: "Bubble",
+                use: "[E] USE", full: "BACKPACK FULL!", sold: "Sold! +",
+                nomoney: "Not enough coins!", bought: "Bought: ", unlocked: "PREMIUM FEATURES UNLOCKED!",
+                newpet: "NEW PET: ", hatched: "Hatched: ", saved: "Spawnpoint set! (Island ",
+                respawn: "Respawned!", invTitle: "YOUR PETS", tpTitle: "TELEPORT",
+                emptyInv: "Empty backpack. Buy an egg!", map: "🗺️ MAP", pets: "🐾 PETS", sell: "💰 SELL",
+                egg: "Egg Tier", bag: "Backpack", infBag: "∞ Bag",
+                autoInfo: "Unlocks Auto Blow & Hatch",
+                tpIsland: "Island"
+            },
+            pl: {
+                play: "GRAJ ▶", reset: "⚠ USUŃ DANE", coins: "Monety", bubble: "Guma",
+                use: "[E] UŻYJ", full: "PLECAK PEŁNY!", sold: "Sprzedano! +",
+                nomoney: "Brak monet!", bought: "Kupiono: ", unlocked: "ODBLOKOWANO PREMIUM!",
+                newpet: "NOWY PET: ", hatched: "Wylosowano: ", saved: "Zapisano punkt! (Wyspa ",
+                respawn: "Odrodzono!", invTitle: "TWOJE ZWIERZAKI", tpTitle: "TELEPORT",
+                emptyInv: "Pusty plecak. Kup jajko!", map: "🗺️ MAPA", pets: "🐾 PETY", sell: "💰 SPRZEDAJ",
+                egg: "Jajko Poziom", bag: "Plecak", infBag: "∞ Plecak",
+                autoInfo: "Odblokowuje Auto Blow & Hatch",
+                tpIsland: "Wyspa"
+            }
+        };
+        let currentLang = 'en';
+
+        // --- CONFIG & DATA ---
+        const CONFIG = {
+            gravity: 80, speed: 26, baseJump: 20, 
+            bubbleJumpFactor: 4.0, jumpPowerExponent: 0.5, maxJumpVelocity: 600,
+            islandCount: 6, minCamDist: 10, maxCamDist: 50
+        };
+        let camDistance = 22; // Dynamic camera dist
+
+        const PET_DATABASE = {
+            0: [ 
+                { name: "Doggy", type: "dog", pow: 1.2, chance: 60, color: 0x8e44ad },
+                { name: "Kitty", type: "cat", pow: 1.5, chance: 30, color: 0xf1c40f },
+                { name: "Bear",  type: "bear", pow: 2.0, chance: 10, color: 0x795548 }
+            ],
+            1: [ 
+                { name: "Piggy", type: "pig", pow: 3.0, chance: 60, color: 0xe91e63 },
+                { name: "Fox",   type: "cat", pow: 5.0, chance: 30, color: 0xd35400 },
+                { name: "Wolf",  type: "dog", pow: 8.0, chance: 10, color: 0x95a5a6 }
+            ],
+            2: [ 
+                { name: "Slime", type: "slime", pow: 15, chance: 50, color: 0x2ecc71 },
+                { name: "Golem", type: "bear",  pow: 25, chance: 40, color: 0x607d8b },
+                { name: "Ghost", type: "ghost", pow: 40, chance: 10, color: 0xffffff }
+            ],
+            3: [ 
+                { name: "Magma",  type: "slime", pow: 80, chance: 50, color: 0xc0392b },
+                { name: "Ice",    type: "slime", pow: 120, chance: 40, color: 0x00bcd4 },
+                { name: "Angel",  type: "ghost", pow: 200, chance: 10, color: 0xffeb3b }
+            ],
+            4: [ 
+                { name: "Dragon", type: "dragon", pow: 500, chance: 50, color: 0xe74c3c },
+                { name: "Hydra",  type: "dragon", pow: 1000, chance: 40, color: 0x8e44ad },
+                { name: "Dominus",type: "demon",  pow: 2500, chance: 10, color: 0x2c3e50 }
+            ],
+            5: [ // NEW SECRET TIER (Last Island)
+                { name: "Void Dog", type: "dog", pow: 10000, chance: 99.9, color: 0x000000 },
+                { name: "SECRET GLITCH", type: "demon", pow: 99999, chance: 0.01, color: 0x00ff00, secret: true }
+            ]
+        };
+
+        const ISLAND_DATA = [
+            { color: 0x4caf50, gap: 100, step: 15,   bagCost: 250,    bagCap: 100,      eggCost: 50,     tier: 0 },
+            { color: 0x8bc34a, gap: 400, step: 45,   bagCost: 1500,   bagCap: 500,      eggCost: 500,    tier: 1 },
+            { color: 0xffeb3b, gap: 1200, step: 140,  bagCost: 8000,   bagCap: 2000,     eggCost: 3500,   tier: 2 },
+            { color: 0xff9800, gap: 3500, step: 500, bagCost: 50000,  bagCap: 8000,     eggCost: 20000,  tier: 3 },
+            { color: 0xff5722, gap: 13000,step: 2000, bagCost: 300000, bagCap: 30000,    eggCost: 100000, tier: 4 }, 
+            // Last Island: Infinity Bag + Tier 5 Egg
+            { color: 0x9c27b0, gap: 0,    step: 0,    bagCost: 5000000,bagCap: "INFINITY", eggCost: 500000, tier: 5 }
+        ];
+
+        // --- GAME STATE ---
+        let gameActive = false;
+        let playerData = { 
+            coins: 0, bubbleSize: 0, maxCapacity: 20, clickMultiplier: 1, 
+            equippedPet: null, ownedPets: [], discoveredPets: [], 
+            unlockedEndgame: false, currentIslandIndex: 0 
+        };
+        let autoBlowActive = false, autoHatchActive = false, activeEggPrompt = null, cheatBuffer = ""; 
+
+        // --- THREE.JS GLOBALS ---
+        let scene, camera, renderer;
+        let playerObj, playerModel, bubbleMesh, petObj;
+        let starField, distantCloudsGroup, coinGroup;
+        let velocity = new THREE.Vector3();
+        let onGround = false, canJump = false, prevTime = performance.now();
+        let camLat = 0, camLon = 0, isRightMouseDown = false;
+        const worldColliders = [], interactables = [], coins = [], eggLabels = [], islandSpawnPoints = []; 
+        const raycaster = new THREE.Raycaster();
+        const downVector = new THREE.Vector3(0, -1, 0);
+        const keyState = { w: false, a: false, s: false, d: false, space: false };
+
+        // --- GLOBAL EXPORTS ---
+        window.toggleLanguage = function() {
+            currentLang = currentLang === 'en' ? 'pl' : 'en';
+            document.getElementById('lang-switch').innerText = currentLang === 'en' ? '🇺🇸 EN' : '🇵🇱 PL';
+            refreshTranslations();
+        };
+
+        window.acceptCookies = function() {
+            document.getElementById('cookie-consent').style.display = 'none';
+            document.cookie = "bgu_consent=true; max-age=31536000; path=/";
+        };
+
+        window.resetGameData = function() {
+            if(confirm("Are you sure? This will delete all progress.\nCzy na pewno? Usunie to cały postęp.")) {
+                document.cookie = "bgu_save=; max-age=0; path=/";
+                location.reload();
+            }
+        };
+
+        window.startGame = function() {
+            document.getElementById('main-menu').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('main-menu').style.display = 'none';
+                document.getElementById('ui-layer').style.display = 'flex';
+                gameActive = true; camLon = 0; camLat = 0;
+            }, 500);
+            
+            const audio = document.getElementById('bg-music');
+            audio.volume = 0.2;
+            audio.play().catch(e => console.log("Audio autoplay block:", e));
+        };
+
+        // --- SAVING SYSTEM ---
+        function saveGame() {
+            if(!gameActive) return;
+            const dataStr = JSON.stringify(playerData);
+            document.cookie = `bgu_save=${dataStr}; max-age=31536000; path=/`;
+        }
+        setInterval(saveGame, 5000); // Autosave every 5s
+
+        function loadGame() {
+            const cookies = document.cookie.split('; ');
+            const saveCookie = cookies.find(row => row.startsWith('bgu_save='));
+            const consentCookie = cookies.find(row => row.startsWith('bgu_consent='));
+
+            if(!consentCookie) document.getElementById('cookie-consent').style.display = 'flex';
+
+            if (saveCookie) {
+                try {
+                    const savedData = JSON.parse(saveCookie.split('=')[1]);
+                    // Merge with defaults to prevent crash on updates
+                    playerData = { ...playerData, ...savedData };
+                    // Restore complex states
+                    if(playerData.equippedPet) {
+                        const pet = playerData.ownedPets.find(p => p.name === playerData.equippedPet);
+                        if(pet) equipPet(pet, true); // true = no ui update yet
+                    }
+                    if(playerData.unlockedEndgame) unlockEndgame(true);
+                    
+                    // Teleport to last island spawn
+                    if(playerData.currentIslandIndex > 0 && islandSpawnPoints[playerData.currentIslandIndex]) {
+                       // Position set in init after level creation
+                    }
+                } catch(e) { console.error("Save file corrupted", e); }
+            }
+        }
+
+        // --- TRANSLATION LOGIC ---
+        function t(key) { return LANG[currentLang][key] || key; }
+        
+        function refreshTranslations() {
+            document.getElementById('play-btn').innerText = t('play');
+            document.getElementById('interaction-prompt').innerText = t('use');
+            document.getElementById('btn-tp').innerText = t('map');
+            document.getElementById('btn-inv').innerText = t('pets');
+            document.getElementById('btn-sell').innerText = t('sell');
+            document.getElementById('txt-inv-title').innerText = t('invTitle');
+            document.getElementById('txt-tp-title').innerText = t('tpTitle');
+            updateUI();
+            updateEggLabels();
+        }
+
+        // --- GAMEPLAY UI ---
+        window.openInventory = function() {
+            if(!gameActive) return;
+            closeAllModals();
+            const modal = document.getElementById('inventory-modal');
+            const grid = document.getElementById('inv-grid');
+            grid.innerHTML = '';
+
+            if(playerData.ownedPets.length === 0) grid.innerHTML = `<p style="text-align:center;width:100%">${t('emptyInv')}</p>`;
+
+            playerData.ownedPets.sort((a,b) => b.pow - a.pow);
+            playerData.ownedPets.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+                if(playerData.equippedPet === pet.name) card.classList.add('equipped');
+                const hexColor = '#' + pet.color.toString(16).padStart(6, '0');
+                card.innerHTML = `<div class="pet-icon" style="background:${hexColor};border:2px solid white;"></div>
+                                  <div style="font-weight:bold;margin-top:5px;color:${pet.secret?'#0f0':'white'}">${pet.name}</div>
+                                  <div class="rarity">x${pet.pow}</div>`;
+                card.onclick = () => { equipPet(pet); window.openInventory(); };
+                grid.appendChild(card);
+            });
+            modal.style.display = 'flex';
+        };
+
+        window.openTeleport = function() {
+            if(!gameActive) return;
+            closeAllModals();
+            const modal = document.getElementById('teleport-modal');
+            const grid = document.getElementById('tp-grid');
+            grid.innerHTML = '';
+
+            for(let i=0; i<islandSpawnPoints.length; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'tp-btn';
+                const locked = i > playerData.currentIslandIndex;
+                btn.innerHTML = `<span>${t('tpIsland')} ${i}</span> <span>${locked ? '🔒' : '🚀'}</span>`;
+                btn.disabled = locked;
+                btn.onclick = () => {
+                    teleportTo(i);
+                    closeAllModals();
+                };
+                grid.appendChild(btn);
+            }
+            modal.style.display = 'flex';
+        };
+
+        window.closeAllModals = function() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        };
+        window.closeInventory = window.closeAllModals; // Alias
+
+        window.toggleAutoBlow = function() {
+            autoBlowActive = !autoBlowActive;
+            const btn = document.getElementById('btn-autoblow');
+            btn.classList.toggle('active');
+            btn.innerText = autoBlowActive ? "💨 AUTO BLOW: ON" : "💨 AUTO BLOW: OFF";
+        };
+        window.toggleAutoHatch = function() {
+            autoHatchActive = !autoHatchActive;
+            const btn = document.getElementById('btn-autohatch');
+            btn.classList.toggle('active');
+            btn.innerText = autoHatchActive ? "🥚 AUTO HATCH: ON" : "🥚 AUTO HATCH: OFF";
+        };
+
+        // --- CORE LOGIC ---
+        function blowBubble() {
+            if(!gameActive) return;
+            const cap = (playerData.maxCapacity === "INFINITY") ? 999999999 : playerData.maxCapacity;
+            if (playerData.bubbleSize >= cap) {
+                if(!autoBlowActive) notify(t('full'), "red"); 
+                return;
+            }
+            playerData.bubbleSize += 1 * playerData.clickMultiplier;
+            if (playerData.bubbleSize > cap) playerData.bubbleSize = cap;
+            
+            if(bubbleMesh) {
+                let displayScale = Math.min(5, (playerData.bubbleSize / (cap === 999999999 ? 10000 : cap)) * 1.5);
+                if(playerData.maxCapacity === "INFINITY" && playerData.bubbleSize > 0) displayScale = Math.max(0.5, Math.log10(playerData.bubbleSize));
+                bubbleMesh.scale.set(displayScale, displayScale, displayScale);
+            }
+            updateUI();
+        }
+
+        window.sellBubbles = function() {
+            if(!gameActive || playerData.bubbleSize <= 0) return;
+            const earn = Math.floor(playerData.bubbleSize * 2); 
+            playerData.coins += earn;
+            playerData.bubbleSize = 0;
+            if(bubbleMesh) bubbleMesh.scale.set(0,0,0);
+            notify(`${t('sold')}${earn}`, "green");
+            updateUI();
+        }
+
+        function teleportTo(index) {
+            if(islandSpawnPoints[index]) {
+                playerObj.position.copy(islandSpawnPoints[index]);
+                velocity.set(0,0,0);
+                notify("Teleport...", "cyan");
+            }
+        }
+
+        function buyBackpack(price, cap) {
+            if(playerData.coins >= price) {
+                if(playerData.maxCapacity === cap || (cap === "INFINITY" && playerData.maxCapacity === "INFINITY")) { notify("Already owned!", "orange"); return; }
+                playerData.coins -= price; 
+                playerData.maxCapacity = cap;
+                notify(`${t('bought')} ${cap}!`, "green"); 
+                if(cap === "INFINITY" && !playerData.unlockedEndgame) unlockEndgame();
+                updateUI();
+            } else notify(t('nomoney'), "red");
+        }
+
+        function unlockEndgame(silent = false) {
+            playerData.unlockedEndgame = true;
+            if(!silent) notify(t('unlocked'), "gold");
+            document.querySelectorAll('.toggle-btn').forEach(el => el.style.display = 'block');
+        }
+
+        function buyEgg(price, tier) {
+            if(playerData.coins >= price) {
+                playerData.coins -= price;
+                const pet = rollPet(tier);
+                if (pet.secret) triggerSecretAnimation(pet, false);
+                else {
+                    playerData.ownedPets.push(pet);
+                    if(!playerData.discoveredPets.includes(pet.name)) {
+                        playerData.discoveredPets.push(pet.name);
+                        notify(`${t('newpet')}${pet.name}!`, "gold");
+                        updateEggLabels();
+                    } else notify(`${t('hatched')}${pet.name}`, "cyan");
+                    if(pet.pow > playerData.clickMultiplier) equipPet(pet);
+                }
+                updateUI();
+            } else {
+                notify(t('nomoney'), "red");
+                if(autoHatchActive) toggleAutoHatch();
+            }
+        }
+
+        function rollPet(tier) {
+            const types = PET_DATABASE[tier];
+            const r = Math.random() * 100;
+            let acc = 0;
+            let selected = types[0];
+            for(let p of types) {
+                acc += p.chance;
+                if (r <= acc) { selected = p; break; }
+            }
+            if(types.find(t => t.secret)) {
+                const secret = types.find(t => t.secret);
+                if(Math.random() * 100 <= secret.chance) selected = secret;
+            }
+            return { ...selected, uniqueId: Math.random() }; 
+        }
+
+        function triggerSecretAnimation(pet, isFake) {
+            const anim = document.getElementById('secret-anim');
+            anim.style.display = 'flex';
+            const audio = document.getElementById('bg-music');
+            const prevVol = audio.volume; audio.volume = 0;
+            setTimeout(() => {
+                anim.style.display = 'none'; audio.volume = prevVol;
+                if(!isFake) {
+                    playerData.ownedPets.push(pet);
+                    if(!playerData.discoveredPets.includes(pet.name)) {
+                        playerData.discoveredPets.push(pet.name); updateEggLabels();
+                    }
+                    equipPet(pet);
+                    notify("SECRET GLITCH!", "lime");
+                }
+            }, 5000); 
+        }
+
+        function equipPet(pet, silent) {
+            playerData.equippedPet = pet.name;
+            playerData.clickMultiplier = pet.pow;
+            if (petObj) scene.remove(petObj);
+            petObj = createPetModel(pet.type, pet.color, pet.secret);
+            scene.add(petObj);
+            if(!silent) updateUI();
+        }
+
+        function collectCoin(coinIndex) {
+            const coin = coins[coinIndex];
+            coinGroup.remove(coin.mesh); 
+            coins.splice(coinIndex, 1);
+            let backpackVal = (playerData.maxCapacity === "INFINITY") ? 5000 : playerData.maxCapacity;
+            const value = Math.max(10, Math.floor((backpackVal * 2) * 0.20));
+            playerData.coins += value;
+            notify(`${t('coins')} +${value}`, "yellow");
+            updateUI();
+            setTimeout(() => spawnSingleCoin(), 10000);
+        }
+
+        // --- 3D UTILS ---
+        function createPetModel(type, color, isSecret) {
+            const g = new THREE.Group();
+            const mat = new THREE.MeshPhongMaterial({ color: color, emissive: isSecret ? color : 0x000000, emissiveIntensity: isSecret ? 0.8 : 0 });
+            const black = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.6, 0.6), mat);
+            g.add(body);
+            const e1 = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.05), black); e1.position.set(-0.15,0.1,0.3);
+            const e2 = e1.clone(); e2.position.set(0.15,0.1,0.3);
+            g.add(e1, e2);
+            if(type === 'dog' || type === 'wolf') {
+                const ear = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.3,0.1), mat);
+                const el = ear.clone(); el.position.set(-0.35,0.1,0); const er = ear.clone(); er.position.set(0.35,0.1,0); g.add(el, er);
+            } else if (type === 'dragon' || type === 'demon') {
+                const wGeo = new THREE.PlaneGeometry(0.8,0.5); const wMat = new THREE.MeshBasicMaterial({color: color, side:THREE.DoubleSide});
+                const w1 = new THREE.Mesh(wGeo, wMat); w1.position.set(-0.5,0.2,-0.2); w1.rotation.y = -0.5;
+                const w2 = new THREE.Mesh(wGeo, wMat); w2.position.set(0.5,0.2,-0.2); w2.rotation.y = 0.5; g.add(w1, w2);
+            }
+            if (isSecret) {
+                const aura = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.8,0.8), new THREE.MeshBasicMaterial({color:0x00ff00, wireframe:true, transparent:true, opacity:0.5}));
+                g.add(aura);
+            }
+            return g;
+        }
+
+        function notify(msg, color) {
+            const el = document.getElementById('notification');
+            el.innerText = msg;
+            el.style.color = color === 'red' ? '#ff6b6b' : (color === 'green' ? '#2ecc71' : (color === 'gold' ? '#f1c40f' : (color === 'lime' ? '#00ff00' : 'white')));
+            el.style.borderColor = el.style.color; el.style.opacity = 1;
+            setTimeout(() => el.style.opacity = 0, 1500);
+        }
+
+        function updateUI() {
+            document.getElementById('ui-coins').innerText = playerData.coins;
+            document.getElementById('ui-bubble').innerText = Math.floor(playerData.bubbleSize);
+            document.getElementById('ui-capacity').innerText = playerData.maxCapacity;
+            document.getElementById('ui-power').innerText = playerData.clickMultiplier;
+            const petName = playerData.equippedPet || "-";
+            document.getElementById('ui-pet').innerText = petName.length > 10 ? petName.substring(0,8)+".." : petName;
+        }
+
+        // --- INIT ---
+        try { init(); animate(); } 
+        catch (e) { document.getElementById('error-console').style.display='block'; document.getElementById('error-console').innerText = e.message; }
+
+        function init() {
+            scene = new THREE.Scene(); scene.background = new THREE.Color(0x87CEEB); scene.fog = new THREE.Fog(0x87CEEB, 100, 900);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1500);
+            const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8); scene.add(hemi);
+            const dir = new THREE.DirectionalLight(0xffffff, 1.2); dir.position.set(50,150,50); dir.castShadow = true; 
+            dir.shadow.mapSize.set(2048,2048); scene.add(dir);
+
+            createPlayer(); playerObj.position.set(0, 5, 0);
+            renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true; document.body.appendChild(renderer.domElement);
+
+            setupInputs(); createLevel(); createStars(); createDistantClouds();
+            coinGroup = new THREE.Group(); scene.add(coinGroup); for(let i=0; i<15; i++) spawnSingleCoin();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            loadGame(); // Load from cookies
+            refreshTranslations();
+            if(islandSpawnPoints[playerData.currentIslandIndex]) {
+                playerObj.position.copy(islandSpawnPoints[playerData.currentIslandIndex]);
+            }
+        }
+
+        function setupInputs() {
+            document.addEventListener('keydown', e => {
+                if(!gameActive) return;
+                if(e.key.length === 1) {
+                    cheatBuffer += e.key.toUpperCase();
+                    if(cheatBuffer.endsWith("OVERLORDHATCHNOW")) { triggerSecretAnimation(null, true); cheatBuffer = ""; }
+                }
+                switch(e.code) {
+                    case 'KeyW': keyState.w=true; break; case 'KeyA': keyState.a=true; break;
+                    case 'KeyS': keyState.s=true; break; case 'KeyD': keyState.d=true; break;
+                    case 'Space': if(!keyState.space && onGround) canJump=true; keyState.space=true; break;
+                    case 'KeyE': checkInteractions(true); break;
+                }
+            });
+            document.addEventListener('keyup', e => {
+                switch(e.code) {
+                    case 'KeyW': keyState.w=false; break; case 'KeyA': keyState.a=false; break;
+                    case 'KeyS': keyState.s=false; break; case 'KeyD': keyState.d=false; break;
+                    case 'Space': keyState.space=false; break;
+                }
+            });
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('mousedown', e => {
+                if(e.button === 2) isRightMouseDown = true;
+                if(e.button === 0 && gameActive) blowBubble();
+            });
+            document.addEventListener('mouseup', e => { if(e.button === 2) isRightMouseDown = false; });
+            document.addEventListener('mousemove', e => {
+                if(isRightMouseDown && gameActive) {
+                    camLon -= e.movementX * 0.005; camLat += e.movementY * 0.005; 
+                    camLat = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, camLat));
+                }
+            });
+            // ZOOM
+            document.addEventListener('wheel', e => {
+                if(gameActive) {
+                    camDistance += e.deltaY * 0.05;
+                    camDistance = Math.max(CONFIG.minCamDist, Math.min(CONFIG.maxCamDist, camDistance));
+                }
+            });
+        }
+
+        function createPlayer() {
+            playerObj = new THREE.Group(); scene.add(playerObj); playerModel = new THREE.Group();
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1,1.4,0.6), new THREE.MeshPhongMaterial({color:0x3498db})); body.position.y=0.7; body.castShadow=true;
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.8,0.8,0.8), new THREE.MeshPhongMaterial({color:0xffccaa})); head.position.y=1.8; head.castShadow=true;
+            const bag = new THREE.Mesh(new THREE.BoxGeometry(0.8,1,0.3), new THREE.MeshPhongMaterial({color:0x555555})); bag.position.set(0,0.8,-0.45);
+            playerModel.add(body, head, bag); playerObj.add(playerModel);
+            const bGeo = new THREE.SphereGeometry(1,32,32); const bMat = new THREE.MeshPhongMaterial({color:0xff6b81, transparent:true, opacity:0.9, shininess:100});
+            bubbleMesh = new THREE.Mesh(bGeo, bMat); bubbleMesh.position.set(0,1.6,0.6); bubbleMesh.scale.set(0,0,0); playerModel.add(bubbleMesh);
+        }
+
+        function createLevel() {
+            let currentY = 0;
+            for(let i=0; i<CONFIG.islandCount; i++) {
+                const data = ISLAND_DATA[i];
+                const angle = i*2.5; const dist = i===0?0:45; 
+                const x = Math.sin(angle)*dist; const z = Math.cos(angle)*dist;
+                islandSpawnPoints.push(new THREE.Vector3(x, currentY + 5, z));
+
+                const mesh = new THREE.Mesh(new THREE.CylinderGeometry(25,20,15,9), new THREE.MeshLambertMaterial({color:data.color}));
+                mesh.position.set(x, currentY-7.5, z); mesh.receiveShadow=true; scene.add(mesh); worldColliders.push(mesh);
+                createZone(x, currentY, z);
+                if(data.bagCost>0) createShop(x+10, currentY, z, data.bagCap, data.bagCost, 'shop');
+                if(data.eggCost>0) createShop(x-10, currentY, z, data.tier, data.eggCost, 'egg');
+
+                if(i<CONFIG.islandCount-1) {
+                    const nextAngle = (i+1)*2.5; const nextDist=45;
+                    const nx = Math.sin(nextAngle)*nextDist; const nz = Math.cos(nextAngle)*nextDist;
+                    const gap = Math.max(10, data.gap); const verticalStep = data.step;
+                    let steps = verticalStep > 0 ? Math.floor(gap / verticalStep) : 0; 
+                    const nextY = currentY + gap; const vec = new THREE.Vector3(nx-x, gap, nz-z);
+                    for(let j=1; j<=steps; j++) {
+                        const t = j / steps; const cloudX = x + (vec.x * t); const cloudZ = z + (vec.z * t); const cloudY = currentY + (j * verticalStep);
+                        createCloud(cloudX, cloudY, cloudZ);
+                    }
+                    currentY = nextY;
+                }
+            }
+        }
+
+        function createCloud(x,y,z) {
+            const g = new THREE.Group();
+            const col = new THREE.Mesh(new THREE.BoxGeometry(14,1,14), new THREE.MeshBasicMaterial({visible:false})); col.position.set(x,y,z); scene.add(col); worldColliders.push(col);
+            const mat = new THREE.MeshLambertMaterial({color:0xffffff, transparent:true, opacity:0.9});
+            for(let k=0; k<7; k++) {
+                const m = new THREE.Mesh(new THREE.SphereGeometry((2.5+Math.random()) * 1.75, 12, 12), mat);
+                m.position.set((Math.random()-0.5)*12, (Math.random()-0.5)*4, (Math.random()-0.5)*12); g.add(m);
+            }
+            g.position.set(x,y,z); scene.add(g);
+        }
+
+        function createDistantClouds() {
+            distantCloudsGroup = new THREE.Group();
+            const mat = new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.4});
+            for(let i=0; i<40; i++) {
+                const c = new THREE.Mesh(new THREE.SphereGeometry(20 + Math.random()*20, 8, 8), mat);
+                const angle = Math.random() * Math.PI * 2; const dist = 300 + Math.random() * 200; const y = Math.random() * 200 - 50;
+                c.position.set(Math.sin(angle)*dist, y, Math.cos(angle)*dist); c.scale.set(2, 0.5, 1); distantCloudsGroup.add(c);
+            }
+            scene.add(distantCloudsGroup);
+        }
+
+        function spawnSingleCoin() {
+            const geo = new THREE.CylinderGeometry(1.5, 1.5, 0.4, 16); const mat = new THREE.MeshPhongMaterial({color: 0xffd700, shininess: 100}); const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.z = Math.PI / 2; const target = worldColliders[Math.floor(Math.random() * worldColliders.length)];
+            mesh.position.copy(target.position); mesh.position.y += 3 + Math.random()*3; mesh.position.x += (Math.random()-0.5)*10; mesh.position.z += (Math.random()-0.5)*10;
+            coinGroup.add(mesh); coins.push({ mesh: mesh, baseY: mesh.position.y, seed: Math.random()*100 });
+        }
+
+        function createShop(x,y,z, val, price, type) {
+            const isEgg = type==='egg';
+            const geo = isEgg ? new THREE.SphereGeometry(2,24,24) : new THREE.BoxGeometry(2.5,2.5,2.5);
+            const mat = new THREE.MeshPhongMaterial({color: isEgg?0xffffff:0x3498db});
+            const mesh = new THREE.Mesh(geo, mat); mesh.position.set(x, y+(isEgg?2.6:1.25), z); if(isEgg) mesh.scale.y=1.3;
+            mesh.castShadow=true; scene.add(mesh);
+            
+            const labelText = isEgg ? `${t('egg')} ${val}` : (val==="INFINITY" ? t('infBag') : `${t('bag')} ${val}`);
+            createLabel(x,y+(isEgg?8:5),z, labelText, `${price} $`, isEgg, val);
+            
+            interactables.push({ pos: new THREE.Vector3(x,y,z), radius:5, type: type, action: isEgg ? ()=>buyEgg(price, val) : ()=>buyBackpack(price, val) });
+        }
+
+        function createLabel(x,y,z,t,s, isEgg, tier) {
+            const cvs = document.createElement('canvas'); cvs.width=512; cvs.height=isEgg ? 350 : 250; 
+            const ctx = cvs.getContext('2d');
+            const texture = new THREE.CanvasTexture(cvs); const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:texture}));
+            spr.scale.set(isEgg?8:6, isEgg?5.5:4, 1); spr.position.set(x,y,z); scene.add(spr);
+            const labelData = { ctx, cvs, texture, t, s, isEgg, tier, sprite: spr };
+            if(isEgg) eggLabels.push(labelData);
+            drawLabelContent(labelData);
+        }
+
+        function drawLabelContent(data) {
+            const { ctx, cvs, texture, t, s, isEgg, tier } = data;
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            ctx.fillStyle="rgba(0,0,0,0.7)"; ctx.fillRect(10,10,492,cvs.height-20); ctx.fill();
+            ctx.fillStyle="white"; ctx.font="bold 50px Arial"; ctx.textAlign="center"; ctx.fillText(t, 256, 70);
+            ctx.fillStyle="#ffd700"; ctx.fillText(s, 256, 130);
+
+            // Special info for Infinity Backpack
+            if(!isEgg && t.includes('∞')) {
+                ctx.font="bold 25px Arial"; ctx.fillStyle="#2ecc71";
+                ctx.fillText(LANG[currentLang].autoInfo, 256, 170);
+            }
+
+            if(isEgg && PET_DATABASE[tier]) {
+                const pets = PET_DATABASE[tier];
+                const startX = 256 - ((pets.length * 90) / 2) + 45;
+                pets.forEach((pet, i) => {
+                    const px = startX + (i-0.5)*100; const py = 180; const size = 80;
+                    const discovered = playerData.discoveredPets.includes(pet.name);
+                    ctx.fillStyle = discovered ? `#${pet.color.toString(16).padStart(6,'0')}` : "#222";
+                    ctx.fillRect(px, py, size, size); ctx.strokeStyle = "white"; ctx.lineWidth = 4; ctx.strokeRect(px, py, size, size);
+                    ctx.fillStyle = "white"; ctx.font = "bold 40px Arial";
+                    if(!discovered) ctx.fillText("?", px + size/2, py + size/1.5);
+                    ctx.font = "20px Arial"; ctx.fillStyle = "#ccc"; ctx.fillText(`${pet.chance}%`, px + size/2, py + size + 25);
+                });
+            }
+            texture.needsUpdate = true;
+        }
+
+        function updateEggLabels() { eggLabels.forEach(l => {
+            // Update title based on lang
+            const isInf = l.t.includes('∞') || l.t.includes('Bag');
+            l.t = l.isEgg ? `${t('egg')} ${l.tier}` : (l.tier==="INFINITY" ? t('infBag') : `${t('bag')} ${l.tier}`);
+            drawLabelContent(l);
+        }); }
+
+        function createZone(x,y,z) {
+            const r = new THREE.Mesh(new THREE.RingGeometry(0.5,4,32), new THREE.MeshBasicMaterial({color:0xff4757, side:THREE.DoubleSide, opacity:0.6, transparent:true}));
+            r.rotation.x=-Math.PI/2; r.position.set(x,y+0.1,z); scene.add(r);
+            interactables.push({pos:new THREE.Vector3(x,y,z), radius:4, action:sellBubbles, auto:true});
+        }
+
+        function createStars() {
+            const v = []; for(let i=0; i<4000; i++) v.push((Math.random()-0.5)*2000, Math.random()*1500+200, (Math.random()-0.5)*2000);
+            const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+            starField = new THREE.Points(geo, new THREE.PointsMaterial({color:0xffffff,size:2,transparent:true,opacity:0}));
+            scene.add(starField);
+        }
+
+        function checkInteractions(manual) {
+            const pp=playerObj.position; let nearby=false; activeEggPrompt = null;
+            interactables.forEach(o=>{
+                if(pp.distanceTo(o.pos)<o.radius) {
+                    if(o.auto) o.action();
+                    else { 
+                        nearby=true; document.getElementById('interaction-prompt').style.display='block'; 
+                        if(o.type === 'egg') activeEggPrompt = o;
+                        if(manual) o.action(); 
+                    }
+                }
+            });
+            if(!nearby) document.getElementById('interaction-prompt').style.display='none';
+        }
+
+        function checkCheckpoints() {
+            for(let i=0; i<islandSpawnPoints.length; i++) {
+                if(playerObj.position.distanceTo(islandSpawnPoints[i]) < 40 && i > playerData.currentIslandIndex) {
+                    playerData.currentIslandIndex = i;
+                    notify(`${t('saved')} ${i})`, "lime");
+                }
+            }
+        }
+
+        setInterval(() => { if(gameActive && autoHatchActive && activeEggPrompt) activeEggPrompt.action(); }, 800); 
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = performance.now(); const delta = Math.min((time - prevTime) / 1000, 0.1); prevTime = time;
+
+            if(!gameActive) {
+                camLon += delta * 0.2; const camX = 40 * Math.sin(camLon); const camZ = 40 * Math.cos(camLon);
+                camera.position.set(camX, 20, camZ); camera.lookAt(0, 5, 0); renderer.render(scene, camera); return;
+            }
+
+            if(autoBlowActive && playerData.unlockedEndgame) blowBubble();
+
+            for (let i = coins.length - 1; i >= 0; i--) {
+                const c = coins[i]; c.mesh.rotation.z += delta * 2; c.mesh.position.y = c.baseY + Math.sin(time*0.003 + c.seed);
+                if(playerObj.position.distanceTo(c.mesh.position) < 3) collectCoin(i);
+            }
+
+            if(distantCloudsGroup) distantCloudsGroup.rotation.y += delta * 0.02;
+
+            // Camera Logic with Scroll Zoom
+            const camX = camDistance * Math.sin(camLon) * Math.cos(camLat);
+            const camY = camDistance * Math.sin(camLat) + 4;
+            const camZ = camDistance * Math.cos(camLon) * Math.cos(camLat);
+            camera.position.set(playerObj.position.x+camX, playerObj.position.y+camY, playerObj.position.z+camZ);
+            camera.lookAt(playerObj.position.x, playerObj.position.y+2, playerObj.position.z);
+
+            velocity.y -= CONFIG.gravity * delta;
+            const camDir = new THREE.Vector3(); camera.getWorldDirection(camDir); camDir.y=0; camDir.normalize();
+            const camSide = new THREE.Vector3(); camSide.crossVectors(camDir, new THREE.Vector3(0,1,0)).normalize();
+
+            velocity.x=0; velocity.z=0;
+            if(keyState.w) { velocity.x+=camDir.x; velocity.z+=camDir.z; }
+            if(keyState.s) { velocity.x-=camDir.x; velocity.z-=camDir.z; }
+            if(keyState.d) { velocity.x+=camSide.x; velocity.z+=camSide.z; }
+            if(keyState.a) { velocity.x-=camSide.x; velocity.z-=camSide.z; }
+
+            if(velocity.x||velocity.z) {
+                const h = new THREE.Vector2(velocity.x, velocity.z).normalize().multiplyScalar(CONFIG.speed);
+                velocity.x=h.x; velocity.z=h.y;
+                let tr = Math.atan2(velocity.x, velocity.z); let rd = tr - playerModel.rotation.y;
+                while(rd>Math.PI) rd-=Math.PI*2; while(rd<-Math.PI) rd+=Math.PI*2;
+                playerModel.rotation.y += rd*15*delta;
+            }
+
+            if(canJump) {
+                let bonus = Math.pow(playerData.bubbleSize, CONFIG.jumpPowerExponent) * CONFIG.bubbleJumpFactor;
+                velocity.y = Math.min(CONFIG.baseJump + bonus, CONFIG.maxJumpVelocity);
+                canJump=false; onGround=false;
+            }
+
+            playerObj.position.addScaledVector(velocity, delta);
+            raycaster.set(playerObj.position, downVector); raycaster.ray.origin.y+=1.5;
+            const hits = raycaster.intersectObjects(worldColliders, false);
+            if(hits.length>0 && hits[0].distance<2.5 && velocity.y<=0) {
+                playerObj.position.y = hits[0].point.y+1; velocity.y=0; onGround=true; checkCheckpoints();
+            } else onGround=false;
+
+            const currentSpawn = islandSpawnPoints[playerData.currentIslandIndex];
+            if(currentSpawn && playerObj.position.y < currentSpawn.y - 150) { 
+                playerObj.position.copy(currentSpawn); velocity.set(0,0,0); notify(t('respawn'), "orange");
+            }
+            if(playerObj.position.y < -50 && !currentSpawn) { playerObj.position.set(0,5,0); velocity.set(0,0,0); }
+
+            if(playerObj.position.y > 300) {
+                const t = Math.min(1, (playerObj.position.y-300)/200);
+                scene.background.lerpColors(new THREE.Color(0x87CEEB), new THREE.Color(0x050510), t);
+                scene.fog.color.lerpColors(new THREE.Color(0x87CEEB), new THREE.Color(0x000000), t);
+                starField.material.opacity = t;
+            } else { scene.background.set(0x87CEEB); scene.fog.color.set(0x87CEEB); starField.material.opacity=0; }
+
+            if(petObj) {
+                const target = playerObj.position.clone().add(new THREE.Vector3(2,3+Math.sin(time*0.005),-1).applyAxisAngle(new THREE.Vector3(0,1,0), playerModel.rotation.y));
+                petObj.position.lerp(target, 0.08); petObj.lookAt(playerObj.position);
+            }
+
+            checkInteractions(false); renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
