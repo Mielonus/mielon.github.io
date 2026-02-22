@@ -26,7 +26,7 @@
 }
 
 .projects {
-  padding: 60px 20px;
+  padding: 30px 20px;
   max-width: 1200px;
   margin: auto;
   color: white;
@@ -87,7 +87,7 @@
 .project_card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(204, 0, 255, 0.626);
   cursor: pointer;
 }
 
@@ -177,8 +177,8 @@
   text-align: center;
   padding: 20px 20px;
   background-color: rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(15px);
-  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   color: white;
 }
 
