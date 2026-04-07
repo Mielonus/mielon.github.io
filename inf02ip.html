@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPv4 INF.02 Quiz</title>
+  <style>
+    :root {
+      --win-gray: #c0c0c0;
+      --win-dark: #808080;
+      --win-darker: #404040;
+      --win-light: #ffffff;
+      --win-blue: #000080;
+      --win-blue2: #0000a0;
+      --win-text: #000000;
+      --win-bg: #008080;
+      --win-panel: #e0e0e0;
+      --win-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #000;
+      --btn-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
+      --btn-shadow-pressed: inset -1px -1px 0 #fff, inset 1px 1px 0 #000;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #009b9b 0%, #008080 55%, #006060 100%);
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      color: var(--win-text);
+      user-select: none;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 18px auto;
+      padding: 0 12px 20px;
+    }
+
+    .window {
+      background: var(--win-gray);
+      border: 2px solid #000;
+      box-shadow: 0 0 0 1px #fff inset;
+    }
+
+    .titlebar {
+      height: 28px;
+      background: linear-gradient(90deg, var(--win-blue), var(--win-blue2));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px;
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    .titlebar .title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      background: conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+      border: 1px solid #fff;
+    }
+
+    .content {
+      padding: 14px;
+      background: var(--win-gray);
+      border-top: 1px solid #fff;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel {
+      background: var(--win-panel);
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: var(--win-shadow);
+      padding: 12px;
+    }
+
+    .panel h2, .panel h3 {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 13px;
+      background: var(--win-gray);
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      box-shadow: var(--btn-shadow);
+      padding: 7px 12px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    button:active, button.pressed {
+      border-color: #404040 #fff #fff #404040;
+      box-shadow: var(--btn-shadow-pressed);
+      transform: translateY(1px);
+    }
+
+    button.primary {
+      font-weight: bold;
+      min-width: 140px;
+    }
+
+    button.small {
+      padding: 5px 8px;
+      min-width: auto;
+      font-size: 12px;
+    }
+
+    .hint {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #111;
+    }
+
+    .status-line {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .badge {
+      background: #000080;
+      color: #fff;
+      padding: 2px 7px;
+      border: 1px solid #fff;
+    }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .question-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      max-height: 65vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .qnav {
+      min-width: 0;
+      padding: 5px 0;
+      font-size: 12px;
+    }
+
+    .qnav.current {
+      outline: 2px solid #000080;
+      outline-offset: 1px;
+    }
+
+    .qnav.answered {
+      background: #d9f2d9;
+    }
+
+    .qnav.correct {
+      background: #c9efc9;
+    }
+
+    .qnav.wrong {
+      background: #f3c8c8;
+    }
+
+    .question-card {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+
+    .question-text {
+      background: #fff;
+      border: 2px solid;
+      border-color: #404040 #fff #fff #404040;
+      box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #fff;
+      padding: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      font-size: 14px;
+      min-height: 96px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px;
+      background: #e9e9e9;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+    }
+
+    .choice input {
+      margin-top: 2px;
+      transform: scale(1.05);
+    }
+
+    .choice label {
+      cursor: pointer;
+      line-height: 1.45;
+      width: 100%;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .feedback {
+      min-height: 46px;
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 10px;
+      background: #fffbe6;
+      border: 2px solid;
+      border-color: #404040 #fff #fff #404040;
+      box-shadow: inset 1px 1px 0 #808080;
+    }
+
+    .feedback.good { background: #e5ffe5; }
+    .feedback.bad { background: #ffe2e2; }
+
+    .summary {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .summary.visible { display: block; }
+
+    .summary-item {
+      background: #fff;
+      border: 2px solid;
+      border-color: #fff #404040 #404040 #fff;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    .summary-item .head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .summary-item .details {
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .muted { color: #333; }
+    .hidden { display: none !important; }
+
+    .footer-note {
+      font-size: 11px;
+      margin-top: 10px;
+      color: #222;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid #000;
+      background: #fff;
+      margin-left: 5px;
+    }
+
+    @media (max-width: 980px) {
+      .top-grid, .quiz-layout { grid-template-columns: 1fr; }
+      .question-list { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+      .question-card { min-height: auto; }
+    }
+
+    @media (max-width: 620px) {
+      .question-list { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .titlebar { height: auto; padding: 7px 8px; }
+      .titlebar .title { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="window">
+      <div class="titlebar">
+        <div class="title"><div class="icon"></div> IPv4 INF.02 Quiz Manager</div>
+        <div><span class="pill">Windows 98 mode</span></div>
+      </div>
+      <div class="content">
+        <div class="top-grid">
+          <div class="panel">
+            <h2>Tryby nauki</h2>
+            <div class="mode-buttons">
+              <button id="startExamBtn" class="primary">Tryb 40 pytań</button>
+              <button id="startEndlessBtn" class="primary">Tryb bez limitu</button>
+              <button id="resetBtn">Reset</button>
+            </div>
+            <p class="hint" id="modeHint">
+              Tryb 40 pytań: odpowiadasz na 40 pytań bez podglądu poprawnych odpowiedzi. Na końcu dostajesz pełne podsumowanie z odpowiedziami poprawnymi i Twoimi zaznaczeniami.
+              Tryb bez limitu: po każdej odpowiedzi od razu widzisz, czy jest dobra, i przechodzisz do kolejnego pytania.
+            </p>
+            <div class="status-line" id="statusLine">
+              <span class="badge">Baza pytań: <span id="bankCount">0</span></span>
+              <span class="badge">Tryb: <span id="modeLabel">brak</span></span>
+              <span class="badge">Postęp: <span id="progressLabel">0/0</span></span>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Co obejmuje quiz</h3>
+            <div class="hint">
+              Pytania z wiedzy: klasy adresów, prywatne/publiczne, broadcast, gateway, DHCP, DNS, NAT, APIPA, maski i CIDR.<br>
+              Pytania obliczeniowe: sieć, broadcast, zakres hostów, liczba hostów, podział na podsieci, rozpoznawanie podsieci.
+            </div>
+            <div class="footer-note">
+              W trybie 40 pytań możesz wracać do dowolnego numeru. W trybie bez limitu odpowiedź od razu pokazuje wynik.
+            </div>
+          </div>
+        </div>
+
+        <div id="quizArea" class="quiz-layout hidden">
+          <div class="panel">
+            <h3>Pytania</h3>
+            <div class="question-list" id="questionList"></div>
+          </div>
+
+          <div class="panel question-card">
+            <div class="question-meta">
+              <div><strong id="questionCounter">Pytanie 1</strong></div>
+              <div><strong id="questionType">—</strong></div>
+            </div>
+
+            <div class="question-text" id="questionText"></div>
+
+            <div class="choices" id="choices"></div>
+
+            <div class="controls">
+              <button id="prevBtn">◀ Poprzednie</button>
+              <button id="nextBtn">Następne ▶</button>
+              <button id="checkBtn" class="primary">Sprawdź / Zapisz</button>
+              <button id="skipBtn">Losuj nowe</button>
+            </div>
+
+            <div id="feedback" class="feedback">Wybierz odpowiedź i kliknij „Sprawdź / Zapisz”.</div>
+          </div>
+        </div>
+
+        <div id="summaryArea" class="summary panel">
+          <h2>Wynik końcowy</h2>
+          <div class="status-line" id="summaryStats"></div>
+          <div id="summaryList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const LETTERS = ['A', 'B', 'C', 'D'];
+      const $ = (id) => document.getElementById(id);
+
+      const state = {
+        mode: null, // exam | endless
+        deck: [],
+        currentIndex: 0,
+        answers: {},
+        reviewed: {},
+        endlessHistory: [],
+        currentQuestion: null,
+        questionSource: 'none',
+        examSize: 40,
+      };
+
+      const staticBank = [
+        makeMCQ('Co oznacza skrót IPv4?', [
+          'Internet Protocol version 4',
+          'Internal Packet version 4',
+          'Internet Port value 4',
+          'Integrated Protocol variable 4'
+        ], 0, 'IPv4 to protokół warstwy sieciowej używany do adresowania urządzeń.'),
+        makeMCQ('Ile bitów ma adres IPv4?', [
+          '16', '32', '64', '128'
+        ], 1, 'IPv4 ma 32 bity, czyli 4 oktety po 8 bitów.'),
+        makeMCQ('Który zapis jest poprawnym adresem IPv4?', [
+          '256.1.1.1', '192.168.0.1', '192.168.0.1.1', '12.34.56'
+        ], 1, 'Każdy oktet IPv4 ma zakres 0–255.'),
+        makeMCQ('Co oznacza zapis /24?', [
+          '24 bity hosta', '24 bity sieci', '24 adresy publiczne', '24 adresy rozgłoszeniowe'
+        ], 1, 'CIDR /24 oznacza 24 bity części sieci i 8 bitów hosta.'),
+        makeMCQ('Jaka jest maska dla /24?', [
+          '255.0.0.0', '255.255.0.0', '255.255.255.0', '255.255.255.255'
+        ], 2, 'Maska /24 to 255.255.255.0.'),
+        makeMCQ('Który adres jest adresem prywatnym?', [
+          '8.8.8.8', '172.20.5.4', '1.1.1.1', '54.54.54.54'
+        ], 1, '172.16.0.0–172.31.255.255 to zakres prywatny.'),
+        makeMCQ('Który zakres jest prywatny?', [
+          '192.168.0.0–192.168.255.255', '224.0.0.0–239.255.255.255', '1.0.0.0–126.255.255.255', '240.0.0.0–255.255.255.255'
+        ], 0, '192.168.0.0/16 to jeden z trzech zakresów prywatnych.'),
+        makeMCQ('Co to jest broadcast?', [
+          'Adres pierwszego hosta', 'Adres routera', 'Adres do wszystkich hostów w podsieci', 'Adres DNS'
+        ], 2, 'Broadcast jest wysyłany do wszystkich hostów w danej sieci.'),
+        makeMCQ('Który adres jest zwykle gatewayem w sieci domowej?', [
+          '192.168.1.1', '127.0.0.1', '255.255.255.255', '169.254.0.1'
+        ], 0, 'Gateway to zwykle adres routera w tej samej podsieci.'),
+        makeMCQ('Do czego służy DNS?', [
+          'Do nadawania adresów IP', 'Do tłumaczenia nazw domen na IP', 'Do szyfrowania danych', 'Do rozgłaszania pakietów'
+        ], 1, 'DNS mapuje nazwy domen na adresy IP.'),
+        makeMCQ('Do czego służy DHCP?', [
+          'Do nadawania dynamicznych konfiguracji sieci', 'Do tworzenia podsieci', 'Do filtrowania pakietów', 'Do kompresji IP'
+        ], 0, 'DHCP przydziela IP, maskę, bramę i DNS automatycznie.'),
+        makeMCQ('Co oznacza APIPA?', [
+          'Adres publiczny przydzielony przez router', 'Adres automatyczny przy braku DHCP', 'Adres multicastowy', 'Adres DNS lokalny'
+        ], 1, 'APIPA to 169.254.x.x w systemach Windows przy braku DHCP.'),
+        makeMCQ('Który protokół odpowiada za NAT?', [
+          'Mechanizm translacji adresów', 'Rozgłaszanie nazw', 'Przydział serwera WWW', 'Kodowanie DNS'
+        ], 0, 'NAT pozwala wielu urządzeniom korzystać z jednego publicznego IP.'),
+        makeMCQ('Jaki adres jest broadcastem w 192.168.1.0/24?', [
+          '192.168.1.0', '192.168.1.1', '192.168.1.254', '192.168.1.255'
+        ], 3, 'W /24 broadcast to ostatni adres, czyli .255.'),
+        makeMCQ('Który adres jest adresem sieci dla 10.0.5.7/8?', [
+          '10.0.0.0', '10.0.5.0', '10.0.5.7', '10.255.255.255'
+        ], 0, 'Przy /8 część sieci to pierwszy oktet.'),
+        makeMCQ('Ile hostów daje sieć /30?', [
+          '1', '2', '4', '254'
+        ], 1, '2^(32-30)-2 = 2 hosty użyteczne.'),
+        makeMCQ('Jaki jest domyślny CIDR klasy C?', [
+          '/8', '/16', '/24', '/30'
+        ], 2, 'Klasa C ma domyślnie maskę /24.'),
+        makeMCQ('Jaki jest zakres klasy D?', [
+          '224.0.0.0–239.255.255.255', '240.0.0.0–255.255.255.255', '192.0.0.0–223.255.255.255', '128.0.0.0–191.255.255.255'
+        ], 0, 'Klasa D służy do multicastu.'),
+        makeMCQ('Jaki jest zakres klasy E?', [
+          '224.0.0.0–239.255.255.255', '240.0.0.0–255.255.255.255', '1.0.0.0–126.255.255.255', '127.0.0.0–127.255.255.255'
+        ], 1, 'Klasa E była przeznaczona eksperymentalnie.'),
+        makeMCQ('Który adres należy do klasy B?', [
+          '150.10.1.1', '200.1.1.1', '20.1.1.1', '240.1.1.1'
+        ], 0, 'Klasa B obejmuje pierwszy oktet od 128 do 191.'),
+        makeMCQ('Który adres jest pętlą zwrotną?', [
+          '127.0.0.1', '169.254.0.1', '192.168.0.1', '224.0.0.1'
+        ], 0, '127.0.0.1 to localhost/loopback.'),
+        makeMCQ('Które urządzenie najczęściej pełni rolę gatewaya?', [
+          'Hub', 'Switch', 'Router', 'Repeater'
+        ], 2, 'Brama domyślna to zwykle router.'),
+        makeMCQ('Co jest częścią hosta w masce 255.255.255.0?', [
+          '0 bitów', '8 bitów', '16 bitów', '24 bity'
+        ], 1, '255.255.255.0 daje 8 bitów hosta.'),
+        makeMCQ('Jak oblicza się adres sieci?', [
+          'IP OR maska', 'IP XOR maska', 'IP AND maska', 'IP NOT maska'
+        ], 2, 'Adres sieci otrzymuje się przez AND bitowy.'),
+        makeMCQ('Jak oblicza się broadcast najprościej?', [
+          'Wszystkie bity hosta na 1', 'Wszystkie bity sieci na 1', 'Wszystkie bity na 0', 'Dodaje się gateway'
+        ], 0, 'Broadcast ma wszystkie bity części hosta ustawione na 1.'),
+        makeMCQ('Co oznacza unicast?', [
+          'Jeden do jednego', 'Jeden do wszystkich', 'Jeden do grupy', 'Wiele do jednego'
+        ], 0, 'Unicast to transmisja punkt-punkt.'),
+        makeMCQ('Co oznacza multicast?', [
+          'Jeden do jednego', 'Jeden do wszystkich', 'Jeden do grupy', 'Każdy do każdego'
+        ], 2, 'Multicast to wysyłanie do grupy odbiorców.'),
+        makeMCQ('Czy adres publiczny może być w prywatnym zakresie?', [
+          'Tak', 'Nie', 'Tylko w klasie A', 'Tylko przy NAT'
+        ], 1, 'Adres prywatny nie jest publiczny.'),
+        makeMCQ('Jaki port i protokół kojarzy się z DNS?', [
+          'TCP/21', 'UDP/53', 'TCP/80', 'UDP/67'
+        ], 1, 'DNS standardowo korzysta z portu 53.'),
+        makeMCQ('Jaki port i protokół kojarzy się z DHCP?', [
+          'UDP/67 i UDP/68', 'TCP/25 i TCP/110', 'UDP/53', 'TCP/443'
+        ], 0, 'DHCP używa UDP 67 i 68.'),
+        makeMCQ('Który adres jest publiczny?', [
+          '192.168.1.20', '10.1.1.1', '172.31.5.5', '8.8.4.4'
+        ], 3, '8.8.4.4 to publiczny serwer DNS.'),
+        makeMCQ('Co najczęściej zrobi komputer, gdy nie dostanie DHCP?', [
+          'Wyłączy kartę sieciową', 'Ustawi APIPA 169.254.x.x', 'Przejdzie na IPv6', 'Zamieni IP na publiczne'
+        ], 1, 'Windows przydziela adres z zakresu APIPA.'),
+        makeMCQ('Który adres jest zwykle pierwszym hostem w podsieci?', [
+          'Adres sieci', 'Broadcast', 'Adres sieci + 1', 'Adres sieci - 1'
+        ], 2, 'Pierwszy host to zwykle sieć + 1.'),
+        makeMCQ('Który adres jest zwykle ostatnim hostem w podsieci?', [
+          'Broadcast - 1', 'Broadcast + 1', 'Adres sieci', 'Gateway zawsze'
+        ], 0, 'Ostatni host to broadcast - 1.'),
+        makeMCQ('Co oznacza NAT w praktyce domowej?', [
+          'Jeden publiczny adres dla wielu urządzeń lokalnych', 'Wiele publicznych adresów dla jednego urządzenia', 'Wyłącznie szyfrowanie', 'Zmianę DNS na DHCP'
+        ], 0, 'Router NAT-uje ruch z LAN na jeden publiczny adres.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy A?', [
+          '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.0/8'
+        ], 0, '10.0.0.0/8 to prywatna klasa A.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy B?', [
+          '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '224.0.0.0/4'
+        ], 1, '172.16.0.0–172.31.255.255 to prywatny zakres klasy B.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy C?', [
+          '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '240.0.0.0/4'
+        ], 2, '192.168.0.0/16 to prywatny zakres klasy C.'),
+      ];
+
+      function makeMCQ(prompt, choices, answerIndex, explanation, type = 'Wiedza') {
+        return {
+          kind: 'static',
+          type,
+          prompt,
+          choices,
+          answerIndex,
+          explanation,
+          source: 'bank'
+        };
+      }
+
+      function ipToInt(ip) {
+        return ip.split('.').reduce((acc, part) => (acc << 8) + Number(part), 0) >>> 0;
+      }
+
+      function intToIp(intVal) {
+        return [24, 16, 8, 0].map(shift => (intVal >>> shift) & 255).join('.');
+      }
+
+      function maskFromPrefix(prefix) {
+        const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+        return intToIp(mask);
+      }
+
+      function prefixFromMask(mask) {
+        return mask.split('.').map(Number).reduce((sum, octet) => sum + octet.toString(2).split('1').length - 1, 0);
+      }
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function randomChoice(arr) {
+        return arr[randomInt(0, arr.length - 1)];
+      }
+
+      function shuffle(array) {
+        const a = array.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function formatBinaryOctet(n) {
+        return n.toString(2).padStart(8, '0');
+      }
+
+      function buildQuestionObject({ prompt, choices, answerIndex, explanation, type = 'Obliczenia', source = 'generated' }) {
+        return { kind: 'generated', type, prompt, choices, answerIndex, explanation, source };
+      }
+
+      function genPrivatePublicQuestion() {
+        const isPrivate = Math.random() < 0.5;
+        let ip;
+        let answerIndex;
+        let explanation;
+        if (isPrivate) {
+          const r = randomChoice(['10', '172', '192']);
+          if (r === '10') ip = `10.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(0,255)}`;
+          if (r === '172') ip = `172.${randomInt(16,31)}.${randomInt(0,255)}.${randomInt(0,255)}`;
+          if (r === '192') ip = `192.168.${randomInt(0,255)}.${randomInt(0,255)}`;
+          answerIndex = 0;
+          explanation = `Adres ${ip} należy do zakresu prywatnego.`;
+        } else {
+          const candidates = [
+            `8.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(1,254)}`,
+            `1.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(1,254)}`,
+            `54.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(1,254)}`,
+            `93.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(1,254)}`
+          ];
+          ip = randomChoice(candidates);
+          answerIndex = 1;
+          explanation = `Adres ${ip} nie mieści się w żadnym prywatnym zakresie IPv4.`;
+        }
+        const prompt = `Czy adres ${ip} jest prywatny czy publiczny?`;
+        const choices = ['Prywatny', 'Publiczny', 'Multicast', 'Loopback'];
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation, type: 'Adresy' });
+      }
+
+      function genClassQuestion() {
+        const first = randomInt(1, 223);
+        const ip = `${first}.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(0,255)}`;
+        let correct;
+        if (first <= 126) correct = 0;
+        else if (first <= 191) correct = 1;
+        else correct = 2;
+        const prompt = `Do jakiej klasy należy adres ${ip}?`;
+        const choices = ['Klasa A', 'Klasa B', 'Klasa C', 'Klasa D'];
+        return buildQuestionObject({ prompt, choices, answerIndex: correct, explanation: `Pierwszy oktet ${first} wskazuje na ${choices[correct].toLowerCase()}.`, type: 'Klasy' });
+      }
+
+      function genMaskQuestion() {
+        const prefixes = [8, 12, 16, 20, 24, 25, 26, 27, 28, 29, 30];
+        const prefix = randomChoice(prefixes);
+        const mask = maskFromPrefix(prefix);
+        const variants = shuffle([
+          mask,
+          maskFromPrefix(prefix - 1 > 0 ? prefix - 1 : prefix + 1),
+          maskFromPrefix(Math.min(prefix + 1, 30)),
+          maskFromPrefix(randomChoice([9, 13, 17, 21, 23, 31]))
+        ]);
+        const answerIndex = variants.indexOf(mask);
+        const prompt = `Która maska odpowiada zapisowi /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `CIDR /${prefix} odpowiada masce ${mask}.`, type: 'Maski' });
+      }
+
+      function genPrefixQuestion() {
+        const prefixes = [8, 12, 16, 20, 24, 25, 26, 27, 28, 29, 30];
+        const prefix = randomChoice(prefixes);
+        const mask = maskFromPrefix(prefix);
+        const variants = shuffle([`/${prefix}`, `/${Math.max(8, prefix-1)}`, `/${Math.min(30, prefix+1)}`, `/${randomChoice([9, 13, 17, 21, 23, 31])}`]);
+        const answerIndex = variants.indexOf(`/${prefix}`);
+        const prompt = `Jaki zapis CIDR odpowiada masce ${mask}?`;
+        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `Maska ${mask} to zapis /${prefix}.`, type: 'Maski' });
+      }
+
+      function genHostCountQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28, 29, 30]);
+        const hosts = Math.pow(2, 32 - prefix) - 2;
+        const distractors = shuffle([
+          String(hosts),
+          String(Math.max(0, hosts + randomChoice([2, 4, 8, 16]))),
+          String(Math.max(0, hosts - randomChoice([1, 2, 4, 8]))),
+          String(Math.pow(2, 32 - prefix))
+        ]);
+        const answerIndex = distractors.indexOf(String(hosts));
+        const prompt = `Ile hostów użytecznych daje sieć /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: distractors, answerIndex, explanation: `Liczba hostów: 2^(32-${prefix}) - 2 = ${hosts}.`, type: 'Obliczenia' });
+      }
+
+      function pickNetworkBase(prefix) {
+        if (prefix >= 24) {
+          return [192, 168, randomInt(0, 254), randomInt(0, 255)];
+        }
+        if (prefix >= 16) {
+          return [172, randomInt(16, 31), randomInt(0, 255), randomInt(0, 255)];
+        }
+        return [10, randomInt(0, 255), randomInt(0, 255), randomInt(0, 255)];
+      }
+
+      function genNetworkQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28, 29]);
+        const maskInt = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+        const base = pickNetworkBase(prefix);
+        const hostSpace = 32 - prefix;
+        const maxHost = hostSpace === 0 ? 0 : (1 << hostSpace) - 1;
+        const offset = randomInt(1, Math.max(1, Math.min(200, maxHost - 1)));
+        const ipInt = (ipToInt(base.join('.')) & maskInt) >>> 0;
+        const ip = intToIp((ipInt + offset) >>> 0);
+        const network = intToIp(ipToInt(ip) & maskInt);
+        const options = shuffle([
+          network,
+          intToIp((ipToInt(network) + (1 << Math.max(0, hostSpace - 1))) >>> 0),
+          intToIp((ipToInt(network) + 1) >>> 0),
+          intToIp((ipToInt(network) - 1) >>> 0)
+        ]);
+        const answerIndex = options.indexOf(network);
+        const prompt = `Jaki jest adres sieci dla ${ip}/${prefix}?`;
+        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Adres sieci: IP AND maska. Dla ${ip}/${prefix} wychodzi ${network}.`, type: 'Obliczenia' });
+      }
+
+      function genBroadcastQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28, 29]);
+        const maskInt = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+        const base = pickNetworkBase(prefix);
+        const offset = randomInt(1, 120);
+        const ip = intToIp(((ipToInt(base.join('.')) & maskInt) + offset) >>> 0);
+        const networkInt = ipToInt(ip) & maskInt;
+        const hostMask = (~maskInt) >>> 0;
+        const broadcast = intToIp((networkInt | hostMask) >>> 0);
+        const options = shuffle([
+          broadcast,
+          intToIp((ipToInt(broadcast) - 1) >>> 0),
+          intToIp((ipToInt(broadcast) + 1) >>> 0),
+          intToIp(networkInt >>> 0)
+        ]);
+        const answerIndex = options.indexOf(broadcast);
+        const prompt = `Jaki jest adres broadcast dla ${ip}/${prefix}?`;
+        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Broadcast = adres sieci z bitami hosta ustawionymi na 1. Wynik: ${broadcast}.`, type: 'Obliczenia' });
+      }
+
+      function genRangeQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28, 29]);
+        const maskInt = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+        const base = pickNetworkBase(prefix);
+        const offset = randomInt(1, 100);
+        const ip = intToIp(((ipToInt(base.join('.')) & maskInt) + offset) >>> 0);
+        const networkInt = ipToInt(ip) & maskInt;
+        const broadcastInt = (networkInt | ((~maskInt) >>> 0)) >>> 0;
+        const first = intToIp((networkInt + 1) >>> 0);
+        const last = intToIp((broadcastInt - 1) >>> 0);
+        const prompt = `Jaki jest zakres hostów dla ${ip}/${prefix}?`;
+        const choices = shuffle([
+          `${first} – ${last}`,
+          `${intToIp(networkInt)} – ${intToIp(broadcastInt)}`,
+          `${intToIp((networkInt + 2) >>> 0)} – ${intToIp((broadcastInt - 2) >>> 0)}`,
+          `${intToIp((networkInt + 1) >>> 0)} – ${intToIp(broadcastInt)}`
+        ]);
+        const answerIndex = choices.indexOf(`${first} – ${last}`);
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Hosty to adresy od ${first} do ${last}.`, type: 'Obliczenia' });
+      }
+
+      function genGatewayQuestion() {
+        const subnet = randomChoice(['192.168.1.0/24', '192.168.0.0/24', '10.0.0.0/24']);
+        const [net, pfx] = subnet.split('/');
+        const ipParts = net.split('.').map(Number);
+        const host = randomInt(2, 200);
+        const ip = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.${host}`;
+        const choices = shuffle([
+          `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1`,
+          `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.0`,
+          `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.255`,
+          `169.254.${randomInt(0,255)}.${randomInt(1,254)}`
+        ]);
+        const answerIndex = choices.indexOf(`${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1`);
+        const prompt = `Który adres najczęściej ustawia się jako gateway w sieci ${subnet} dla hosta ${ip}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `W typowej sieci domowej brama to pierwszy adres hosta: ${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1.`, type: 'Wiedza' });
+      }
+
+      function genBinaryQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28]);
+        const mask = maskFromPrefix(prefix);
+        const octet = Number(mask.split('.')[3]);
+        const choices = shuffle([
+          formatBinaryOctet(octet),
+          formatBinaryOctet((octet ^ 255) >>> 0),
+          formatBinaryOctet(Math.max(0, octet - 32)),
+          formatBinaryOctet(Math.min(255, octet + 16))
+        ]);
+        const answerIndex = choices.indexOf(formatBinaryOctet(octet));
+        const prompt = `Który zapis binarny odpowiada ostatniemu oktetowi maski ${mask}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Ostatni oktet maski ${mask} to ${formatBinaryOctet(octet)}.`, type: 'Maski' });
+      }
+
+      function genSubnetStepQuestion() {
+        const prefix = randomChoice([24, 25, 26, 27, 28, 29]);
+        const blockSize = 256 - Number(maskFromPrefix(prefix).split('.')[3]);
+        const choices = shuffle([
+          String(blockSize),
+          String(Math.max(2, blockSize / 2)),
+          String(blockSize + randomChoice([8, 16, 32])),
+          String(Math.max(2, blockSize - randomChoice([1, 2, 4])))]);
+        const answerIndex = choices.indexOf(String(blockSize));
+        const prompt = `Jaki jest rozmiar bloku podsieci dla maski ${maskFromPrefix(prefix)}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Rozmiar bloku: 256 - ${maskFromPrefix(prefix).split('.')[3]} = ${blockSize}.`, type: 'Obliczenia' });
+      }
+
+      function genClassRangeQuestion() {
+        const classes = [
+          ['Klasa A', '1.0.0.0–126.255.255.255'],
+          ['Klasa B', '128.0.0.0–191.255.255.255'],
+          ['Klasa C', '192.0.0.0–223.255.255.255'],
+          ['Klasa D', '224.0.0.0–239.255.255.255']
+        ];
+        const [name, range] = randomChoice(classes);
+        const choices = shuffle(classes.map(c => c[1]));
+        const answerIndex = choices.indexOf(range);
+        const prompt = `Który zakres odpowiada ${name}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `${name} ma zakres ${range}.`, type: 'Klasy' });
+      }
+
+      function genCIDRQuestion() {
+        const prefix = randomChoice([8, 12, 16, 20, 24, 25, 26, 27, 28, 29, 30]);
+        const hostBits = 32 - prefix;
+        const choices = shuffle([
+          String(hostBits),
+          String(Math.max(0, hostBits - 1)),
+          String(hostBits + 2),
+          String(Math.max(0, hostBits + 1))
+        ]);
+        const answerIndex = choices.indexOf(String(hostBits));
+        const prompt = `Ile bitów hosta ma sieć ${maskFromPrefix(prefix)} / ${'/' + prefix}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `W CIDR /${prefix} liczba bitów hosta wynosi ${hostBits}.`, type: 'Maski' });
+      }
+
+      function genStaticOrDynamic() {
+        const generators = [
+          genPrivatePublicQuestion,
+          genClassQuestion,
+          genMaskQuestion,
+          genPrefixQuestion,
+          genHostCountQuestion,
+          genNetworkQuestion,
+          genBroadcastQuestion,
+          genRangeQuestion,
+          genGatewayQuestion,
+          genBinaryQuestion,
+          genSubnetStepQuestion,
+          genClassRangeQuestion,
+          genCIDRQuestion,
+        ];
+        const roll = Math.random();
+        if (roll < 0.42) return randomChoice(staticBank);
+        return randomChoice(generators)();
+      }
+
+      function generateDeck(size) {
+        const deck = [];
+        const used = new Set();
+        let safety = 0;
+        while (deck.length < size && safety < size * 30) {
+          safety++;
+          const q = cloneQuestion(genStaticOrDynamic());
+          const key = q.prompt + '|' + q.choices.join('||');
+          if (used.has(key)) continue;
+          used.add(key);
+          deck.push(q);
+        }
+        while (deck.length < size) {
+          deck.push(cloneQuestion(randomChoice(staticBank)));
+        }
+        return deck;
+      }
+
+      function cloneQuestion(q) {
+        return JSON.parse(JSON.stringify(q));
+      }
+
+      function setMode(mode) {
+        state.mode = mode;
+        state.currentIndex = 0;
+        state.answers = {};
+        state.reviewed = {};
+        state.endlessHistory = [];
+        $('summaryArea').classList.remove('visible');
+        $('quizArea').classList.remove('hidden');
+        $('feedback').className = 'feedback';
+        $('feedback').textContent = mode === 'exam'
+          ? 'Tryb 40 pytań uruchomiony. Odpowiadaj, przechodź między pytaniami i sprawdź wynik na końcu.'
+          : 'Tryb bez limitu uruchomiony. Po każdej odpowiedzi zobaczysz natychmiastowy wynik.';
+        $('modeLabel').textContent = mode === 'exam' ? '40 pytań' : 'bez limitu';
+        $('progressLabel').textContent = mode === 'exam' ? `1/${state.examSize}` : '∞';
+      }
+
+      function startExam() {
+        state.deck = generateDeck(state.examSize);
+        setMode('exam');
+        renderQuestionList();
+        renderQuestion(0);
+        updateCounters();
+      }
+
+      function startEndless() {
+        state.deck = [cloneQuestion(genStaticOrDynamic())];
+        setMode('endless');
+        renderQuestionList();
+        renderQuestion(0);
+        updateCounters();
+      }
+
+      function renderQuestionList() {
+        const list = $('questionList');
+        list.innerHTML = '';
+        const count = state.mode === 'exam' ? state.deck.length : Math.max(1, state.endlessHistory.length + 1);
+        for (let i = 0; i < count; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'qnav small';
+          btn.textContent = i + 1;
+          btn.addEventListener('click', () => {
+            if (state.mode === 'exam') {
+              renderQuestion(i);
+            } else {
+              // endless mode only current question is visible; clicking keeps current question focused.
+              renderQuestion(Math.min(i, state.deck.length - 1));
+            }
+          });
+          list.appendChild(btn);
+        }
+        refreshNavStates();
+      }
+
+      function renderQuestion(index) {
+        if (!state.deck.length) return;
+        if (state.mode === 'exam') {
+          state.currentIndex = Math.max(0, Math.min(index, state.deck.length - 1));
+        } else {
+          state.currentIndex = 0;
+        }
+        const q = state.deck[state.currentIndex];
+        state.currentQuestion = q;
+        $('questionCounter').textContent = state.mode === 'exam'
+          ? `Pytanie ${state.currentIndex + 1} / ${state.deck.length}`
+          : `Pytanie ${state.endlessHistory.length + 1}`;
+        $('questionType').textContent = q.type;
+        $('questionText').textContent = q.prompt;
+        renderChoices(q);
+        updateControls();
+        updateCounters();
+        refreshNavStates();
+        const sel = state.answers[state.currentIndex];
+        if (sel !== undefined) {
+          const input = document.querySelector(`input[name="answer"][value="${sel}"]`);
+          if (input) input.checked = true;
+        }
+        if (state.mode === 'exam') {
+          const isAnswered = state.answers[state.currentIndex] !== undefined;
+          $('feedback').className = 'feedback' + (isAnswered ? ' good' : '');
+          $('feedback').textContent = isAnswered
+            ? 'Odpowiedź zapisana. Możesz przejść dalej albo wrócić do tego pytania.'
+            : 'Wybierz odpowiedź i kliknij „Sprawdź / Zapisz”.';
+        } else {
+          $('feedback').className = 'feedback';
+          $('feedback').textContent = 'Zaznacz odpowiedź i kliknij „Sprawdź / Zapisz”.';
+        }
+      }
+
+      function renderChoices(q) {
+        const wrap = $('choices');
+        wrap.innerHTML = '';
+        q.choices.forEach((choice, idx) => {
+          const id = `choice-${state.currentIndex}-${idx}`;
+          const row = document.createElement('div');
+          row.className = 'choice';
+          row.innerHTML = `
+            <input type="radio" name="answer" id="${id}" value="${idx}" />
+            <label for="${id}"><strong>${LETTERS[idx]}.</strong> ${choice}</label>
+          `;
+          wrap.appendChild(row);
+        });
+      }
+
+      function getSelectedAnswer() {
+        const checked = document.querySelector('input[name="answer"]:checked');
+        return checked ? Number(checked.value) : null;
+      }
+
+      function saveAnswer() {
+        const selected = getSelectedAnswer();
+        if (selected === null) {
+          showFeedback('Najpierw wybierz odpowiedź.', false);
+          return;
+        }
+        const q = state.deck[state.currentIndex];
+        state.answers[state.currentIndex] = selected;
+        state.reviewed[state.currentIndex] = true;
+
+        if (state.mode === 'endless') {
+          const correct = selected === q.answerIndex;
+          showFeedback(correct ? `Dobrze! ${q.explanation}` : `Źle. ${q.explanation}`, correct);
+          setTimeout(() => {
+            const nextQ = cloneQuestion(genStaticOrDynamic());
+            state.deck = [nextQ];
+            state.currentIndex = 0;
+            state.endlessHistory.push({ question: q, selected, correct });
+            renderQuestionList();
+            renderQuestion(0);
+          }, 650);
+          return;
+        }
+
+        showFeedback('Odpowiedź zapisana. Możesz wrócić do tego pytania lub przejść dalej.', true);
+        refreshNavStates();
+        updateControls();
+      }
+
+      function showFeedback(text, good = null) {
+        const fb = $('feedback');
+        fb.textContent = text;
+        fb.className = 'feedback' + (good === null ? '' : good ? ' good' : ' bad');
+      }
+
+      function updateControls() {
+        const prev = $('prevBtn');
+        const next = $('nextBtn');
+        const check = $('checkBtn');
+        const skip = $('skipBtn');
+
+        const inExam = state.mode === 'exam';
+        prev.disabled = !inExam || state.currentIndex === 0;
+        next.disabled = !inExam || state.currentIndex >= state.deck.length - 1;
+        check.disabled = !state.mode;
+        skip.disabled = !state.mode;
+        next.textContent = inExam ? 'Następne ▶' : 'Kolejne (auto)';
+      }
+
+      function updateCounters() {
+        $('bankCount').textContent = `${staticBank.length} + generator`;
+        if (state.mode === 'exam') {
+          $('progressLabel').textContent = `${Math.min(state.currentIndex + 1, state.deck.length)}/${state.deck.length}`;
+        } else if (state.mode === 'endless') {
+          $('progressLabel').textContent = `∞ (${state.endlessHistory.length + 1})`;
+        } else {
+          $('progressLabel').textContent = '0/0';
+        }
+      }
+
+      function refreshNavStates() {
+        const buttons = Array.from(document.querySelectorAll('.qnav'));
+        buttons.forEach((btn, idx) => {
+          btn.classList.remove('current', 'answered', 'correct', 'wrong');
+          if (state.mode !== 'exam') {
+            if (idx === 0) btn.classList.add('current');
+            return;
+          }
+          if (idx === state.currentIndex) btn.classList.add('current');
+          if (state.answers[idx] !== undefined) {
+            btn.classList.add('answered');
+            if (state.deck[idx]) {
+              btn.classList.add(state.answers[idx] === state.deck[idx].answerIndex ? 'correct' : 'wrong');
+            }
+          }
+        });
+      }
+
+      function goNext() {
+        if (state.mode !== 'exam') return;
+        if (state.currentIndex < state.deck.length - 1) renderQuestion(state.currentIndex + 1);
+      }
+
+      function goPrev() {
+        if (state.mode !== 'exam') return;
+        if (state.currentIndex > 0) renderQuestion(state.currentIndex - 1);
+      }
+
+      function skipToNewQuestion() {
+        if (!state.mode) return;
+        if (state.mode === 'exam') {
+          // Replace current question with a fresh one so the deck stays at 40.
+          const fresh = cloneQuestion(genStaticOrDynamic());
+          state.deck[state.currentIndex] = fresh;
+          delete state.answers[state.currentIndex];
+          delete state.reviewed[state.currentIndex];
+          renderQuestion(state.currentIndex);
+          renderQuestionList();
+          showFeedback('Wylosowano nowe pytanie w tym miejscu.', true);
+          return;
+        }
+        // endless: manually advance to a fresh one.
+        state.endlessHistory.push({ question: state.deck[0], selected: state.answers[0], correct: state.answers[0] === state.deck[0].answerIndex });
+        state.deck = [cloneQuestion(genStaticOrDynamic())];
+        state.currentIndex = 0;
+        renderQuestionList();
+        renderQuestion(0);
+      }
+
+      function finishExam() {
+        const total = state.deck.length;
+        const answered = Object.keys(state.answers).length;
+        let correctCount = 0;
+        const rows = [];
+        for (let i = 0; i < total; i++) {
+          const q = state.deck[i];
+          const user = state.answers[i];
+          const correct = q.answerIndex;
+          const isCorrect = user === correct;
+          if (isCorrect) correctCount++;
+          rows.push({ index: i + 1, q, user, correct, isCorrect });
+        }
+        const pct = Math.round((correctCount / total) * 100);
+        $('summaryStats').innerHTML = `
+          <span class="badge">Wynik: ${correctCount}/${total} (${pct}%)</span>
+          <span class="badge">Odpowiedziane: ${answered}/${total}</span>
+          <span class="badge">Tryb: 40 pytań</span>
+        `;
+        const list = $('summaryList');
+        list.innerHTML = rows.map(r => {
+          const userText = r.user === undefined ? 'Brak odpowiedzi' : `${LETTERS[r.user]}. ${r.q.choices[r.user]}`;
+          const correctText = `${LETTERS[r.correct]}. ${r.q.choices[r.correct]}`;
+          return `
+            <div class="summary-item">
+              <div class="head">
+                <div>Pytanie ${r.index} — ${r.q.type}</div>
+                <div>${r.isCorrect ? 'Poprawnie' : 'Błędnie'}</div>
+              </div>
+              <div class="details"><strong>${escapeHtml(r.q.prompt)}</strong>
+
+Twoja odpowiedź: ${escapeHtml(userText)}
+Poprawna odpowiedź: ${escapeHtml(correctText)}
+
+${escapeHtml(r.q.explanation)}</div>
+            </div>
+          `;
+        }).join('');
+        $('summaryArea').classList.add('visible');
+        $('quizArea').classList.remove('hidden');
+        $('feedback').className = 'feedback good';
+        $('feedback').textContent = 'Test zakończony. Poniżej znajdziesz pełne podsumowanie.';
+        $('modeLabel').textContent = 'podsumowanie';
+        $('progressLabel').textContent = `${total}/${total}`;
+        document.getElementById('summaryArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function escapeHtml(text) {
+        return String(text)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function bindEvents() {
+        $('startExamBtn').addEventListener('click', startExam);
+        $('startEndlessBtn').addEventListener('click', startEndless);
+        $('resetBtn').addEventListener('click', () => {
+          state.mode = null;
+          state.deck = [];
+          state.answers = {};
+          state.reviewed = {};
+          state.endlessHistory = [];
+          $('quizArea').classList.add('hidden');
+          $('summaryArea').classList.remove('visible');
+          $('modeLabel').textContent = 'brak';
+          $('progressLabel').textContent = '0/0';
+          $('questionList').innerHTML = '';
+          $('questionText').textContent = '';
+          $('choices').innerHTML = '';
+          $('feedback').className = 'feedback';
+          $('feedback').textContent = 'Wybierz tryb quizu.';
+          updateControls();
+        });
+
+        $('prevBtn').addEventListener('click', goPrev);
+        $('nextBtn').addEventListener('click', goNext);
+        $('checkBtn').addEventListener('click', () => {
+          if (state.mode === 'exam') {
+            saveAnswer();
+            refreshNavStates();
+            if (Object.keys(state.answers).length === state.deck.length) {
+              const allAnswered = state.deck.every((_, idx) => state.answers[idx] !== undefined);
+              if (allAnswered) {
+                const answeredCount = state.deck.length;
+                const total = state.deck.length;
+                const currentAllSet = Object.keys(state.answers).length === total;
+                if (currentAllSet && confirm('Wszystkie pytania mają odpowiedzi. Zakończyć test i zobaczyć wynik?')) {
+                  finishExam();
+                }
+              }
+            }
+            return;
+          }
+          saveAnswer();
+        });
+        $('skipBtn').addEventListener('click', skipToNewQuestion);
+      }
+
+      function init() {
+        $('bankCount').textContent = `${staticBank.length} + generator`;
+        $('feedback').textContent = 'Wybierz tryb quizu.';
+        updateControls();
+        bindEvents();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
