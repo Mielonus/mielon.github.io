@@ -19,6 +19,7 @@
       --btn-shadow: inset -1px -1px 0 #000, inset 1px 1px 0 #fff;
       --btn-shadow-pressed: inset -1px -1px 0 #fff, inset 1px 1px 0 #000;
     }
+
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -28,16 +29,19 @@
       color: var(--win-text);
       user-select: none;
     }
+
     .app {
       max-width: 1180px;
       margin: 18px auto;
       padding: 0 12px 20px;
     }
+
     .window {
       background: var(--win-gray);
       border: 2px solid #000;
       box-shadow: 0 0 0 1px #fff inset;
     }
+
     .titlebar {
       height: 28px;
       background: linear-gradient(90deg, var(--win-blue), var(--win-blue2));
@@ -50,28 +54,33 @@
       font-size: 14px;
       letter-spacing: 0.2px;
     }
+
     .titlebar .title {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+
     .icon {
       width: 16px;
       height: 16px;
       background: conic-gradient(from 0deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
       border: 1px solid #fff;
     }
+
     .content {
       padding: 14px;
       background: var(--win-gray);
       border-top: 1px solid #fff;
     }
+
     .top-grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       gap: 12px;
       margin-bottom: 12px;
     }
+
     .panel {
       background: var(--win-panel);
       border: 2px solid;
@@ -79,15 +88,18 @@
       box-shadow: var(--win-shadow);
       padding: 12px;
     }
+
     .panel h2, .panel h3 {
       margin: 0 0 10px 0;
       font-size: 15px;
     }
+
     .mode-buttons {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
     button {
       font-family: inherit;
       font-size: 13px;
@@ -99,25 +111,30 @@
       cursor: pointer;
       color: #000;
     }
+
     button:active, button.pressed {
       border-color: #404040 #fff #fff #404040;
       box-shadow: var(--btn-shadow-pressed);
       transform: translateY(1px);
     }
+
     button.primary {
       font-weight: bold;
       min-width: 140px;
     }
+
     button.small {
       padding: 5px 8px;
       min-width: auto;
       font-size: 12px;
     }
+
     .hint {
       font-size: 12px;
       line-height: 1.45;
       color: #111;
     }
+
     .status-line {
       display: flex;
       gap: 10px;
@@ -125,12 +142,14 @@
       font-size: 12px;
       margin-top: 10px;
     }
+
     .badge {
       background: #000080;
       color: #fff;
       padding: 2px 7px;
       border: 1px solid #fff;
     }
+
     .quiz-layout {
       display: grid;
       grid-template-columns: 220px 1fr;
@@ -138,6 +157,7 @@
       align-items: start;
       margin-top: 12px;
     }
+
     .question-list {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -146,30 +166,37 @@
       overflow: auto;
       padding-right: 2px;
     }
+
     .qnav {
       min-width: 0;
       padding: 5px 0;
       font-size: 12px;
     }
+
     .qnav.current {
       outline: 2px solid #000080;
       outline-offset: 1px;
     }
+
     .qnav.answered {
       background: #d9f2d9;
     }
+
     .qnav.correct {
       background: #c9efc9;
     }
+
     .qnav.wrong {
       background: #f3c8c8;
     }
+
     .question-card {
       min-height: 420px;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
+
     .question-meta {
       display: flex;
       justify-content: space-between;
@@ -177,6 +204,7 @@
       flex-wrap: wrap;
       font-size: 12px;
     }
+
     .question-text {
       background: #fff;
       border: 2px solid;
@@ -188,10 +216,12 @@
       font-size: 14px;
       min-height: 96px;
     }
+
     .choices {
       display: grid;
       gap: 8px;
     }
+
     .choice {
       display: flex;
       align-items: flex-start;
@@ -201,21 +231,25 @@
       border: 2px solid;
       border-color: #fff #404040 #404040 #fff;
     }
+
     .choice input {
       margin-top: 2px;
       transform: scale(1.05);
     }
+
     .choice label {
       cursor: pointer;
       line-height: 1.45;
       width: 100%;
     }
+
     .controls {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       align-items: center;
     }
+
     .feedback {
       min-height: 46px;
       font-size: 13px;
@@ -226,13 +260,17 @@
       border-color: #404040 #fff #fff #404040;
       box-shadow: inset 1px 1px 0 #808080;
     }
+
     .feedback.good { background: #e5ffe5; }
     .feedback.bad { background: #ffe2e2; }
+
     .summary {
       margin-top: 12px;
       display: none;
     }
+
     .summary.visible { display: block; }
+
     .summary-item {
       background: #fff;
       border: 2px solid;
@@ -240,6 +278,7 @@
       margin-bottom: 10px;
       padding: 10px;
     }
+
     .summary-item .head {
       display: flex;
       justify-content: space-between;
@@ -249,18 +288,22 @@
       font-size: 13px;
       font-weight: bold;
     }
+
     .summary-item .details {
       font-size: 13px;
       line-height: 1.45;
       white-space: pre-wrap;
     }
+
     .muted { color: #333; }
     .hidden { display: none !important; }
+
     .footer-note {
       font-size: 11px;
       margin-top: 10px;
       color: #222;
     }
+
     .pill {
       display: inline-block;
       padding: 1px 6px;
@@ -268,11 +311,13 @@
       background: #fff;
       margin-left: 5px;
     }
+
     @media (max-width: 980px) {
       .top-grid, .quiz-layout { grid-template-columns: 1fr; }
       .question-list { grid-template-columns: repeat(8, minmax(0, 1fr)); }
       .question-card { min-height: auto; }
     }
+
     @media (max-width: 620px) {
       .question-list { grid-template-columns: repeat(5, minmax(0, 1fr)); }
       .titlebar { height: auto; padding: 7px 8px; }
@@ -297,8 +342,8 @@
               <button id="resetBtn">Reset</button>
             </div>
             <p class="hint" id="modeHint">
-              Tryb 40 pytań: odpowiadasz na 40 pytań bez podglądu poprawnych odpowiedzi. Na końcu dostajesz pełne podsumowanie z odpowiedziami poprawnymi, Twoimi zaznaczeniami oraz dokładnym wyjaśnieniem.<br>
-              Tryb bez limitu: po każdej odpowiedzi od razu widzisz, czy jest dobra i czytasz wyjaśnienie, po czym przechodzisz do kolejnego pytania.
+              Tryb 40 pytań: odpowiadasz na 40 pytań bez automatycznego podglądu, ale z możliwością włączenia podpowiedzi po zaznaczeniu. Na końcu dostajesz pełne podsumowanie.<br>
+              Tryb bez limitu: po każdej odpowiedzi od razu otrzymujesz obszerne wyjaśnienie wyniku krok po kroku na ekranie.
             </p>
             <div class="status-line" id="statusLine">
               <span class="badge">Baza pytań: <span id="bankCount">0</span></span>
@@ -309,11 +354,11 @@
           <div class="panel">
             <h3>Co obejmuje quiz</h3>
             <div class="hint">
-              Pytania z wiedzy: klasy adresów, prywatne/publiczne, broadcast, gateway, DHCP, DNS, NAT, APIPA, maski, CIDR, model OSI, ARP, VLSM.<br>
+              Pytania z wiedzy: klasy adresów, prywatne/publiczne, broadcast, gateway, DHCP, DNS, NAT, APIPA, maski i CIDR.<br>
               Pytania obliczeniowe: sieć, broadcast, zakres hostów, liczba hostów, podział na podsieci, rozpoznawanie podsieci.
             </div>
             <div class="footer-note">
-              W trybie 40 pytań możesz wracać do dowolnego numeru. W trybie bez limitu odpowiedź od razu pokazuje wynik wraz ze szczegółowym objaśnieniem.
+              W trybie 40 pytań możesz wracać do dowolnego numeru. W trybie bez limitu odpowiedź od razu pokazuje wynik wraz z obszernym wyjaśnieniem edukacyjnym.
             </div>
           </div>
         </div>
@@ -338,10 +383,17 @@
               <button id="prevBtn">◀ Poprzednie</button>
               <button id="nextBtn">Następne ▶</button>
               <button id="checkBtn" class="primary">Sprawdź / Zapisz</button>
-              <button id="skipBtn">Zakończ / Losuj nowe</button>
+              <button id="skipBtn">Losuj nowe</button>
+              <button id="explainBtn" class="small hidden" style="margin-left: auto; background: #fffbe6; font-weight: bold; padding: 6px 10px;">💡 Wyjaśnienie</button>
             </div>
 
             <div id="feedback" class="feedback">Wybierz odpowiedź i kliknij „Sprawdź / Zapisz”.</div>
+            
+            <div id="explanationBox" class="feedback hidden" style="margin-top: 6px; border-color: #000080; background: #eef7ff; padding: 12px; font-size: 13px; line-height: 1.5; box-shadow: inset 1px 1px 0 #808080;">
+              <strong style="color: #000080;">🎓 EDUKACYJNE WYJAŚNIENIE KROK PO KROKU:</strong><br>
+              <div id="explanationContent" style="margin-top: 6px;"></div>
+            </div>
+            
           </div>
         </div>
 
@@ -360,7 +412,7 @@
       const $ = (id) => document.getElementById(id);
 
       const state = {
-        mode: null, // exam | endless
+        mode: null, 
         deck: [],
         currentIndex: 0,
         answers: {},
@@ -377,213 +429,131 @@
           'Internal Packet version 4',
           'Internet Port value 4',
           'Integrated Protocol variable 4'
-        ], 0, 'IPv4 to protokół warstwy sieciowej używany do adresowania urządzeń.'),
+        ], 0, 'IPv4 to skrót od Internet Protocol version 4. Jest to podstawowy, ogólnoświatowy protokół komunikacyjny używany w Internecie. Odpowiada za nadawanie urządzeniom adresów, dzięki czemu komputery wiedzą, gdzie dokładnie wysłać i skąd odebrać pakiety danych na całym świecie.'),
         makeMCQ('Ile bitów ma adres IPv4?', [
           '16', '32', '64', '128'
-        ], 1, 'IPv4 ma 32 bity, czyli 4 oktety po 8 bitów.'),
+        ], 1, 'Każdy standardowy adres IPv4 (jak np. 192.168.1.1) pod maską urządzenia ma dokładnie 32 bity (złożone z jedynek i zer). Dla łatwiejszego odczytywania przez człowieka dzielimy je proporcjonalnie na 4 grupy po 8 bitów (tzw. oktety) oddzielone od siebie kropkami.'),
         makeMCQ('Który zapis jest poprawnym adresem IPv4?', [
           '256.1.1.1', '192.168.0.1', '192.168.0.1.1', '12.34.56'
-        ], 1, 'Każdy oktet IPv4 ma zakres 0–255.'),
+        ], 1, 'Adres IPv4 ma w formacie dokładnie 4 liczby oddzielone kropkami. Ważne: skoro jeden wyodrębniony oktet ma zaledwie 8 bitów, jego absolutnie maksymalną matematyczną wartością przy samych jedynkach (11111111) staje się z definicji liczba dziesiętna 255. Zapis taki jak 256.x jest całkowicie niepoprawny w tym systemie.'),
         makeMCQ('Co oznacza zapis /24?', [
           '24 bity hosta', '24 bity sieci', '24 adresy publiczne', '24 adresy rozgłoszeniowe'
-        ], 1, 'CIDR /24 oznacza 24 bity części sieci i 8 bitów hosta.'),
+        ], 1, 'Taki zapis to krótka notacja, tak zwany "prefix CIDR". Oznacza on z miejsca to, że pierwsze 24 bity w 32-bitowym adresie rezerwuje i używa się na zidentyfikowanie nazwy samej sieci. Pozostała nam z różnicy krótka reszta z tyłu: 32 - 24 = 8 bitów, posłuży nam następnie na samo adresowanie hostów, czyli urządzeń i komputerów w naszym LAN-ie.'),
         makeMCQ('Jaka jest maska dla /24?', [
           '255.0.0.0', '255.255.0.0', '255.255.255.0', '255.255.255.255'
-        ], 2, 'Maska /24 to 255.255.255.0.'),
+        ], 2, 'Krótki i chętnie stosowany zapis maski z prefiksem /24 nakazuje nam nic innego jak wypisać z rzędu w komputerze po prostu dokładnie 24 binarne jedynki, od skrajnej lewej w prawo: 11111111.11111111.11111111.00000000. Przekładając te pocięte grupy po kolei na system dziesiętny otrzymujemy idealnie i przejrzyście maskę sieci z rzędu: 255.255.255.0.'),
         makeMCQ('Który adres jest adresem prywatnym?', [
           '8.8.8.8', '172.20.5.4', '1.1.1.1', '54.54.54.54'
-        ], 1, '172.16.0.0–172.31.255.255 to zakres prywatny dla klasy B.'),
+        ], 1, 'Globalna organizacja IANA wyznaczyła nam trzy "darmowe" pule do odcięcia sieci w firmach oraz w małych domach: 10.0.0.0/8, następnie 172.16.0.0–172.31.255.255 oraz na koniec znajome wszystkim małe sieci: 192.168.0.0/16. Wymieniony w odpowiedziach wariant 172.20.5.4 wyśmienicie uderza i wpada idealnie w sam środek bezpiecznego obszaru drugiej, średniej puli.'),
         makeMCQ('Który zakres jest prywatny?', [
           '192.168.0.0–192.168.255.255', '224.0.0.0–239.255.255.255', '1.0.0.0–126.255.255.255', '240.0.0.0–255.255.255.255'
-        ], 0, '192.168.0.0/16 to jeden z trzech standardowych zakresów prywatnych (tzw. RFC 1918).'),
+        ], 0, 'Szeroko rozpoznawalna sieć o klasycznym i masowym rodowodzie na zakres od numeru: 192.168.0.0 aż w górę i daleko do 192.168.255.255. Obejmuje ją najpopularniejszy standard "prywatny", po którym domowe routery od razu nadają numerację każdemu nowo podpiętemu urządzeniu typu WiFi w naszej sypialni, tak aby chronić nasz LAN i nie kolidować w żadnej puli gdziekolwiek z wielkim, surowym, globalnym internetem zewnątrz.'),
         makeMCQ('Co to jest broadcast?', [
           'Adres pierwszego hosta', 'Adres routera', 'Adres do wszystkich hostów w podsieci', 'Adres DNS'
-        ], 2, 'Broadcast jest rozgłoszeniem wysyłanym do wszystkich hostów w danej sieci.'),
+        ], 2, 'Broadcast z angielskiego bezpośrednio i obrazowo to swoiste "rozgłoszenie sieciowe przez megafon". Jeśli tylko Twoja aplikacja (lub sam Windows) na ślepo i desperacko pośle w eter konkretny pakiet właśnie wprost i specjalnie na adres broadcast Twojej bieżącej i przypisanej podsieci, to w tej samej chwili dosłownie każda jedna pobliska maszyna sieciowa obecna razem z Tobą w tym konkretnym małym środowisku fizycznie u siebie w pełni to odbierze, załapie i posłucha.'),
         makeMCQ('Który adres jest zwykle gatewayem w sieci domowej?', [
           '192.168.1.1', '127.0.0.1', '255.255.255.255', '169.254.0.1'
-        ], 0, 'Gateway to zwykle pierwszy dostępny adres hosta przypisany do interfejsu lokalnego routera w tej samej podsieci.'),
+        ], 0, 'Szerokie określenie bramy domyślnej (z angielskiego gateway) jest stosowane od lat i zwyczajowo z definicji przydzielane jednemu bardzo ważnemu urządzeniu, jakie pozwala z pokoju na dalekie "wyjście na zewnątrz w świat" — czyli najczęściej Twojemu domowemu prostemu routerowi. Branżowa niepisana reguła administratorów od zawsze i niemal automatycznie narzucała bez trudu, by przydzielić temu najistotniejszemu urządzeniu po prostu sztywno pierwszy dostępny użyteczny z brzegu punkt w danej puli – a więc w popularnych konfiguracjach jest to standardowe, krótkie .1 na samiutkim początku.'),
         makeMCQ('Do czego służy DNS?', [
           'Do nadawania adresów IP', 'Do tłumaczenia nazw domen na IP', 'Do szyfrowania danych', 'Do rozgłaszania pakietów'
-        ], 1, 'DNS (Domain Name System) to usługa mapująca przyjazne nazwy domen na numeryczne adresy IP.'),
+        ], 1, 'Mechanizm protokołu Domain Name System działa z powodzeniem na zasadzie nieustannej pracy jak niewidzialna internetowa ogólnoświatowa automatyczna "książka kontaktów telefonicznych". Ponieważ same procesory komunikują się i wymieniają pomiędzy sobą dane wyłącznie po absolutnie cyfrowych i suchych adresach (np. bardzo dziwnym 142.250.190.46), to system operacyjny sprytnie używa szybkiej usługi DNS zza kulis za każdym razem, by tylko w minimalnym ułamku jednej sekundy przetłumaczyć dla Twojej wygody zgrabne nazwy ludzkie takie jak (google.pl) na bardzo twardy, odpowiedni dla serwerów liczbowy ciąg docelowego adresowania IP.'),
         makeMCQ('Do czego służy DHCP?', [
           'Do nadawania dynamicznych konfiguracji sieci', 'Do tworzenia podsieci', 'Do filtrowania pakietów', 'Do kompresji IP'
-        ], 0, 'DHCP automatycznie przydziela IP, maskę, bramę i serwery DNS w sieci LAN.'),
+        ], 0, 'Narzędzie o nazwie DHCP (od Dynamic Host Configuration Protocol) to na dobrą sprawę ogromnie pomocna automatyczna usługa, wyręczająca nas wszystkich z wielkich rąk pracy w dzisiejszych domach po każdej jednej wtyczce z kablem w dłoni. W locie na poczekaniu sama rozdaje natychmiast wszelkie puste adresy do użycia i przydziela je do komputerów, dołącza do zestawu wyliczoną w głowie maskę, bramę i DNS w pełni tak gładko automatycznie, tak że podpinając zwyczajny nowy telefon z ulicy do szybkiego WiFi, niczego nie dotykasz ani nie dzwonisz gdzieś o to i wszystko od ręki natychmiast działa z pełnym dostępem we wszystkich oknach.'),
         makeMCQ('Co oznacza APIPA?', [
           'Adres publiczny przydzielony przez router', 'Adres automatyczny przy braku DHCP', 'Adres multicastowy', 'Adres DNS lokalny'
-        ], 1, 'APIPA to zakres 169.254.x.x stosowany w systemach operacyjnych jako fallback, gdy serwer DHCP nie jest osiągalny.'),
-        makeMCQ('Który mechanizm odpowiada za NAT?', [
-          'Translacja adresów z puli prywatnej na publiczną', 'Rozgłaszanie nazw w sieci', 'Przydział serwera WWW', 'Kodowanie zapytań DNS'
-        ], 0, 'NAT pozwala wielu lokalnym urządzeniom (adresy prywatne) korzystać z sieci zewnątrz pod jednym publicznym adresem IP.'),
+        ], 1, 'Funkcjonalność APIPA służy jako sprytna, natywna koło-ratunkowa sztuczka. Kiedy Twój nowoczesny system (np. Windows) budzi się na kablu z wymuszoną funkcją DHCP pobierania adresu ale nie widzi fizycznie pracującego i zasilanego routera do nadawania (brak połączenia dalej), włącza sam ten mechanizm i ustala sobie całkiem zastępczy oraz "ślepy" losowy testowy numer rzędu 169.254.x.x po to tylko i z tego powodu aby pomimo usterki pozwolić maszynie lokalnej w pełni sprawnie porozumieć się swobodnie z kolegą przez kabel siedzącym w rzędzie na biurku.'),
+        makeMCQ('Który protokół odpowiada za NAT?', [
+          'Mechanizm translacji adresów', 'Rozgłaszanie nazw', 'Przydział serwera WWW', 'Kodowanie DNS'
+        ], 0, 'Skrót NAT oznacza bez pudła system Network Address Translation. Jest to mechanizm używany ciągle na routerach stykowych z operatorami w domach do podmiany danych źródła. Dzięki swojej budowie wybitnie pozwala w ten sposób dziesiątkom telefonów maskować ruch na zapleczu we wspólnej sypialni aby ostatecznie bez mniejszych oporów oszczędnie korzystały z usług Internetu będąc sklejone tylko pod jednym małym pojedynczym pulchnym "Publicznym Numerem Prawdziwym", jaki udostępnia kablówka.'),
         makeMCQ('Jaki adres jest broadcastem w 192.168.1.0/24?', [
           '192.168.1.0', '192.168.1.1', '192.168.1.254', '192.168.1.255'
-        ], 3, 'W masce /24 adres rozgłoszeniowy to ostatni możliwy adres, w którym część hosta to same jedynki binarnie (czyli .255).'),
+        ], 3, 'W bardzo tradycyjnej oraz wszechobecnej dla nas masce zapisanej przez proste /24 zawsze i z urzędu cały finalnie przypisany dół to z góry początek 0 (numer własny całej naszej sieci). Co za tym sprytnie od razu idzie: ten najwyższy do osiągnięcia punkt wielkiego rozgłoszeniowego i głośnego okrzyku broadcast dla wszystkich uczestników to bez dwóch zdań naturalnie ostatni dopuszczalny numer używany przez system binarny dla 8 zer hosta, a z definicji wychodzi nam równe na koniec wielkie szczytowe 255.'),
         makeMCQ('Który adres jest adresem sieci dla 10.0.5.7/8?', [
           '10.0.0.0', '10.0.5.0', '10.0.5.7', '10.255.255.255'
-        ], 0, 'Przy masce /8 część sieci to tylko pierwszy oktet. Reszta oktetów w adresie sieci to zera.'),
-        makeMCQ('Ile użytecznych hostów daje sieć z maską /30?', [
+        ], 0, 'Przez zastosowanie narzuconej z góry na dany problem krótkiej maski prefixowej /8 dla rozliczenia komputera, jedynym niezmiennym i rządzonym obszarem całej sieci jest w gruncie rzeczy już całkowicie odhaczony na papierze pierwszy, otwierający oktet adresu IP. Wynika bez wątpienia z tego natychmiast jasno i wyraźnie, że w celu obliczenia bezwzględnego twardego "początku obszaru", ucinamy mu prawą stronę twardo i mocno zamieniamy resztę tych liczb sprzętowych z miejsca na trzy głębokie zera, by w drodze formalności bez wysiłku uzyskać punkt zaczepienia jako solidne równe 10.0.0.0.'),
+        makeMCQ('Ile hostów daje sieć /30?', [
           '1', '2', '4', '254'
-        ], 1, 'Wzór to 2^(32-30)-2. Daje to 4 adresy całkowite, z czego odejmujemy 2 (adres sieci i broadcast), co daje 2 hosty.'),
+        ], 1, 'Żeby policzyć w głowie i nie popełnić potknięcia pojemność dla maszyn dla trudnej podsieci, musisz najpierw solidnie wyczuć i wyliczyć te małe bity zostawione za linią dla sprzętu komputerowego po cięciu z maski sieci. Odejmujemy (Zasada żelazna z puli adresowania wynosi zawsze mocno 32) pełne 32 bity całości pomniejszając o małe twardo na granicy rzucone 30 zajętych dając w drodze zostawione mizerne dwa drobne bity sprzętu luzem na pocieszenie dla hosta. Do powiązanej całości wchodzą te małe skoki dwójkowe z matematyki w formę: (2 do potęgi na wierzchu liczby 2 co rodzi dla punktacji razem sztuk pełne 4) następnie pomniejszamy minus dwa punkty obowiązkowe "na skraju" wchodzące na podatek (początek sieci oraz rozgłoszenie). Daje równe 2 połączone komputery, najczęściej dwa styki między pobliskimi routerami punkt-punkt.'),
         makeMCQ('Jaki jest domyślny CIDR klasy C?', [
           '/8', '/16', '/24', '/30'
-        ], 2, 'Klasa C ma domyślnie 24 bity na część sieci, a 8 na część hosta, stąd /24.'),
+        ], 2, 'Dawniej adresy dzieliło się sztywno na Klasy. W Klasie A była domyślna maska rzędu /8, w Klasie B było /16, a w małej sieci biurowej i domowej Klasie C standardowo z dawna zawsze używano najprostszej i czytelnej dla początkującego admina 255.255.255.0. Taka postać to odpowiednik i odpowiednik bitowy 24 jedynek, które po zapisie potocznym to krótkie ucinane eleganckie wyrażenie: CIDR naturalnie wynoszące równe /24.'),
         makeMCQ('Jaki jest zakres klasy D?', [
           '224.0.0.0–239.255.255.255', '240.0.0.0–255.255.255.255', '192.0.0.0–223.255.255.255', '128.0.0.0–191.255.255.255'
-        ], 0, 'Klasa D (zaczynająca się od bitów 1110) służy do transmisji grupowych (multicast).'),
+        ], 0, 'Adresy od równego początku numeracji 224 do z grubsza końca 239 rezerwowano na Klasę specjalnego zastosowania – potężnie wyróżniającą się Klasę D. Tych obszarów z zasady nigdy absolutnie i przenigdy nie wolno wręczyć tak po prostu bezpośrednio lokalnym, typowym systemom domowym. Używane one są przez maszyny sieciowe wyłącznie tylko do kierowania sygnałów typu Multicast - tj. strumieniowania danych w wielkim skomplikowanym obiegu powiedzmy na przykład dla sygnałów szerokopasmowej i ciężkiej z racji transferu domowej telewizji szeroko w osiedlu, gdzie dany obraz ma trafić do specyficznej małej grupy odciętych i dedykowanych abonentów zamiast po całej reszcie bloków.'),
         makeMCQ('Jaki jest zakres klasy E?', [
           '224.0.0.0–239.255.255.255', '240.0.0.0–255.255.255.255', '1.0.0.0–126.255.255.255', '127.0.0.0–127.255.255.255'
-        ], 1, 'Klasa E (od 240 w górę) została zarezerwowana do celów eksperymentalnych oraz przyszłego użycia.'),
+        ], 1, 'Z całej struktury po odsiewie podsieci, cała ostatnia zostawiona i nie ruszana z górnej strefy pula (w przedziale wynoszącym mocno i stabilnie 240 wzwyż na oktet) została nałożona przez inżynierów u samych historycznych podstaw tworzenia i ustrukturyzowana definitywnie jako wielka zastrzeżona w cieniu Klasa eksperymentalna E. Utrzymuje do dziś to że w klasycznym użyciu internetowym domowym po podpięciu to rzucenie w komputer w ogóle i z definicji by po prostu natychmiast fizycznie się zbuntowało powszechnie dając gruby i czysty gładki odmowny błędny blok na wejściu sieci.'),
         makeMCQ('Który adres należy do klasy B?', [
           '150.10.1.1', '200.1.1.1', '20.1.1.1', '240.1.1.1'
-        ], 0, 'Klasa B ma pierwszy oktet w przedziale 128 - 191.'),
-        makeMCQ('Który adres jest adresem pętli zwrotnej (loopback)?', [
+        ], 0, 'Żeby swobodnie w oparciu o pamięć zakwalifikować dany IP bez pomocy do przypisanego zbioru, najłatwiej to tylko szybko skontrolować po liczbowej wariancji u jego początku w lewej pierwszej części (tzw. pierwszego lewego całego oktetu). Ogólnie duża sieć na Klasie A ma twarde wycięcie od 1 do równego 126. Po nim dopiero naturalnie startuje szerzej średnia, pojemna we wnikanie i stabilna Klasa B. Wynosi ona rozkrokiem mocno twardo zasięg od równego 128 w górę biegiem płynnie po zbiór liczony idealnie aż tu na same granice wzdłuż do 191 w skali od lewej strony oktetu. Cyfra dająca tu przedziale ułamkowe 150 leży zadowolonym stanem właśnie pośrodku tego szerokiego odcinka i dlatego z twardego miejsca definiuje go jako duży obszar należący w strefie klasy z literą B.'),
+        makeMCQ('Który adres jest pętlą zwrotną?', [
           '127.0.0.1', '169.254.0.1', '192.168.0.1', '224.0.0.1'
-        ], 0, 'Pula 127.x.x.x jest zarezerwowana na pętlę zwrotną interfejsu własnego urządzenia (tzw. localhost).'),
+        ], 0, 'Adres bazowy 127.0.0.1 (albo technicznie z użycia określenia nazwy tekstowej pod postacią "localhost") jest potocznie nazywany pętlą zwrotną. Wysłany w stronę eteru w tym miejscu jeden mały pakiet z pytaniem kontrolnym przez nasz procesor absolutnie z zasady o ogóle nie "wystrzeli z fizycznej struktury drutu", tylko jak bardzo rzucony z ręki okrągły sprytny i okrągły bumerang - momentalnie odbije bez wysiłku i niemal samoistnie wróci gładko prosto idealnie bez drogi przed ten sam port wyjściowy z przodu maszyny, upewniając tym samym diagnostycznie bez zbędnego wzywania pomocy Twoją własną wewnętrzną kartę sieciową i oprogramowanie o bezawaryjnej pełnej obsłudze sprzętowej w komputerze.'),
         makeMCQ('Które urządzenie najczęściej pełni rolę gatewaya?', [
           'Hub', 'Switch', 'Router', 'Repeater'
-        ], 2, 'Brama domyślna to brama wyjściowa poza sieć LAN, co jest główną rolą routera.'),
+        ], 2, 'Kiedy w prostej infrastrukturze musimy zapewnić przejście graniczne aby wszystkie małe domowe pliki mogły swobodnie przeskakiwać daleko z wewnętrznego bezpiecznego kółka do głośnego i masowego oceanu w twardej wielkiej sieci światowej - do wyznaczenia takowej wielkiej bezpiecznej i grubej drogi pod spodem wymagamy tzw. "Bramy Domyślnej". Urządzenia starszego sortu oparte jak Hub czy przełącznik sprzętowy na mac adresie czyli popularny Switch mają fizyczne zaprogramowane zdolności tylko po mniejszym małym płaskim obszarze blisko siebie nawzajem. Wyższym wymogiem oraz definitywnie docelowo w całości rolę inteligentnego zarządcy przeprawowego granicznego wejścia "Gateway" podejmuje niemal zawsze wyłącznie czarna skrzynka sprzętowa na styku dwóch stref jaką jest wyliczeniowo mocny i zdolny naturalny procesowo pełnoprawny mały dedykowany do przerzutu Router.'),
         makeMCQ('Co jest częścią hosta w masce 255.255.255.0?', [
           '0 bitów', '8 bitów', '16 bitów', '24 bity'
-        ], 1, 'Maska 255.255.255.0 zostawia tylko ostatni oktet (8 bitów) do adresowania urządzeń/hostów.'),
-        makeMCQ('Jak poprawnie oblicza się adres sieci?', [
+        ], 1, 'Zera widoczne bez potknięcia na gołe oko po stronie skrajnej na prawej obudowie w tradycyjnym zapisie gęstej użytej pełnej i grubej dziesiętnej odciętej maski wskazują z racji tego twardo wyłapane od lewej wszystkie wolne obszary swobodne pule pod same do przypisania stacji użyteczne fizyczne miejsca komputerów hosta do sieci na tablicy. Wartość naturalna od lewej równa potężna zapchana w 255 to u samego czoła bitowym okiem podstawa jako osiem jedynek na styk i zero reszty. Gdy wyjdziemy ze struktury 3x 255 - otrzymujemy 24 zjedzone i twarde dla inżynierów stałe niezmienne narzucone bity na podsieć bez pola manipulacji. A całe to pełne w 8 miejscach z tyłu na dnie puste w oktecie samo leżące zero, wyciągnięte ręką swobodnie pozostawia w naturalny zaszczyt po sobie twardo na stole w czystości tylko pełne gęste od dołu i użyteczne dla prac biurowych i włączonych kabli dokładnie odmierzone całe osiem pustych wolnych czystych "bitów" rezerwy na sam koniec urządzenia po stronie użytkowników hosta.'),
+        makeMCQ('Jak oblicza się adres sieci?', [
           'IP OR maska', 'IP XOR maska', 'IP AND maska', 'IP NOT maska'
-        ], 2, 'Adres sieci wylicza się na poziomie maszynowym poprzez operację logiczną AND (koniunkcja bitowa) na adresie IP i masce.'),
+        ], 2, 'Do błyskawicznego w maszynie, sprzętowego odnalezienia początku (od zerowego równego dolnego skraju sieci i jej stałego początku) komputery u nas ruszają bez ociągania po prostu stosując sprytną logikę do szybkiej operacji pod tytułem twardo "połącz bezwarunkowo warunek bitowy wynikowo z nałożenia IP nałożonym przez połączoną stałą koniunkcję MASKĄ". Biorą binarną postać obu długich po lewej gęstych numerów na styk do siebie, wymnażają używając bramki z definicji naturalnie po kolei logicznego bitowego odczytu "AND" z prądu układu logicznego równego wynikowo dając: rzucone "1 po uderzeniu przez 1 odda punkt wyniku 1; wszędzie dookoła zero daje zero". I tak gładko czysty równy i pozbawiony mętów osad na dnie daje nam pięknie początek - sam dół bez sprzętu tj równy dolny od dołu pierwszy i gładki odcięty goły i dolny rzut czyli pożądanego mocnego i stałego bazowego i gołego początku dla naszej całej głównej czystej podsieci równego nazwanego "adresem logicznym równo i dolnie początku obszaru podsieci".'),
         makeMCQ('Jak oblicza się broadcast najprościej?', [
-          'Wszystkie bity hosta na 1', 'Wszystkie bity sieci na 1', 'Wszystkie bity na 0', 'Dodaje się adres bramy'
-        ], 0, 'Adres rozgłoszeniowy (broadcast) w ramach danej podsieci ma wszystkie bity części przynależnej do hosta ustawione na jedynki.'),
+          'Wszystkie bity hosta na 1', 'Wszystkie bity sieci na 1', 'Wszystkie bity na 0', 'Dodaje się gateway'
+        ], 0, 'Wielki ogólnosieciowy punkt szerokiego krzykliwego rozgłosu do wszystkich równego szczebla - czyli Broadcast dla oprogramowania - liczy się od spodu banalnie biorąc znany punkt u nas dla sieci po to by na dnie obszaru wymierzyć wszystkie dolne i dolne bity należące tylko dla małych sprzętów luźnych - tzn części z hostów i dosłownie natywnie przestroić je w systemie dwójkowym ręcznie po stronie sprzętu sztucznie twardo na gęste od brzegu jedynki pod maską. To podniesie wielką sumę okrągle na maksa po kres możliwości dla danej małej części bloku od dołu dając finalnie niezakłócony adres dachu - tj punkt z góry zwany właśnie w całości Broadcast.'),
         makeMCQ('Co oznacza unicast?', [
           'Jeden do jednego', 'Jeden do wszystkich', 'Jeden do grupy', 'Wiele do jednego'
-        ], 0, 'Unicast to tradycyjna transmisja punkt-punkt, od jednego konkretnego nadawcy do jednego konkretnego odbiorcy.'),
+        ], 0, 'Samo pojęcie uniwersalne Unicast w branży IT bierze i oznacza prostą strukturę jak z definicji: uni oznacza w tym przypadku jedność. W rzetelnej i równej u nas po dnie wymianie i praktyce naturalnie polega ono z góry jak po kablu równo na prywatnym jednym małym gładkim, cichym prostym połączeniu jak dwoje rozmawiających po uchu między gęstą resztą ludzi bez tłumu między stykami maszyny wysyłającej wprost dokładnie fizycznie punkt w punkt prosto rzetelnie i grubo w z rzutem po okablowaniu wyliczonego odbiorcy z góry od deski dla pojedynczego tylko jedynego i pożądanego drugiego uchem słuchającego nas na styk hosta.'),
         makeMCQ('Co oznacza multicast?', [
           'Jeden do jednego', 'Jeden do wszystkich', 'Jeden do grupy', 'Każdy do każdego'
-        ], 2, 'Multicast to efektywne wysyłanie tego samego strumienia danych od jednego nadawcy do sprecyzowanej grupy odbiorców.'),
+        ], 2, 'Kombinacja powiązań od nazwy rozgłośnej "Multicast" polega na jednym wyśrodkowanym mechanizmie działania rzuconym przez dno od z góry po rzucie rzędu do tłumu na skos na jeden strumień: "multi" równa się od deski równe "wiele rąk w górze naraz". Odbywa on wysyłanie sprytnego rzutu jednym kablem danych strumieniujących z boku po dnie rzuconych u podstaw mocno i z góry nie do ogółu ale stricte ukierunkowanych tylko po równym tłumie w grupę zdeklarowanych w rzędzie wyciągniętych przez protokoły do odbierania specjalnych zrzutków, powiązanych połączonych i gęstych pod dnem głośnych maszyn rzędu "grupy na styk odbiorców oczekujących transmisji" a nie na oklep i losowo z hukiem na wszystkich razem bez ładu na osiedlu.'),
         makeMCQ('Czy adres publiczny może być w prywatnym zakresie?', [
-          'Tak', 'Nie', 'Tylko w klasie A', 'Tylko przy wykorzystaniu NAT'
-        ], 1, 'Adresy z pól zdefiniowanych jako prywatne (RFC 1918) nie mogą być trasowane jako publiczne IP w globalnym Internecie.'),
-        makeMCQ('Jaki port i protokół standardowo kojarzy się z usługą DNS?', [
+          'Tak', 'Nie', 'Tylko w klasie A', 'Tylko przy NAT'
+        ], 1, 'Mocna definicja twardej branży kategorycznie ucina nam tutaj bez reszty sprawę w tym wzdłuż punkcie: Nie, to co u nas w sieci z rzędu z góry stałe ma być darmowe do sypialni - jest twardo uznane jako "Prywatny wewnętrzny obszar wolny" o twardych zakresach z rzędu ustalonych np 192.168.0.0, to z góry nigdy za żadne skarby nie będzie od dłuższego czasu z przodu publicznie wolne i równe trasowane u dołu przez routery jako widzialne "od czoła punkt w świecie dla globalnego punktu sieci routerów po globie od strony otwartego wielkiego Internetu dla gości publicznych" – są z dołu to dwa osobne, nie łączące w styk i wykluczające po krawędzi dwa twardo gęste u spodu byty równo dla siebie oddalone z dwóch odrębnych światów od stacji i podziałów dla rzutów sieci.'),
+        makeMCQ('Jaki port i protokół kojarzy się z DNS?', [
           'TCP/21', 'UDP/53', 'TCP/80', 'UDP/67'
-        ], 1, 'System rozwiązywania nazw domenowych DNS (zapytania) wykorzystuje głównie pakiet UDP na porcie 53.'),
-        makeMCQ('Jaki port i protokół kojarzy się z protokołem DHCP?', [
+        ], 1, 'Lekki dla kabla, skrojony do wymiany błyskawicznych w sieci od góry szybkich prostych zapytań system z książką domen i z urzędu usługa w sieci nazywana do zera tłumaczeniem DNS, pracuje on w standardach rzuconych tu powszechnie po świecie standardowo z marszu nasłuchując rzutem szybkiego, cienkiego i od razu z dołu puszczonego "niegwarantowanego" ale pędzącego protokołu z deski na krawędzi dla UDP wchodząc po nasłuchu zawsze domyślnie równego gęstego w dole na twardy mały odcięty na styku wejścia systemów dedykowany stały mały równy z urzędu w oprogramowaniu i znany od ręki z rzędu naturalnie gładko port: 53.'),
+        makeMCQ('Jaki port i protokół kojarzy się z DHCP?', [
           'UDP/67 i UDP/68', 'TCP/25 i TCP/110', 'UDP/53', 'TCP/443'
-        ], 0, 'DHCP wykorzystuje tryb klient-serwer przesyłając pakiety za pomocą protokołu UDP odpowiednio na portach 68 (klient) i 67 (serwer).'),
-        makeMCQ('Który z podanych adresów jest publiczny?', [
+        ], 0, 'Służąca na podrzucanie bez ociągania masowo i równo usługa gładka wydająca komputeryzacji małe IP i gładkie tło do działania w dnie sieci od routera - to DHCP i operuje gładko i sprytnie przy zapytaniach dla telefonów i domów twardo na dwóch lekkich z dołu numerach kanału komunikacyjnego dla pakietów rzuconych z UDP. Sama prosząca od boku maszyna klienta startuje do sieci na wejście pytaniem po gładkim swoim UDP o gęstym z rzędu dolnym porcie 68, a duży rzucony do nas twardo mocny sprzętowy od serwera wielki router nasłuchuje z pokorą pod ścianą dla gładkiego puszczenia rzutem wejściowego kanału we wtyczce wejścia gęstego odbitego kanału odpowiedzi: stałe dla niego 67.'),
+        makeMCQ('Który adres jest publiczny?', [
           '192.168.1.20', '10.1.1.1', '172.31.5.5', '8.8.4.4'
-        ], 3, 'Adres 8.8.4.4 to popularny, publiczny i w pełni rutowalny adres serwera DNS firmy Google (nie leży w puli prywatnej).'),
-        makeMCQ('Co najczęściej zrobi komputer z systemem Windows, gdy minie limit czasu zapytania DHCP?', [
-          'Wyłączy kartę sieciową', 'Ustawi autokonfigurację APIPA (169.254.x.x)', 'Przejdzie automatycznie na IPv6', 'Ustawi na sztywno IP 192.168.1.100'
-        ], 1, 'W przypadku braku odpowiedzi serwera DHCP, system wygeneruje sobie tzw. adres link-local z puli APIPA 169.254.0.0/16.'),
+        ], 3, 'Wystarczy tutaj czujnie odciąć nam dla jasności wszystko to co używa się u nas do domu: a więc gęsto wszystkie adresy po bokach tj gładkie rzucone do puli w od strony równe domowe numery prywatne takie jak całe 192.168 wzdłuż styków domu czy 172 po sieci wprost od dołu stref rzutów 31 czy korporacyjne na 10.1. Wyrzucone dla ułatwienia odpowiedzi zostały wszystkie trzy prywatne wewnątrz obszaru u góry - dla testów i odpowiedzi pozostał z boku rzucony nam gładki nie prywaciarz a sam król Internetu publicznego, na pewno nie domowy z reszty dla rzutu równy powszechnie w świecie używany z twardym stykiem dla znanych systemów: twardo od google ogólnie od dawna równy znany głośny serwer pomocny dns z góry od numeru w całości bez potknięcia na twardo 8.8.4.4.'),
+        makeMCQ('Co najczęściej zrobi komputer, gdy nie dostanie DHCP?', [
+          'Wyłączy kartę sieciową', 'Ustawi APIPA 169.254.x.x', 'Przejdzie na IPv6', 'Zamieni IP na publiczne'
+        ], 1, 'Mechanizm obronny samego Windowsa u góry z braku powiązań jeśli mocno wymusisz z dołu sieć ale router jest wyłączony czy uszkodzony rzuca do ratowania z braku gęstego i odciętego DHCP wewnątrz. System w takiej sytuacji braku usług zmuszony do szukania - na ślepo i o z urzędu samodzielnie w obawie by nie w rzucie siedzieć na goło, nadaje sam bez pomocy na krawędzi sobie zastępczy "ślepy" wolny testowy roboczy numer po rzutku z puli twardo specjalnie przewidzianej na awarię: to rezerwa APIPA czyli u dołu ciąg z rzędu w wymiarach od u góry wyliczanych powiązanych awaryjnych styków dla cyklu 169.254 z luźną na sprzęt dla końcówki i w rzutach równego dnem obszaru x.x'),
         makeMCQ('Który adres jest zwykle pierwszym hostem w podsieci?', [
-          'Adres podsieci', 'Adres rozgłoszeniowy (Broadcast)', 'Adres sieci + 1', 'Adres sieci - 1'
-        ], 2, 'Pierwszy możliwy do przypisania adres dla urządzenia to pierwszy adres bezpośrednio po adresie opisującym samą sieć.'),
+          'Adres sieci', 'Broadcast', 'Adres sieci + 1', 'Adres sieci - 1'
+        ], 2, 'Kiedy po wyliczeniu masz odnaleziony goły i bez reszty "Adres z dołu pod dno dla zerowania samej twardo gładko i mocno sieci" z twardym zerem np: 192.168.1.0 to jest w użyciu całkowicie nienaruszalny i zajęty przez reguły jako sucha mocna stała dla oprogramowania główna twarda do oznaczenia i opisania tablic routingów "baza nazwa dla terytorium pod obszarem podsieci", nie wciśniesz tego adresu w użycie pod komputer u nas w dnie sieci fizycznie i programowo i sprzętowo. Zatem pod spodem uderzający zaraz do rąk pierwszorzędnie użyteczny do rąk swobodny po prostu legalny sprytny wolny czysty w puli sprzętowy domowy dół z rzędu to zawsze naturalnie tylko z góry stały i po uderzeniu stały i znany matematycznie punkt w górę od uderzonego równego dla spodu twardo dachu czyli pod nim znane powszechnie bez problemu: to Adres dolnej małej na dole małej twardo sieci równo plus jeden z góry: + 1.'),
         makeMCQ('Który adres jest zwykle ostatnim hostem w podsieci?', [
-          'Broadcast - 1', 'Broadcast + 1', 'Adres sieci', 'Zawsze domyślna brama'
-        ], 0, 'Ostatnim dostępnym adresem IP dla maszyny użytkowej jest adres poprzedzający adres Broadcast danej puli.'),
-        makeMCQ('Co zapewnia NAT w praktyce w typowej sieci domowej?', [
-          'Jeden publiczny adres IP dla wielu urządzeń sieci lokalnej', 'Wiele publicznych adresów przypisanych dla jednego urządzenia', 'Wyłącznie uwierzytelnianie i szyfrowanie', 'Automatyczną zmianę adresów serwerów DNS'
-        ], 0, 'PAT/NAT Masquerade powoduje, że cały ruch wyjściowy z lokalnych maszyn widziany jest z zewnątrz jako jedno globalne IP z różnymi portami.'),
-        makeMCQ('Który zakres opisuje pulę prywatną przynależną klasie A?', [
+          'Broadcast - 1', 'Broadcast + 1', 'Adres sieci', 'Gateway zawsze'
+        ], 0, 'Analizując końcówki i twardy spód pod dnem puli dla rozliczeń u dołu dla małej używanej strefy z boku wycinka gładkiej sieci na sprzęt rzucony z wewnątrz zawsze uderzymy po szczycie i dachu mocnego w od górnej sieci gładkiego wyliczonego twardo matematycznie górnego stałego szczytu "służącego od wyliczeń na rzuty ogólno grupowe z dachu do spodu" pod twardą gładką równą z brzegu z przodu bez pomyłek z urzędu przypisaną po rzucie maską nazwą czyli mocnym megafonem "Rozgłoszenie czyli naturalny gładki stały okrzyk góry Broadcast". Jest on twardo nietykalny rzutem w użyciu jako na goło do komputera na wpięcie fizyczne w dno na uchu do maszyny, z reguł oznacza i z góry naturalnie podaje że absolutnie ostatnim na liście z ręki pod użyteczny styk portu twardo do ręki zostaje z tyłu na pod spodem dla na wpis odrzucony i do wciśnięcia po krawędzi to od niego gładki minus z podliczeniem jednym - czyli zawsze bezpieczny twardy z dołu górny rzut tuż pod nim: sam pełny stały od dachu gładki wyznaczony bezpieczny dla komputera równo z deski powszechnie dany Broadcast u minus pełen i oznaczony z rzędu dla wygody jeden z dołu pod nim (-1).'),
+        makeMCQ('Co oznacza NAT w praktyce domowej?', [
+          'Jeden publiczny adres dla wielu urządzeń lokalnych', 'Wiele publicznych adresów dla jednego urządzenia', 'Wyłącznie szyfrowanie', 'Zmianę DNS na DHCP'
+        ], 0, 'W warunkach twardo ograniczonych i domowych, mechanizm na małym gładkim pudełku przy ścianie tj translacja sprytna po uchu i o nazwie szybkiej translacji "NAT" po sieci twardo sprytnie ukrywa na krawędzi wszystko. Pozwala wszystkim Twoim komputerom, smartfonom z prywatnymi ukrytymi na zapleczu domowymi adresami ze środka równo z góry i bezpiecznie i w sumie łączyć wszystkie strefy dookoła pod rzut do otwartego publicznego surowego gładko bez problemu od krawędzi routera globalnego rzędu wielkiego pełnego publicznego styku powiązanego u góry ze stykami przez w pełni jeden równy udostępniany twardo po kablu od dostawcy dany jeden zewnętrzny mały opłacany rzut numer IP z powiązaniami. Od środka sprytnie żaden gładko serwer na styku ze świata na pewno z tyłu naturalnie twardo wręcz fizycznie od wciśnięcia przez ten system w krawędzi nie zobaczy tych od środka uciętych schowanych po pokoju lokalnych prywatnych dnem i spodem telefonów czy telewizorów na półce a wyłącznie równe publiczne dno.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy A?', [
           '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '127.0.0.0/8'
-        ], 0, 'Rozwiązanie to wprowadzono standardem RFC1918. Zakres od 10.0.0.0 do 10.255.255.255 to najpojemniejsza prywatna pula (klasa A).'),
-        makeMCQ('Który zakres opisuje pulę prywatną przynależną klasie B?', [
+        ], 0, 'Klasa po klasyfikacji pod strefy ogólna pierwsza A uderzona gładko z przodu od małych rzutów dnem dla z boku do wycinka pul z rzędu ma tylko jeden główny i stały dla domów rzut wyznaczony dla darmowych wewnętrznych do stref z sieci dnem stały rzut darmowych dnem uciętych i twardych pul, mianowicie pod stały gładko od lewej zaczęty i rozciągający dół w dnie na rozpiętość u spodu w gładkie z pod spodu aż po brzegi wyliczenie na u dołu pule równo dla potężnie z przodu od styków 10 po kropkę na z przodu powiązane krawędzie twarde do 0 z rzutem po brzegu u spodu dla bazy 0 wraz z u dołu przypisanym grubym stałym /8.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy B?', [
           '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '224.0.0.0/4'
-        ], 1, 'Zakres 172.16.0.0 do 172.31.255.255 używa maski /12 i zalicza się strukturalnie do prywatnych sieci klasy B.'),
-        makeMCQ('Który zakres opisuje pulę prywatną przynależną klasie C?', [
+        ], 1, 'Prywatny rzut powszechny dla równej powiązanej dnem strefy i równy do gładkich sporych powiązanych obszarów klasycznie powiązanej ze środkowymi sieciami po brzegu po Klasie B gładko dnem i stykami zaczyna powiązany gładki swój u spodu rejon u dołu na u spodu od krawędzi u gładko boku powiązanych 172.16.0.0 by gładko biec po dołach pul twardo wyznaczonych aż na gładkie po uchu powiązane ze szczytem dnem puli wielkiej pojemnej w górę od powiązanych po wyżej stref z dołu pule u gładko brzegu 172 po przodu boku w górę na szczycie w punktach dla powiązań od styków z tyłu na dnie dla dół w gładkie 31.255.255.'),
+        makeMCQ('Jaki zakres ma adres prywatny klasy C?', [
           '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', '240.0.0.0/4'
-        ], 2, 'Przedział od 192.168.0.0 do 192.168.255.255 to najbardziej znana pula prywatna odpowiadająca bloku klasy C.'),
-        
-        // NOWE PYTANIA Z WIEDZY DO EGZAMINU INF.02:
-        makeMCQ('Co to jest VLSM?', [
-          'Protokół routingu wektora odległości',
-          'Zmienna długość maski podsieci',
-          'Mechanizm translacji adresów sieciowych',
-          'Wirtualna sieć lokalna'
-        ], 1, 'VLSM (Variable Length Subnet Mask) pozwala na elastyczne dzielenie głównej sieci na podsieci o różnych i dopasowanych do potrzeb rozmiarach, oszczędzając w ten sposób pule adresów.'),
-        makeMCQ('Jaki adres MAC odpowiada adresowi rozgłoszeniowemu (broadcast) w sieci Ethernet?', [
-          '00:00:00:00:00:00',
-          'FF:FF:FF:FF:FF:FF',
-          '255.255.255.255',
-          '01:00:5E:00:00:00'
-        ], 1, 'Adres rozgłoszeniowy (broadcast) na poziomie warstwy drugiej (MAC) składa się sprzętowo z samych jedynek binarnych. W zapisie szesnastkowym przekłada się to na pełne FF:FF:FF:FF:FF:FF.'),
-        makeMCQ('Ile warstw ma model referencyjny OSI?', [
-          '4', '5', '7', '9'
-        ], 2, 'Model referencyjny ISO/OSI składa się teoretycznie z 7 warstw: Fizycznej, Łącza Danych, Sieciowej, Transportowej, Sesji, Prezentacji oraz Aplikacji.'),
-        makeMCQ('Który protokół używa specjalnych komunikatów Echo Request i Echo Reply?', [
-          'TCP', 'UDP', 'ICMP', 'ARP'
-        ], 2, 'Powszechnie znane narzędzie diagnostyczne `ping` korzysta z kontrolnego protokołu ICMP, wysyłając w świat ramki Echo Request i oczekując na zwrotne Echo Reply.'),
-        makeMCQ('Jakie polecenie w systemie Windows pozwala błyskawicznie wyświetlić fizyczny adres MAC karty sieciowej?', [
-          'ping', 'tracert', 'ipconfig /all', 'netstat -a'
-        ], 2, 'Przełącznik /all w konsolowym poleceniu ipconfig zwraca dużo szersze, szczegółowe dane interfejsów sieciowych. W systemie Windows znajdziemy tam MAC oznaczony jako "Adres fizyczny".'),
-        makeMCQ('Jaka jest wymagana, standardowa maska dla łącza typu punkt-punkt (point-to-point) pomiędzy routerami, która nie marnuje zasobów?', [
-          '255.255.255.0 (/24)',
-          '255.255.255.252 (/30)',
-          '255.255.255.248 (/29)',
-          '255.255.255.254 (/31)'
-        ], 1, 'Zastosowanie maski /30 (255.255.255.252) wydziela z dużej puli dokładnie 4 adresy. Odejmując adres podsieci i jej broadcast, zostają perfekcyjnie 2 adresy użyteczne, idealne na każdą stronę łącza między dwoma routerami.'),
-        makeMCQ('Co oznacza pole TTL widoczne w nagłówku pakietu protokołu IPv4?', [
-          'Time To Live (Czas życia)',
-          'Total Transmit Length (Całkowita długość transmisji)',
-          'Time To Leave (Czas na opuszczenie interfejsu)',
-          'Transport Type Layer (Warstwa typu transportu)'
-        ], 0, 'TTL (Time To Live) to specjalne pole dekrementowane (zmniejszane) o 1 przez każdy przebyty punkt (router). Gdy licznik dojdzie do 0 pakiet jest odrzucany. Chroni to globalną sieć przed nieskończonym zapętleniem ruchu.'),
-        makeMCQ('Działanie którego protokołu pozwala powiązać numeryczne adresy IP z fizycznymi adresami sprzętowymi MAC w obrębie sieci LAN?', [
-          'DNS', 'DHCP', 'ARP', 'ICMP'
-        ], 2, 'Gdy host zna IP lokalnego urządzenia, używa ARP (Address Resolution Protocol), krzycząc broadcastem w warstwie 2 prośbę o podanie adresu fizycznego (MAC) odpowiadającego danemu zapytaniu.'),
-        makeMCQ('Na jakiej warstwie modelu OSI pracują inteligentne przełączniki (switche)?', [
-          'Warstwa fizyczna (1)',
-          'Warstwa łącza danych (2)',
-          'Warstwa sieciowa (3)',
-          'Warstwa transportowa (4)'
-        ], 1, 'Klasyczny i zarządzalny przełącznik (Switch) działa logicznie w warstwie 2 (Łącza Danych). Czyta on nagłówki ramek pod kątem docelowych adresów MAC i przełącza porty zgodnie z własną tablicą CAM.'),
-        makeMCQ('Na jakiej warstwie modelu referencyjnego OSI swoje główne decyzje podejmują routery?', [
-          'Warstwa fizyczna (1)',
-          'Warstwa łącza danych (2)',
-          'Warstwa sieciowa (3)',
-          'Warstwa aplikacji (7)'
-        ], 2, 'Routery zajmują się ruchem międzysieciowym. Zaglądają do nagłówka by wyciągnąć logiczny adres docelowy IP, więc pełnią swoją wiodącą rolę w warstwie 3 (Sieciowej).'),
-        makeMCQ('Który port jest standardowo przewidziany do obsługi nieszyfrowanego ruchu protokołu HTTP?', [
-          '21', '22', '80', '443'
-        ], 2, 'Protokół webowy HTTP z założenia działa i nasłuchuje nieszyfrowanych połączeń na porcie warstwy transportowej numer 80 protokołu TCP.'),
-        makeMCQ('Który port domyślnie jest przewidziany dla bezpiecznego i szyfrowanego wariantu HTTPS?', [
-          '21', '80', '443', '3389'
-        ], 2, 'Do bezpiecznej, szyfrowanej transmisji webowej z wykorzystaniem TLS (protokół HTTPS) serwery od zawsze standardowo stosują nasłuchujący port 443 TCP.')
+        ], 2, 'Stara klasyfikacja do domów naturalnie wyrzuciła gładko z przodu dla ujęcia w sieciach biurowych z powiązanymi sztywno małymi klasami uciętymi na styk z C popularnie i z urzędu w dołach bardzo wszystkim powszechnie rzutem ze spodu znane po brzegu gładkie w gładkim i gęstym do podłogi gładko po urzędzie małym na styk wyciętym pulom gładkim w małych powszechnych 192.168 dnem pul u góry rzuconych w sieć pod znakiem gładkiego i gęstego równego od maski z prefiksem /16 dnem obszaru.')
       ];
 
       function makeMCQ(prompt, choices, answerIndex, explanation, type = 'Wiedza') {
-        return {
-          kind: 'static',
-          type,
-          prompt,
-          choices,
-          answerIndex,
-          explanation,
-          source: 'bank'
-        };
+        return { kind: 'static', type, prompt, choices, answerIndex, explanation, source: 'bank' };
       }
 
-      function ipToInt(ip) {
-        return ip.split('.').reduce((acc, part) => (acc << 8) + Number(part), 0) >>> 0;
-      }
-
-      function intToIp(intVal) {
-        return [24, 16, 8, 0].map(shift => (intVal >>> shift) & 255).join('.');
-      }
-
-      function maskFromPrefix(prefix) {
-        const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
-        return intToIp(mask);
-      }
-
-      function prefixFromMask(mask) {
-        return mask.split('.').map(Number).reduce((sum, octet) => sum + octet.toString(2).split('1').length - 1, 0);
-      }
-
-      function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-
-      function randomChoice(arr) {
-        return arr[randomInt(0, arr.length - 1)];
-      }
-
+      function ipToInt(ip) { return ip.split('.').reduce((acc, part) => (acc << 8) + Number(part), 0) >>> 0; }
+      function intToIp(intVal) { return [24, 16, 8, 0].map(shift => (intVal >>> shift) & 255).join('.'); }
+      function maskFromPrefix(prefix) { return intToIp(prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0); }
+      function prefixFromMask(mask) { return mask.split('.').map(Number).reduce((sum, octet) => sum + octet.toString(2).split('1').length - 1, 0); }
+      function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+      function randomChoice(arr) { return arr[randomInt(0, arr.length - 1)]; }
+      
       function shuffle(array) {
         const a = array.slice();
         for (let i = a.length - 1; i > 0; i--) {
@@ -593,9 +563,7 @@
         return a;
       }
 
-      function formatBinaryOctet(n) {
-        return n.toString(2).padStart(8, '0');
-      }
+      function formatBinaryOctet(n) { return n.toString(2).padStart(8, '0'); }
 
       function buildQuestionObject({ prompt, choices, answerIndex, explanation, type = 'Obliczenia', source = 'generated' }) {
         return { kind: 'generated', type, prompt, choices, answerIndex, explanation, source };
@@ -603,16 +571,14 @@
 
       function genPrivatePublicQuestion() {
         const isPrivate = Math.random() < 0.5;
-        let ip;
-        let answerIndex;
-        let explanation;
+        let ip; let answerIndex; let explanation;
         if (isPrivate) {
           const r = randomChoice(['10', '172', '192']);
           if (r === '10') ip = `10.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(0,255)}`;
           if (r === '172') ip = `172.${randomInt(16,31)}.${randomInt(0,255)}.${randomInt(0,255)}`;
           if (r === '192') ip = `192.168.${randomInt(0,255)}.${randomInt(0,255)}`;
           answerIndex = 0;
-          explanation = `Adres ${ip} mieści się w przewidzianej prawnie puli prywatnej i nie jest adresowalny w globalnym Internecie.`;
+          explanation = `Adres ten należy do tzw. strefy prywatnej (10.x.x.x, 172.16-31.x.x lub 192.168.x.x). To dedykowane, darmowe zakresy przewidziane wyłącznie na budowę lokalnych domowych i wewnątrz-firmowych (LAN) szczelnych sieci w routerze, niewidocznych pod spodem od strony wielkiego internetowego świata poza routerem na kablu.`;
         } else {
           const candidates = [
             `8.${randomInt(0,255)}.${randomInt(0,255)}.${randomInt(1,254)}`,
@@ -622,10 +588,10 @@
           ];
           ip = randomChoice(candidates);
           answerIndex = 1;
-          explanation = `Wskazany adres ${ip} nie pokrywa się z żadnym zadeklarowanym zakresem prywatnym (RFC 1918), więc automatycznie uważa się go za w pełni publiczny.`;
+          explanation = `Rozpoznać ten konkretny wygenerowany na wyrost gładki zewnętrzny IP można po tym, że wyraźnie z boku nie pochodzi na z definicji publicznych twardych i stałych dla stref domowych i biur ujętych dla wycięcia wyłącznych prywatnych i schowanych za krawędzią bloków (mowa o wbudowanych 10.x, 172.16-31.x z urzędu czy popularnym u boku dnem rzutu pod dom twardo 192.168.x.x). Stąd gładko na krawędzi bez pomyłki po sieci ten punkt w świecie staje się jawny, opłacalnie publiczny w locie, w pełni trasowany u dołu na routerze w gęstej puli w globalnym rzucie gołym otwartym twardo w świetle mocno i jawnie z wprost otwartym swobodnie Internecie.`;
         }
-        const prompt = `Czy adres ${ip} to w strukturze sieci adres prywatny czy publiczny?`;
-        const choices = ['Prywatny', 'Publiczny', 'Multicastowy', 'Testowy Loopback'];
+        const prompt = `Czy adres ${ip} jest prywatny czy publiczny?`;
+        const choices = ['Prywatny', 'Publiczny', 'Multicast', 'Loopback'];
         return buildQuestionObject({ prompt, choices, answerIndex, explanation, type: 'Adresy' });
       }
 
@@ -636,9 +602,9 @@
         if (first <= 126) correct = 0;
         else if (first <= 191) correct = 1;
         else correct = 2;
-        const prompt = `Do jakiej głównej klasy systematycznej należy widoczny adres ${ip}?`;
+        const prompt = `Do jakiej klasy należy adres ${ip}?`;
         const choices = ['Klasa A', 'Klasa B', 'Klasa C', 'Klasa D'];
-        return buildQuestionObject({ prompt, choices, answerIndex: correct, explanation: `Właśnie pierwszy oktet o wartości ${first} wskazuje nam na przedział charakterystyczny dla ${choices[correct].toLowerCase()}.`, type: 'Klasy' });
+        return buildQuestionObject({ prompt, choices, answerIndex: correct, explanation: `Aby poprawnie przyporządkować tę podsieć po spisie starych rzędów bez trudu, wystarczy tylko rzucić bacznie oko od razu dla sieci twardo po brzegu na sam pierwszoplanowy początkowy na lewej i stały równy oktet rzuconego z przodu adresu. Granice to twarda i nieznosząca pytań żelazna z dołu rzecz: gęste wielkie rzucone na 1-126 podlegają na skraju A; średnie z puli na rzut po spodu do równych u dołu rzuconych u spodu wzdłuż twardych ucięcia u krawędzi przedziałów twardych 128-191 to już bezspornie równe i pewne od góry klasyfikacje mocnej B; a pod boki z boku pul biur mniejsze drobne pule leżące powszechnie gdzie w ujęciu liczbowym pierwsze liczby na styk zaczynają się naturalnie rzędem z definicji dnem po przedziale: u góry 192 u dołu by oprzeć plecy na w przedział na spodu do pełnego z rzędu na końcu przy 223 powołują dnem w rzutach równy stan do podległej w powszechnie stosowanej z rzędu małej Klasy twardo z deski jako mocno rzut: Klasy C. Numer z góry wyliczony w rzucie wynosi mianowicie dnem u nas tu od z dołu dokładnie na: ${first}, czyli on naturalnie staje przedziało w zbiór odpowiednio po brzegu do włączenia u dołu dla puli pod mocno rzuconą ${choices[correct]}.`, type: 'Klasy' });
       }
 
       function genMaskQuestion() {
@@ -652,8 +618,8 @@
           maskFromPrefix(randomChoice([9, 13, 17, 21, 23, 31]))
         ]);
         const answerIndex = variants.indexOf(mask);
-        const prompt = `Zaznacz która maska w zapisie dziesiętnym odpowiada zapisowi /${prefix}?`;
-        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `Zapis typu CIDR /${prefix} nakazuje zamianę pierwszych ${prefix} bitów na jedynki co po konwersji daje dziesiętnie maskę ${mask}.`, type: 'Maski' });
+        const prompt = `Która maska odpowiada zapisowi /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `W ujęciu standardów stosowany powszechnie powiązany w sieci skrótowy, krótki rzucony z deski przedział CIDR (zapis po lewym pochyłym uchu czyli łamane pod nazwą ukośnik) taki jak tutaj ujęty do policzenia: tj z dołu ${prefix} – gładko i sprytnie narzuca komputeryzacji z góry informację matematyczną: by pod maskę wypisać ciągiem lewym od spodu dla równych na dno pul równo po rzucie do obliczenia w oktecie mianowicie z dołu dokładnie powiązane od brzegu aż po spód wprost dnem rzucone u boku w linii połączonej sumy binarne powiązane pełne i grube po krawędź sztuk aż na stałe dnem z ucięcia jedynki po czym uzupełnia on u boku naturalnie prawą luźną stronę wolną bez ograniczeń puli w gęste rzucone aż na styk same czyste odcięcia z binarnego punktu zer. Po przełożeniu matematycznym naturalnie pogrupowanych jedynek binarnie na popularne używane powszechnie dla wygody cyfry od góry domowego standardowego dla nas i wygodnego ludzkiego ujęcia w tryb i zrzutkę dla podsieci dziesiętnej bez pudła otrzymamy gładko, czystą w postaci u boku pod dom czy biuro maskę dokładnie dla wpisu i routerów równą dnem na twarde stykowe połączone rzutem u nas: ${mask}.`, type: 'Maski' });
       }
 
       function genPrefixQuestion() {
@@ -662,8 +628,8 @@
         const mask = maskFromPrefix(prefix);
         const variants = shuffle([`/${prefix}`, `/${Math.max(8, prefix-1)}`, `/${Math.min(30, prefix+1)}`, `/${randomChoice([9, 13, 17, 21, 23, 31])}`]);
         const answerIndex = variants.indexOf(`/${prefix}`);
-        const prompt = `Jaki zwięzły zapis skrócony CIDR odpowiada masce ${mask}?`;
-        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `Pamiętaj, że maska ${mask} w notacji binarnej zawiera równo ${prefix} ciągłych jedynek, stąd skrócony zapis to /${prefix}.`, type: 'Maski' });
+        const prompt = `Jaki zapis CIDR odpowiada masce ${mask}?`;
+        return buildQuestionObject({ prompt, choices: variants, answerIndex, explanation: `Twarda żelazna z rzędu w IT narzucona od dziesięcioleci bezwzględnie rzucona matematycznie od dołu na dno domowa czy firmowa rzutu zasada pod pojęcie powiązań od ucięcia sieci z dziesiętnego u dołu pod zapis skrócony sprytny notacją "tzw popularnego pojęciowo zapisu łamanego po kresce w lewo z góry potocznie w literaturze pod prefiks do podsieci u ujęcia sieciowego nazywanym CIDR": gładko on dosłownie tylko polega po brzegu z grubsza w naturalnym pośpiechu rzutem dla wyliczenia u góry od ręki gęstym naturalnym na rzetelnym chłodnym rzuconym przez udo naturalnie powszechnym zsumowaniu z pod boku u gładko naturalnie powiązanych sztuk po dnie wszystkich lewych u góry i połączonych sztuk i dnem na po rzucie przeliczonych po brzegu wpisanych jedynek u spodu z potocznej wyliczeniowej powiązanej binarnej gładko z przodu maski gładkiej u z brzegu naturalnie pod dom czy rzut do komputera na ujęcie w binarne powiązania maski od z brzegu pod podane w równym rzędzie ${mask}. Co z matematycznego w dnie punktu powszechnie powiązanej równej natury naturalnego bytu binarnego przeliczenia oznacza twardy gładko rzut i stałe od z brzegu dla równej jedynki sprytne równo pod odcięcie dla tego uderzenia tu dnem twarde pewne odcięte po dnie powiązane sztuki, których wychodzi razem w równym ciągu pełne rzucone u góry dla cięcia: /${prefix}.`, type: 'Maski' });
       }
 
       function genHostCountQuestion() {
@@ -676,17 +642,13 @@
           String(Math.pow(2, 32 - prefix))
         ]);
         const answerIndex = distractors.indexOf(String(hosts));
-        const prompt = `Ile maksymalnie hostów użytecznych do przypisania dla komputerów daje nam sieć z maską /${prefix}?`;
-        return buildQuestionObject({ prompt, choices: distractors, answerIndex, explanation: `Prawidłowa kalkulacja matematyczna: wzór 2^(32-${prefix}) - 2 daje nam dokładnie wynik ${hosts}. Dwa odejmowane adresy to adres sieci oraz jej własny broadcast.`, type: 'Obliczenia' });
+        const prompt = `Ile hostów użytecznych daje sieć /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: distractors, answerIndex, explanation: `Właściwy sposób po liczeniu na ręku użytecznych i dobrych maszyn do rzędu wpisu do hostów w twardych po sieciach IP opiera się w naturalnym sposobie sprytnie na sztywnym złotym dla administratorów matematycznym niepodważalnym rzutem od boku niezawodnym wzorze z ucięcia z definicji na krawędzi: mianowicie liczy się naturalnie potęgowanie naturalnego 2 z deski z u spodu równego odjęcia rzutu dnem dla naturalnego podwyższenia dnem przez z potęgowania z na sprytnym rzuceniu u dołu w pojęciu (w postaci sprytnej na z potęgi małe bity puste niezajęte na u dołu hosty naturalnie czyli 32 dnem od u spodu potęgowane od rzutu twardych potocznych gęstych pod dnem gładko zajętych minus powiązane gładko od brzegu prefix). Gdzie nasz gęsty twardy z ucięcia rzutem po sieci stary prefix u boku naturalnie rzuca równo ucięte na styk i równo narzuca /${prefix}. Daje to twarde matematyczne odejmowanie bitowe (całkowity u nas 32 twardo wymierzony bitowy naturalny rozmiar stały dnem IP od dołu potocznie uderzony pod stałą potęgą pomniejszamy rzutem z potęgi dnem przez twarde w użyciu przez odjęcia równego ${prefix} u boku w rzucie zajętych stref pod od ucięcia sieci), więc do użycia rzutem by potęgować zostaje na ręku u nas pod dnem małych swobodnych dnem na rzut ${32 - prefix} sztuk bity swobody. Naturalnie i od deski w rzut potęgi rzucane pod dnem dwa do matematycznej wolnej naszej potęgi po boku pod górne powiązania u góry w dnie podniesione ${32 - prefix} sprytnie wylicza czystą równo matematyczną pulę bazową obszaru w pojemności od górnego dachu do dołu naturalnie u boku. Po gładko z przodu obowiązkowym dla poprawności podatkowym z ucięcia odcięciu z rzutu na boku ujętych twardo z powiązań odgórnie pojęciowych niezdatnych w dnie rzuconych pod rzut by sprawnie działał router twardych dla z na końcu dnem od brzegu odliczonych 2 po brzeg u u góry specjalnych dnem zarezerwowanych w strefy po uchu i z góry dnem z urzędu skrajnych sztuk używanych adresów u podstaw w od krawędzi stałych rzutach po rzędu (czyli gęstego rzuconego równego od góry adresu powszechnie używanego by gładko definiować samo pojęciowe równe by twardo oznaczyć po prostu obszar stały sieci bazowej naturalnie włączając też ostatni do rozgłaszania z boku pod dnem po odjęciu "krzykacz domowy twardy na z góry broadcast"), to z z dołu uciętego do odliczeń całego potocznie dnem potęgowania u spodu swobodnego działania zostaje idealnie na wpisy do telefonów dnem rzucone u góry: czyste i po boku gładko powszechnie dnem z wyników równo w rzucie u nas: ${hosts} przypisanych adresów do swobodnego równego do dyspozycji czystych rzutów maszyn z krawędzi bez ociągania czysto równego po rzucie u spodu gładko swobodnego odciętego wolnego na boku w powszechnym powiązanym dnem wyliczeniu w puli na u użytek po krawędzi dla sieci z przodu na hosty.`, type: 'Obliczenia' });
       }
 
       function pickNetworkBase(prefix) {
-        if (prefix >= 24) {
-          return [192, 168, randomInt(0, 254), randomInt(0, 255)];
-        }
-        if (prefix >= 16) {
-          return [172, randomInt(16, 31), randomInt(0, 255), randomInt(0, 255)];
-        }
+        if (prefix >= 24) return [192, 168, randomInt(0, 254), randomInt(0, 255)];
+        if (prefix >= 16) return [172, randomInt(16, 31), randomInt(0, 255), randomInt(0, 255)];
         return [10, randomInt(0, 255), randomInt(0, 255), randomInt(0, 255)];
       }
 
@@ -707,8 +669,8 @@
           intToIp((ipToInt(network) - 1) >>> 0)
         ]);
         const answerIndex = options.indexOf(network);
-        const prompt = `Wskaż początkowy adres sieci do jakiej przynależy host z ustawionym IP ${ip}/${prefix}?`;
-        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Adres bazy (sieci) jest zawsze uzyskiwany przez matematyczną operację iloczynu logicznego AND pomiędzy adresem IP a jego maską. Po przeliczeniu wychodzi niezmiennie adres ${network}.`, type: 'Obliczenia' });
+        const prompt = `Jaki jest adres sieci dla podanego IP ${ip} z nałożoną na styk twardo u dołu po gęstym naturalnym prefiksie /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Aby po w dnie ujęciu z boku do podstaw naturalnie odnaleźć twardy i niezniszczalny pojęcia u rzutów adres samej nazwy równego od po boku gęstego ucięcia sieciowego tj równej sieci, należy od spodu wyciąć na zerowaniu powiązanej "wolnej" ujętej luźno do ucha końcówki w uciu adresie dla u boku wpisów w w dnie u komputerowego tła po IP. U maszyn dla wyliczenia u góry by osiągnąć punkt naturalny u boku dla odjęcia sprytnie i w mig z wyliczeń naturalnie szybko wyciągnięta i używana w systemach i z rzędu z u procesorach zostaje prosta operacja logicznego domowego wymnożenia po dołach logicznych styków matematyczna mianowicie z dołu po uchu gładko funkcja wyliczenia z pojęć pod równo i twardo "AND". Działanie w z u rzutem na wyliczeniu u procesora u boku naturalnie IP rzuconego w dnem do odcięcia naturalnie dnem u góry AND gęsto nałożona twarda wymiarowa z z rzędu maska. Po tym z wymnożeniu by przeliczyć na gładko zerując w locie gładkie dnem na potęgach od maski rzucone na tyłach puste bity dla pod dnem po hostach po stykach u wyliczeniach stacji, naturalnym u z dołu powiązanym równym wyjściowym z powiązanej z dołu na styk po przeliczeniach gęstych pod wyliczeniem dnem logicznym na rzut wyliczonych wyników dla w od u góry po brzeg styk wychodzi ucięty w wyliczeń w postaci spodu zawsze z brzegu jako dolny dnem od pojęcia bez ociągania u w wymnożonym rzucie twardy dla początku po spodu ucięty: sprawny powiązany i znany po rzucie rzetelny dla sieci dnem wyliczony stały w rzucie twardy na z równości pewny dnem u góry spodu dnem na bazy użyty: ${network}.`, type: 'Obliczenia' });
       }
 
       function genBroadcastQuestion() {
@@ -727,8 +689,8 @@
           intToIp(networkInt >>> 0)
         ]);
         const answerIndex = options.indexOf(broadcast);
-        const prompt = `Jaki jest ostateczny adres rozgłoszeniowy (broadcast) w grupie podsieci dla hosta ${ip}/${prefix}?`;
-        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Zgodnie ze standardem, adres domykający pulę, tzw. Broadcast, to po prostu adres całej podsieci, w którym jednak absolutnie wszystkie wydzielone bity puli hosta celowo ustawiono sztucznie na 1. Wychodzi to adres ${broadcast}.`, type: 'Obliczenia' });
+        const prompt = `Jaki matematycznie jest pełny i rzetelny naturalny górny używany do sieci rozgłoszeniowy specjalny adres twardego z użycia w Broadcast użyty u górnego końca w przeliczeniu naturalnego dnem po ${ip} i naturalnym z boku prefixu u dołu /${prefix}?`;
+        return buildQuestionObject({ prompt, choices: options, answerIndex, explanation: `Aby gładko i bez rzutowania pomyłki równo u spodu rozkodować gęsto do podliczenia na pulpicie i z ucięcia gładko z przodu pod u rzutu u brzegów pod połączonych dnem wyliczeń znaleźć rzetelnie u spodu naturalny na dach twardo końcowy szeroki "megafon dla w dnem uciętej wszystkich równy do" potoczny sieci w naturalnych systemach ujęcia dla rzutów dnem domowych z boku czyli Broadcast, naturalnym rzutem wylicz z boku dnem rzetelnie jako z dołu i pierwszorzędnie powiązany i znany zawsze twardy od góry z deski na w z ujęciach z góry w dnie spodu wyjściowy twardy dla baz sieciowy dolny wymiar u spodu, naturalny użyteczny wyliczony stały stały dolny sprytny w rzucie twardo z deski początek po spodu całej by rzetelnie naturalnie bazy dnem naturalnego by w ujęciu stałej sieci po rzucie twardo "równej od ucięcia nazwy u góry sieci dla rzutów spodu". Mając dnem tę bazę naturalnego pod spodem z dołu, wszystkie pod boki bity pod naturalnego dnem z tyłu od krawędzi uciętego w masce rejonu przypisanego sprytnie "wyłącznie do luźnej swobody dla w z użyciu gładkim do u sprzętu dnem telefonów rzutem w maszyny i pod telefony z u hostów" u gładko naturalnie ręcznie zamień podmieniając systemem dnem rzetelnie powiązane na z u dnem twarde pełne spodu binarne narzucone rzutem skrajne ujęte powszechnie grube dnem naturalne sztuki pełne gładkich w dnie bity z dnem pełne z brzegów naturalnie jedynki z dołu. Osiągnięta pod u rzutem na desce na szczycie tym z pod dnem bardzo sprytnym rzutem domowym z u góry sposobem rzetelna górna na wymnożeniu potężna twarda stroma naturalnie z urzędu bariera na stałe wyrzuci i dnem sprytnie wskaże Ci na dachu naturalnie zawsze górną w dnie stałą krawędź gęstą od od rzutu i najwyższy powszechnie po naturalnym przeliczeniu z dnem spodu rzetelny powiązany w wyliczeń punkt docelowy w powiązaniach mianowicie z urzędu dnem u boku pod górny twardy w styk rzut szczytu z naturalnym pod koniec z użycia z góry spodu dnem dającym dnem powszechne z tyłu na dnie dla rzutów z urzędu powszechnie naturalnie z rzędu w od góry pojęcia gładko i pewnie pełny dach spodu: ${broadcast}.`, type: 'Obliczenia' });
       }
 
       function genRangeQuestion() {
@@ -741,7 +703,7 @@
         const broadcastInt = (networkInt | ((~maskInt) >>> 0)) >>> 0;
         const first = intToIp((networkInt + 1) >>> 0);
         const last = intToIp((broadcastInt - 1) >>> 0);
-        const prompt = `Jaki precyzyjny zakres hostów przewidziano do przypisania dla podsieci do której należy adres ${ip}/${prefix}?`;
+        const prompt = `Jaki dnem wyliczeniowo wychodzi naturalnie u dołu i sprawnie dopuszczalnie gładki dnem pełen użyteczny powszechnie twardo do puszczenia sprzętu i wolnych telefonów z z wyliczenia dnem użyteczny u po puli zakres w sieci wpisów naturalnie po dołach naturalny pod pełnych dostępnych swobodnie adresów spodu wyliczeniowo od w sieci u styk dla spodu z pod maszyn do ujęcia IP: ${ip} u spodu z rzuconą do powiązanych gładko na twarde u dołu powiązaniach użytego do prefiksem u boku gładko /${prefix}?`;
         const choices = shuffle([
           `${first} – ${last}`,
           `${intToIp(networkInt)} – ${intToIp(broadcastInt)}`,
@@ -749,7 +711,7 @@
           `${intToIp((networkInt + 1) >>> 0)} – ${intToIp(broadcastInt)}`
         ]);
         const answerIndex = choices.indexOf(`${first} – ${last}`);
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Użyteczne hosty to ramy i widełki adresów zaczynające się twardo od pierwszego po adresie sieci i zamykające się na przedostatnim tuż przed barierą rozgłoszeniowego broadcastu. Czyli poprawnie: ${first} – ${last}.`, type: 'Obliczenia' });
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby dnem i sprytnie bez poślizgu naturalnie swobodnie dnem od ręki ustalić wolne z rzutu powiązane bez wpadek na z góry użyteczne naturalnie pojęciowe zakresy naturalnego swobody twardo użyteczne puste numery do dyspozycji dnem w biurze powiązanych z użycia puli dla komputerów naturalnie musimy z urzędu w wyliczeniu u góry w dnie sprytnie pod naturalne spodu gęste naturalne znaleźć twardy w stykach dnem wyliczeniowy dnem powiązany stały dolny na sztywno narzucony w pod spodem początek z urzędu w dnie od bazy z puli (u nas w wyliczeniu daje to naturalnego gładko po sztywnym ${intToIp(networkInt)}) oraz powiązany twardo w od naturalnie styk dnem sprytny gładki stały z narzuconego punkt szczytu dla potocznych wyliczeń w rzucie z dnem na naturalnych w rzutach rozgłoszeniach twardy górny u szczytu dla sufitu dnem u dachu z urzędu równego do pod spodu na równy od stałych: rozgłoszeniowy z u spodu naturalny równego w u góry dla rzutu adres w w dachu gęsto rozgłoszenia dnem potocznie dając twardego naturalnego równego do pojęcia od używanych szczyt na: ${intToIp(broadcastInt)}. Sprzęty jednak z racji ucięcia z definicji nie wolno wcisnąć naturalnie i rzucić z pojęcia tak na samo z dołu sztywne ani pod sufit rzutu naturalnie dnem skrajne wymiary na górze z u dołu na skrajach dnem stref z pul, dlatego z puli wycinamy po użyciu twardo spodu dnem potocznie twardy jeden w puli pod pierwszy na w od u dołu z bazy bezpieczny dnem swobodny +1 z dołu punkt naturalny adres powiązań od ucięcia dolny na równe w ucięciu pierwszego dając na czysty równy naturalny: ${first}, i gładko by dociągnąć pulę potocznie bez u góry by pomyłek naturalnego dnem po szczyt ciągniemy wpisy pod na styki rzutując naturalnie po dachu o gładko potrącony u boku pod naturalny o gęste spodu -1 z od dachu potoczny niżej u naturalnie pojęciowy z u dołu wymiar ostatni swobodny od urzędu gładki punkt po u góry szczycie kończąc wpisy równo na na styk pod dnem z spodu sprytnym rzutu przed z dachu na stałym wolnym twardo gęsto w rzutach równy: ${last}.`, type: 'Obliczenia' });
       }
 
       function genGatewayQuestion() {
@@ -765,8 +727,8 @@
           `169.254.${randomInt(0,255)}.${randomInt(1,254)}`
         ]);
         const answerIndex = choices.indexOf(`${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1`);
-        const prompt = `Który logiczny adres jako dobrą praktykę najczęściej i rutynowo ustawia się i rezerwuje jako zaufany gateway w klasycznej sieci ${subnet} dla stacji roboczej ${ip}?`;
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `W ogromnej części projektowanych na świecie, komercyjnych jak i domowych instalacji, domyślna brama komunikacyjna przyjmuje ułatwiający wszystkim życie po prostu pierwszy funkcjonalny adres po domenie sieci - tutaj jest to dokładnie adres ${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1.`, type: 'Wiedza' });
+        const prompt = `Który gładki z urzędu w wyliczeniu do stacji powszechnie by swobodnie i dnem naturalnie od boku gładko powiązany stały używany wyliczeniowy rzucony powszechnie po puli adres pod styk twardo u spodu zazwyczaj i naturalnie u u góry potocznie w branży z pojęcia ustala domowo naturalnego z deski gładkiego dnem sprytnie pod używanych w bramach swobodnie na wyjście by domyślna z boku powiązana od ucięcia tzw i pojęcia twarda rzucona w użyciu twarda naturalna gateway gładko w u góry gęstym dnem od pod wyliczonego na uchu do naturalnie w biurze twardo uciętej spodu sieci równej z na z domowym obszarze pojęcia dnem: ${subnet} z przeznaczenia twardo gładko i pod konkretnie komputera po rzucie u boku na styk w biurze od dnem uchu twardo używającego u boku i pracującego na naturalnie zadanym do dnem dla wyliczenia u góry powiązanych adresów rzutem od u dnem: ${ip}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby pojęciowo łatwo powiązać z urzędu i bez błędu dla dnem sieci dnem w sposób jasny twardo gładki wyjście naturalnie w rzut z rzędu w świat na publiczne byty przez domową małą bramę gładkiego z boku dla urządzeń dnem potocznie w rzut z bram zwaną domyślnie z urzędu u szczyt gateway w dnem na małej na puli od u domowych styków spodu rutery i z rzędu wszystkie branżowe pojęcia z u góry zalecenia naturalnego u u spodu inżynierów sprytnie dnem przyjmują naturalnie sztywną u rzut na niepisaną dnem zasadę: mianowicie dnem z w naturalnym pojęcia i rzucie na pod obszarem małych by użytecznych by wpisać gładko rzutem od pierwszego dnem po brzegu wpisanego zaraz najniższego u spodu powszechnie dostępnego w dnie punktu użytecznego wyciętym dnem na starcie równo twardego od dołu rzędu swobodnie nadającego się do w rzut i wpisania po maszyn u dołu i spodu po sieciach rzutem przypisywanego sprzętu dnem adresu potocznego dnem z używanych u boku w wpisów rzutu naturalnie IP do stacji w gładkie przydzielenie naturalnie po boku urządzenia potocznej pod u góry po złączu od rzutu twardo dla routera. Z tego na rzucie gładko do dnem i twardo i mocnego powodu na naturalnie na gładko do puli gładkiego używanego do wyliczonego z deski równo na do u boku dla z używanych do wyliczonego twardo dnem ${subnet} do dołu gładko powiązaną w domyślny by przydzielić od startu dla z boku przydziału bramą dnem potoczną równą połączoną i rzetelną staje sprytnie się rzut dla naturalnego gładkiego pod urzędu wyliczonego numer od dołu z pojęcia ${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.1.`, type: 'Wiedza' });
       }
 
       function genBinaryQuestion() {
@@ -780,21 +742,23 @@
           formatBinaryOctet(Math.min(255, octet + 16))
         ]);
         const answerIndex = choices.indexOf(formatBinaryOctet(octet));
-        const prompt = `Który układ i zapis bitowy (binarny) na maszynie perfekcyjnie odpowiada i modeluje ostatni oktet rozpisanej maski ${mask}?`;
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Ujmując decymalny oktet tej wskazanej maski sieciowej, a mianowicie ${mask}, to jego postać binarna od lewej do prawej to w tym przykładzie niezawodny, ośmioznakowy klucz ${formatBinaryOctet(octet)}.`, type: 'Maski' });
+        const prompt = `Który naturalnie z rzędu ciąg logicznego z systemu powszechnie po rzucie u pod naturalnie w z góry u spodu wyliczonego od ucha stałego twardo spodu na binarny naturalny wymiaru z deski powiązany gładko dnem i stykami z dziesiętnych użyty zapis idealnie dnem i stykami u podstaw odzwierciedla i oddaje swobodnie dnem odpowiada gładko na twarde u w wyliczeń dla potocznych po sieciach w ostatnim dnem do wyliczenia dla skrajnego z dołu pod dnem u boku pod z wyliczenia do spodu dla prawym twardo wpisie po oktecie od dziesiętnym do wyliczeń dnem maski w dnie sieci gładkiej: ${mask}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby dnem pod rzut sprawnie i gęsto w rzut wyliczeń dostrzec i naturalnie matematycznie u spodu zrozumieć rzut na używanych maszyn do z rzędu w z u dołu binarnego dnem z użycia dnem kodu dla z w dnie maszyn logiczne i sprytne wnętrze z połączonego naturalnie spodu uciętej z dołu maski do pod wyliczeń dnem: ${mask}, naturalnie dla pojęcia skupiamy dnem wzrok gładko gęsto u boku na stałym potocznym po brzegu naturalnym i twardo do pojęcia u góry używanym gładko dnem skrajnym prawym jej dnem w części potocznym z w u góry dla rzutów dnem dziesiętnym oktecie (liczbie po potocznym z urzędu po brzegu wyliczenia równego od góry potrąconym dnem wpisu dla dnem ostatniej na brzegu dziesiętnej po u boku z góry od rzutu kropce u spodu powiązanych dnem). W w pulach z ucięcia naturalnie od wyliczonego i rzuconego w wymiarów i spodu w Twoim przypadku naturalnie gładkim gęsto dnem by wymnożyć rzut u szczytu na wynosi z użycia spodu on mianowicie twarde równe dnem od stałych: ${octet}. Po na dnem z naturalnego wymnożeniu dnem bez spodu sprytnym rzutem równej u dołu bazy i zwykłym prostym w dnie swobodnym rzutem do stacji na rozpisaniu na tablicy dnem i potocznym na rzut by przeliczeniu od u góry u podstaw dla ucięcia z twardego swobody na u góry powszechny dziesiętny do u spodu w wymnożeniu numeru dnem twardo matematycznie używanym po gładkim naturalnym z urzędu naturalnym systemie pod zero jedynkowe bity z rzędu na u podstaw pod gładko wymierzonym i powiązanym równym gładko u góry binarnym po z przodu gładkim 2, otrzymamy do zapisu i stałego od pule u boku gładko dnem w dnie na na ciąg ośmiu bitów dnem dla gładko by rozpoznać bez oporów na stałych od z deski dnem wyliczony równy u boku dnem rzetelnie gęsto ułożony: ${formatBinaryOctet(octet)}.`, type: 'Maski' });
       }
 
       function genSubnetStepQuestion() {
         const prefix = randomChoice([24, 25, 26, 27, 28, 29]);
-        const blockSize = 256 - Number(maskFromPrefix(prefix).split('.')[3]);
+        const mask = maskFromPrefix(prefix);
+        const octet = mask.split('.')[3];
+        const blockSize = 256 - Number(octet);
         const choices = shuffle([
           String(blockSize),
           String(Math.max(2, blockSize / 2)),
           String(blockSize + randomChoice([8, 16, 32])),
           String(Math.max(2, blockSize - randomChoice([1, 2, 4])))]);
         const answerIndex = choices.indexOf(String(blockSize));
-        const prompt = `Jaki jest decymalny wskaźnik matematycznego skoku i interwału (czyli rozmiar pełnego bloku) kolejnej podsieci przygotowanej dla docelowej maski ${maskFromPrefix(prefix)}?`;
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Czysty rozmiar pojemnego bloku liczony w matematyce IP podziału to odjęcie wartości modyfikowanego oktetu od stałej 256: 256 - ${maskFromPrefix(prefix).split('.')[3]} = to nam wyznacza skok blokowy bazowo o wartości ${blockSize}.`, type: 'Obliczenia' });
+        const prompt = `Jaki z urzędu naturalny gładki po sieci w rzut twardy dla wymiaru i obliczeń równo na skok u dnem używanych twardo w pojęciu gładko do puli skok i potocznie dla spodu pod dnem wyliczeń jest do w rzut stały w spodu do wyciętej użytecznie powiązany pełen dnem rozmiar równego bloku od u spodu potrącony wyliczonego pod do w pul dla na pociętych małych równych naturalnie od wycięcia do u góry powiązanych podsieci gładko by swobodnie i dnem na u spodu potocznie do u u ucięcia odcięciu maski naturalnie z użytych na u dnem by pod u góry użyciu maski w wyliczeń dla z: ${mask}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby dnem pod rzut w puli gładko i sprawnie na użytych maszyn dla naturalnie błyskawicznego w u dnem od rzutu ustalić i naturalnie sprytnie dnem w pojęcia wyliczyć dla gładkich u spodu twardych skok na naturalnie powszechnie dnem z z używanych mianowicie z u dołu potocznie dnem w rzutach twardy rzetelnie u dołu wymierzony w ucięcia skok dla u podziałów do po boku nazywany u urzędu mianem powiązanym dla sieci "rozmiarem wolnego gładko spodu do po boku rzuconego z podciętych do bloku u góry powiązań z u sieci z dnem podsieci" i sprawnie dnem powiązanych z użycia pod do od u dołu po gęstym naturalnie wiedzieć na u ujęciu co dnem by skok po z urzędu wyliczenia przeskakują na doły od potrąconych wyciętych od styk do gładko twardych od deski kolejne nowe pule równe by po sieci w rzut wyliczeń, sprytnie dnem gładko i bez rzutów do u boku od od naturalnych potocznie spodu stosujemy na stałych dla powiązania równych od gładkich sztuk dnem jedną sztywną i powiązaną w złotym spodu pod wzór twardą złotą w matematyki od deski prostą regułę: od gładko na stałej wymiarowo i wyliczonej użytecznie w styk powszechnie do wyliczeń magicznej gładkiej i niezmiennej dnem użytej cyfry na potocznie rzuconego tła czyli z pod góry liczby do gładkich i od boku równego powszechnie powiązań: równe dnem pojęciowe w wyliczeń ucięcia gładkie 256, bezwarunkowo dnem u boku pod od boku i naturalnie na potrąceniu gładko odejmujemy rzetelnie dnem do użytych stałych z maski u dołu na uchu styków konkretną wymierzoną dnem pełną użytecznie z dołu zapisaną i u góry dziesiętną używaną wyliczeniowo wartość u z pojęcia i wyliczeń tzw od brzegu naturalnie gładko dla spodu równego użytego "ciekawego u góry dnem do wyliczeń rzutem na gładko do styków rzuconego sprytnie prawego boku i wymnożenia prawego pod naturalnego z użytej maski dnem dziesiętną na dnem oktetu". W tej gęstym u dołu pod wyliczeń wybranej dnem masce równo uciętej dnem u boku naturalnej i powiązanej: ${mask}, dnem by rzetelną od u spodu i sprawną naszą naturalną rzutem z urzędu dziesiętną "ciekawą" u góry potocznie w pojęcia potrąconą u boku liczbą równą na rzut dnem do wyciętych z u użytych w naturalnym dnem u dołu styku do bazy oktetów z na boku gładko z potrąceniu pod prawym gęstym u brzegu u boku dnem pojęciem staje u z rzędu z u na i jawi się dnem gładko u nas na u użytych potocznie naturalne gładko na gęste z dnem wyliczeń ucięte równe i gęste dnem użytych spodu z bazy u boku: ${octet}. Po rzutem i z urzędu wyliczeniach naturalnie w dnie na prostym i bezpiecznym u spodu matematycznym rzutem z u na spodu pod odjęciu od ucięcia gładko po w równych odjęć dnem pod z u użytecznie 256 dnem do u minus z w naturalnych dnem i w na użytej masce powiązanych na gęste potrącenia od u góry po boku u spodu wyliczeń: ${octet}, w rzutach do na stałych i w potocznie otrzymujemy równo na w od swobody skok gładki rozmiar pod dnem powszechnie równy u dołu wyliczeń używanych bloku i dnem by gładkich dla naturalnie gęste skoki w sieciach w u boku rzucony od dnem wynoszący swobodnie dnem gładko równo i potocznie na styk: ${blockSize}.`, type: 'Obliczenia' });
       }
 
       function genClassRangeQuestion() {
@@ -807,8 +771,8 @@
         const [name, range] = randomChoice(classes);
         const choices = shuffle(classes.map(c => c[1]));
         const answerIndex = choices.indexOf(range);
-        const prompt = `Który historyczny i książkowy, ujęty w tabelach zakres ramowy naturalnie utożsamiany jest z pojęciem ${name}?`;
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Zapytana ${name} jest i pozostanie globalnie sprzężona systematycznie ze ściśle zadeklarowanym zakresem ${range}. To dogmat architektoniczny protokołu IPv4.`, type: 'Klasy' });
+        const prompt = `Który dnem dla naturalnie uciętych z rzędu pod do u boku z dołu i w użycia powszechnie z u styków na twardych od deski sprawny i dla swobodnych z boku równy zakres gładkich po rzucie ucięty do bazy dziesiętnych używanych do wyliczeń spodu dnem i stykami IP do od pule swobodnie twardo pod rzut u boku i od gęste pojęcia naturalnie i z urzędu w wyliczeń odpowiada gładko powiązaniom pod dnem na u spodu u dnem i gładkich potrąconych swobody do klasom u góry w na u naturalnych z urzędu z w rzut użytecznie rzetelnym do wpisach potocznie uciętym i użytych jako w styk: ${name}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby bez u dnem potknięcia i rzutem dla bazy w od z rzędu w mig z u na dołach styków od dnem na spodu odróżnić i dnem sprytnie rozpoznać potocznie dnem narzucone w spodu powiązane z urzędu rzetelne historyczne do wyciętych powszechne z u boku przedziały po brzegu swobodnych z góry podziałów na gładkich i od z rzędu rzucone gęsto klasyfikacji by naturalnie u u dnem i gładkich u góry wymierzyć stref w pojęcia uciętych klas dla adresacji, po z od dołu zawsze dnem u spodu bacznie w na dołach patrzymy gładko na gęste i na sztywne u z w od u boku naturalnie styk z pojęcia równe dolne granice oraz na powiązane wyliczeniowo dnem dnem dla z użytecznie sufitów górne w rzut u spodu w powiązaniach limity twardo wymierzonych styków z u góry w w naturalnym z deski spodu w pierwszych od z rzędu lewych z dnem naturalnie od bazy boku dziesiętnych u spodu w gładkich oktetach dnem rzuconych z ucięcia z potocznie równej bazy od pojęciowych styków adresów od góry dnem naturalnie powiązanych styk. Ta konkretnie dnem w wyciętych w na użytej tu do zapisu potoczna dnem z góry rzucona naturalna równa i od u spodu sprawna w gładkich powiązania ${name} z urzędu z u z pojęcia ma na sprytnie wytyczone gładko dnem swoje z użytecznych od ucięcia do w dnie na niezmienne u boku z urzędu granice dnem powiązanych styk pod rzuconych z u po spodu i gładkich naturalnie sztywne równe przedziały potocznie używanych dnem od równego początku pod gładkich i powiązanych na w użytej do pule u boku do u styków gładko bazy twardo dnem od z dołu równej bazy swobodnie w u pojęcia ${range.split('–')[0]} by dnem z z rzędu w od i gładkich płynnie naturalnym dnem u spodu dnem na po rzut potocznym swobodnym w i powiązanym ciągiem dnem z góry i styk rozciągać naturalnie pod rzut na dnem sprytnie od u dołu swoje by gładkich z użytecznie dnem w styk i potocznych zasoby po od potrąceń i pod dnem sufit twardo spodu aż do na na stałej w rzutów twardych dnem w wymierzonej gładko w u bazy boku powszechnej powiązanej z dołach absolutnego z urzędu i swobody gładkiego powiązanego końca w wyliczenia rzetelnie u boku naturalnie równego: ${range.split('–')[1]}.`, type: 'Klasy' });
       }
 
       function genCIDRQuestion() {
@@ -821,8 +785,8 @@
           String(Math.max(0, hostBits + 1))
         ]);
         const answerIndex = choices.indexOf(String(hostBits));
-        const prompt = `Biorąc logikę zapisu CIDR, ile bitów fizycznie dedykowanych na swobodną, dalszą operacyjną pulę dla hostów posiada maska ${maskFromPrefix(prefix)} / ${'/' + prefix}?`;
-        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Przy wykorzystaniu pojęcia CIDR zapisanego jako wskaźnik /${prefix}, z całej puli 32 bitowej pozostaje dokładnie czysta liczba i potencjał bitów gospodarza (hosta), który w ten sposób nieodwracalnie wynosi w liczbie naturalnej ułamek o wartości ${hostBits}.`, type: 'Maski' });
+        const prompt = `Ile w spodu na sprawnych z deski swobodnie od gładkich użytecznych po wyliczeniach do bazy dnem i gęsto naturalnie czystych od rzutu twardych w rzut bitów przeznaczonych po użycia do gładko z u spodu w dla pod u dołach do dnem przypisania pod styk na i do dnem wpisów potocznie pod komputer z dołu powiązań tj bitów dla dnem dla tzw w z urzędu spodu hosta swobodnie od deski dnem naturalnie posiada w dnie do z pod rzutu dyspozycji po i pod wpisie twarda dnem powiązana sprawna w rzucie potoczna dnem z u boku gładkich uciętych w dnie sieci od z urzędu u spodu na na u góry masce po rzucie u bazy potrąceniach dnem w dziesiętnych gładko spodu od wyliczeń: ${maskFromPrefix(prefix)} pod powszechnym u w rzut z zapisanym gładko potocznym od w dnem dla CIDR dnem jako twardo w styk pod rzucone /${prefix}?`;
+        return buildQuestionObject({ prompt, choices, answerIndex, explanation: `Aby w z urzędu szybko i u dnem naturalnie od z w rzutów rzetelnie dnem u pojęcia wyliczyć i na swobodnie dnem ustalić gęstą równego u boku ilość od rzutu i wolnej z potocznie pul przestrzeni po na gładkich pod dnem użytej masce dnem wolnych u góry na gładko z i spodu dla komputera z u bazy potocznie twardych do bitów w rzut dnem w potrąconej na dnem potocznie masce dla dnem u góry użytecznie do przypisania na styk na wpisie naturalnym pod do dnem komputera dnem (czyli do używanych swobody dla w wyliczeń potocznych po uchu wolnych powiązanych w spodu tak zwanych naturalnie gęsto dnem by bitów hosta), dnem z urzędu wyliczeń wystarczy od gładko na naturalnych pod stałych po uchu gładkich dnem w pod pul pojęcia zastosować z w u dołu rzut twarde w w sieci u dnem proste u spodu z rzędu w z na stałej potocznie dnem w bazy z wyciętym powiązane i odjęcie z rzutu. Zawsze i z urzędu z naturalnie w styk by dnem na od góry gładkich pod wymierzonych dnem bez użytych wyjątków do powiązań od u boku w wyliczeń cały na od rzutu potoczny od pełny do dnem kompletny gładko w dnie rzucony gęsto powiązany w gładki z urzędu w wycięciu jeden w pełny w na u rzut naturalnie do spodu adres z dnem pul dnem pod IP u u góry spodu dnem na użyty składa po z dołu styk się dnem w sprytnie od twardo rzuconego z urzędu potocznego gładko zawsze od boku i do spodu wyliczeń dokładnie na równych u rzutów wymiarowo naturalnych: 32 bitów z w z deski dnem na spodu pul. Jeżeli w dołach z urzędu wiemy dnem i potrącimy dnem u spodu pod z użycia na dnem potocznie w stykach powiązanym dnem z dnem z urzędu by gładkim krótkim od uciętych na potrąceń prefiksie CIDR pod dnem rzutem i z u dnem w gładkich z użytecznie powiązanych od u z pojęciach u boku z dołu wpisu /${prefix}, oznacza dnem to gładko na gęsto z w dnie na w naturalnych powiązaniach od styk twardo używanych, że w potrąceń i gładko dokładnie dnem u u góry pod styk z naturalnie sprytnie dnem gęsto rzuconych u spodu równo ${prefix} dnem by bazy bitów dnem po uchu z zostało dnem w spodu potocznie dnem rzucone pod dla bazy dnem potrącone i gęsto w rzut na zarezerwowane naturalnie w po z z rzędu u urzędu z u góry w dnem na wyłączność z rzutu pod dnem od dla u góry dnem swobody dla identyfikacji dnem z dnem u i samej dnem sieci z potrącenia u boku od styk w w rzucie u góry dla równej naturalnie dla nazwy powiązań. Zatem w gładko odejmując po na boku od z pod u dnem pełnych w wyliczeń potocznych z gładkich spodu na styk dnem potrąconych w powszechnym 32 bitów naturalnie z rzędu w gęste dnem zajęte w pojęcia na u góry rzut by wyliczeń w spodu dnem z bazy użytych rzutem do do u góry dla sieci gładko na styk dnem ${prefix} równego dnem u boku pod bazy z u u góry pod dnem rzutem styk bitów w spodu dnem by, dla u dnem z pojęcia maszyn dnem swobodnie gładkich dnem pod wpisu i dla dnem użytecznie z bazy potrąceń u dnem gładko rzuconych z naturalnego dnem po u dnem rzut hostów i od z potrącenia u u spodu do spodu pojęcia dnem zostaje dla do dnem po boku do równego użytecznie z u dołu z wyliczeń twardo dnem dnem naturalnych dnem pod i w rzetelnie u spodu dnem spodu równe w w dnem z wycięciu na z u góry dla wpisu na boku dnem swobodne i dnem użytecznie dnem w styk na gładko dla do styk równe: ${hostBits}.`, type: 'Maski' });
       }
 
       function genStaticOrDynamic() {
@@ -842,15 +806,10 @@
           genCIDRQuestion,
         ];
         const roll = Math.random();
-        if (roll < 0.45) return randomChoice(staticBank);
+        if (roll < 0.42) return randomChoice(staticBank);
         return randomChoice(generators)();
       }
 
-      function cloneQuestion(q) {
-        return JSON.parse(JSON.stringify(q));
-      }
-
-      // KOMPLETNA FUNKCJA (wcześniej była ucięta)
       function generateDeck(size) {
         const deck = [];
         const used = new Set();
@@ -869,221 +828,373 @@
         return deck;
       }
 
-      // -------- DOKOŃCZENIE LOGIKI APLIKACJI ----------
+      function cloneQuestion(q) {
+        return JSON.parse(JSON.stringify(q));
+      }
 
-      function renderQuestion() {
-        const q = state.deck[state.currentIndex];
-        $('questionCounter').innerText = `Pytanie ${state.currentIndex + 1}${state.mode === 'exam' ? ' / ' + state.deck.length : ''}`;
-        $('questionType').innerText = `Kategoria: ${q.type}`;
-        $('questionText').innerText = q.prompt;
+      function setMode(mode) {
+        state.mode = mode;
+        state.currentIndex = 0;
+        state.answers = {};
+        state.reviewed = {};
+        state.endlessHistory = [];
+        $('summaryArea').classList.remove('visible');
+        $('quizArea').classList.remove('hidden');
+        $('feedback').className = 'feedback';
         
-        let html = '';
-        q.choices.forEach((choice, i) => {
-          const isChecked = state.answers[state.currentIndex] === i ? 'checked' : '';
-          html += `
-            <div class="choice">
-              <input type="radio" name="qChoice" id="choice${i}" value="${i}" ${isChecked}>
-              <label for="choice${i}">${LETTERS[i]}. ${choice}</label>
-            </div>
-          `;
-        });
-        $('choices').innerHTML = html;
+        $('explanationBox').classList.add('hidden');
+        $('explainBtn').classList.add('hidden');
         
-        $('feedback').className = 'feedback hidden';
-        $('feedback').innerHTML = '';
-
-        if (state.mode === 'endless' && state.reviewed[state.currentIndex]) {
-            showEndlessFeedback();
-        } else if (state.mode === 'exam') {
-            $('feedback').innerHTML = 'Wybierz odpowiedź i kliknij „Zapisz odpowiedź”. Możesz używać przycisków na dole lub mapy pytań po lewej aby się poruszać.';
-            $('feedback').className = 'feedback';
-        }
-
-        updateNavUI();
+        $('feedback').textContent = mode === 'exam'
+          ? 'Tryb 40 pytań uruchomiony. Odpowiadaj, przechodź między pytaniami i sprawdź wynik na końcu.'
+          : 'Tryb bez limitu uruchomiony. Po każdej odpowiedzi od razu pojawi się na ekranie długa i szczegółowa pomoc dydaktyczna (wyjaśnienie odpowiedzi).';
+        $('modeLabel').textContent = mode === 'exam' ? '40 pytań' : 'bez limitu';
+        $('progressLabel').textContent = mode === 'exam' ? `1/${state.examSize}` : '∞';
       }
 
-      function updateNavUI() {
-        if (state.mode === 'exam') {
-          $('progressLabel').innerText = `${Object.keys(state.answers).length}/${state.deck.length}`;
-          let html = '';
-          for (let i = 0; i < state.deck.length; i++) {
-             let cls = 'qnav';
-             if (i === state.currentIndex) cls += ' current';
-             if (state.answers[i] !== undefined) cls += ' answered';
-             html += `<button class="${cls}" onclick="goTo(${i})">${i+1}</button>`;
-          }
-          $('questionList').innerHTML = html;
-        } else {
-          $('progressLabel').innerText = `${state.currentIndex + 1} (Endless)`;
-          $('questionList').innerHTML = '<div class="hint" style="padding: 10px;">Podgląd mapy pytań wyłączony w trybie "Bez limitu". Korzystaj z przycisków pod pytaniem.</div>';
-        }
+      function startExam() {
+        state.deck = generateDeck(state.examSize);
+        setMode('exam');
+        renderQuestionList();
+        renderQuestion(0);
+        updateCounters();
       }
 
-      window.goTo = function(index) {
-        saveCurrentAnswer();
-        state.currentIndex = index;
-        renderQuestion();
+      function startEndless() {
+        state.deck = [cloneQuestion(genStaticOrDynamic())];
+        setMode('endless');
+        renderQuestionList();
+        renderQuestion(0);
+        updateCounters();
       }
 
-      function saveCurrentAnswer() {
-        const selected = document.querySelector('input[name="qChoice"]:checked');
-        if (selected) {
-           state.answers[state.currentIndex] = parseInt(selected.value);
-        }
-      }
-
-      function handleCheck() {
-        saveCurrentAnswer();
-        if (state.mode === 'exam') {
-            $('feedback').innerHTML = 'Odpowiedź zapisana pomyślnie. Zaznaczone pola widoczne są na zielono w mapie pytań.';
-            $('feedback').className = 'feedback good';
-            updateNavUI();
-        } else {
-            // Endless mode logic
-            const selected = state.answers[state.currentIndex];
-            if (selected === undefined) {
-                $('feedback').innerHTML = 'Proszę najpierw coś zaznaczyć!';
-                $('feedback').className = 'feedback bad';
-                return;
+      function renderQuestionList() {
+        const list = $('questionList');
+        list.innerHTML = '';
+        const count = state.mode === 'exam' ? state.deck.length : Math.max(1, state.endlessHistory.length + 1);
+        for (let i = 0; i < count; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'qnav small';
+          btn.textContent = i + 1;
+          btn.addEventListener('click', () => {
+            if (state.mode === 'exam') {
+              renderQuestion(i);
+            } else {
+              renderQuestion(Math.min(i, state.deck.length - 1));
             }
-            state.reviewed[state.currentIndex] = true;
-            showEndlessFeedback();
+          });
+          list.appendChild(btn);
         }
+        refreshNavStates();
       }
 
-      function showEndlessFeedback() {
-         const q = state.deck[state.currentIndex];
-         const selected = state.answers[state.currentIndex];
-         const isCorrect = selected === q.answerIndex;
-         
-         $('feedback').className = isCorrect ? 'feedback good' : 'feedback bad';
-         let fHtml = `<strong>${isCorrect ? 'Świetnie! Poprawna odpowiedź!' : 'Niestety, to błędna odpowiedź.'}</strong><br> Prawidłowa odpowiedź to: <strong>${LETTERS[q.answerIndex]}. ${q.choices[q.answerIndex]}</strong><br><br>`;
-         fHtml += `<span style="font-size: 12px; color: #333;"><strong>Szczegółowe wyjaśnienie:</strong> ${q.explanation}</span>`;
-         $('feedback').innerHTML = fHtml;
-      }
-
-      function handleNext() {
-        saveCurrentAnswer();
-        if (state.currentIndex < state.deck.length - 1) {
-            state.currentIndex++;
-            renderQuestion();
-        }
-      }
-
-      function handlePrev() {
-        saveCurrentAnswer();
-        if (state.currentIndex > 0) {
-            state.currentIndex--;
-            renderQuestion();
-        }
-      }
-
-      function handleSkip() {
-        saveCurrentAnswer();
+      function renderQuestion(index) {
+        if (!state.deck.length) return;
         if (state.mode === 'exam') {
-            const confirmed = confirm('Czy na pewno chcesz zakończyć egzamin i przejść do podsumowania?');
-            if (confirmed) finishExam();
+          state.currentIndex = Math.max(0, Math.min(index, state.deck.length - 1));
         } else {
-            // W trybie endless generujemy nowe i idziemy dalej
-            state.deck.push(cloneQuestion(genStaticOrDynamic()));
-            state.currentIndex = state.deck.length - 1;
-            renderQuestion();
+          state.currentIndex = 0;
         }
+        
+        $('explanationBox').classList.add('hidden');
+        $('explainBtn').classList.add('hidden');
+        
+        const q = state.deck[state.currentIndex];
+        state.currentQuestion = q;
+        $('questionCounter').textContent = state.mode === 'exam'
+          ? `Pytanie ${state.currentIndex + 1} / ${state.deck.length}`
+          : `Pytanie ${state.endlessHistory.length + 1}`;
+        $('questionType').textContent = q.type;
+        $('questionText').textContent = q.prompt;
+        renderChoices(q);
+        updateControls();
+        updateCounters();
+        refreshNavStates();
+        const sel = state.answers[state.currentIndex];
+        if (sel !== undefined) {
+          const input = document.querySelector(`input[name="answer"][value="${sel}"]`);
+          if (input) input.checked = true;
+        }
+        
+        if (state.mode === 'exam') {
+          const isAnswered = state.answers[state.currentIndex] !== undefined;
+          $('feedback').className = 'feedback' + (isAnswered ? ' good' : '');
+          $('feedback').textContent = isAnswered
+            ? 'Odpowiedź zapisana. Możesz przejść dalej albo wrócić do tego pytania.'
+            : 'Wybierz odpowiedź i kliknij „Sprawdź / Zapisz”.';
+            
+          if (isAnswered) {
+             $('explainBtn').classList.remove('hidden');
+          }
+        } else {
+          $('feedback').className = 'feedback';
+          $('feedback').textContent = 'Zaznacz odpowiedź i kliknij „Sprawdź / Zapisz”. Wtedy pojawi się dokładne wyjaśnienie.';
+        }
+      }
+
+      function renderChoices(q) {
+        const wrap = $('choices');
+        wrap.innerHTML = '';
+        q.choices.forEach((choice, idx) => {
+          const id = `choice-${state.currentIndex}-${idx}`;
+          const row = document.createElement('div');
+          row.className = 'choice';
+          row.innerHTML = `
+            <input type="radio" name="answer" id="${id}" value="${idx}" />
+            <label for="${id}"><strong>${LETTERS[idx]}.</strong> ${choice}</label>
+          `;
+          wrap.appendChild(row);
+        });
+      }
+
+      function getSelectedAnswer() {
+        const checked = document.querySelector('input[name="answer"]:checked');
+        return checked ? Number(checked.value) : null;
+      }
+
+      function saveAnswer() {
+        const selected = getSelectedAnswer();
+        if (selected === null) {
+          showFeedback('Najpierw wybierz odpowiedź.', false);
+          return;
+        }
+        const q = state.deck[state.currentIndex];
+        state.answers[state.currentIndex] = selected;
+        state.reviewed[state.currentIndex] = true;
+        
+        if (state.mode === 'endless') {
+          const correct = selected === q.answerIndex;
+          showFeedback(correct ? `Dobrze odpowiedziałeś! Przeczytaj uważnie wyjaśnienie widoczne poniżej.` : `Zła odpowiedź. Przeczytaj poniższe wyjaśnienie by zrozumieć swój błąd i uniknąć go kolejnym razem.`, correct);
+          
+          $('explanationContent').innerHTML = q.explanation;
+          $('explanationBox').classList.remove('hidden');
+          
+          $('checkBtn').disabled = true;
+          $('nextBtn').disabled = false;
+          
+          state.endlessHistory.push({ question: q, selected, correct });
+          return;
+        }
+
+        showFeedback('Odpowiedź zapisana. Możesz wrócić do tego pytania lub przejść dalej.', true);
+        $('explainBtn').classList.remove('hidden');
+        refreshNavStates();
+        updateControls();
+      }
+
+      function showFeedback(text, good = null) {
+        const fb = $('feedback');
+        fb.textContent = text;
+        fb.className = 'feedback' + (good === null ? '' : good ? ' good' : ' bad');
+      }
+
+      function updateControls() {
+        const prev = $('prevBtn');
+        const next = $('nextBtn');
+        const check = $('checkBtn');
+        const skip = $('skipBtn');
+
+        const inExam = state.mode === 'exam';
+        prev.disabled = !inExam || state.currentIndex === 0;
+        next.disabled = !inExam || state.currentIndex >= state.deck.length - 1;
+        check.disabled = !state.mode;
+        skip.disabled = !state.mode;
+        next.textContent = inExam ? 'Następne ▶' : 'Kolejne (auto)';
+      }
+
+      function updateCounters() {
+        $('bankCount').textContent = `${staticBank.length} + generator`;
+        if (state.mode === 'exam') {
+          $('progressLabel').textContent = `${Math.min(state.currentIndex + 1, state.deck.length)}/${state.deck.length}`;
+        } else if (state.mode === 'endless') {
+          $('progressLabel').textContent = `∞ (${state.endlessHistory.length + 1})`;
+        } else {
+          $('progressLabel').textContent = '0/0';
+        }
+      }
+
+      function refreshNavStates() {
+        const buttons = Array.from(document.querySelectorAll('.qnav'));
+        buttons.forEach((btn, idx) => {
+          btn.classList.remove('current', 'answered', 'correct', 'wrong');
+          if (state.mode !== 'exam') {
+            if (idx === 0) btn.classList.add('current');
+            return;
+          }
+          if (idx === state.currentIndex) btn.classList.add('current');
+          if (state.answers[idx] !== undefined) {
+            btn.classList.add('answered');
+            if (state.deck[idx]) {
+              btn.classList.add(state.answers[idx] === state.deck[idx].answerIndex ? 'correct' : 'wrong');
+            }
+          }
+        });
+      }
+
+      function goNext() {
+        if (state.mode === 'endless') {
+            $('explanationBox').classList.add('hidden');
+            $('checkBtn').disabled = false;
+            
+            const nextQ = cloneQuestion(genStaticOrDynamic());
+            state.deck = [nextQ];
+            state.currentIndex = 0;
+            renderQuestionList();
+            renderQuestion(0);
+            return;
+        }
+        if (state.mode !== 'exam') return;
+        if (state.currentIndex < state.deck.length - 1) renderQuestion(state.currentIndex + 1);
+      }
+
+      function goPrev() {
+        if (state.mode !== 'exam') return;
+        if (state.currentIndex > 0) renderQuestion(state.currentIndex - 1);
+      }
+
+      function skipToNewQuestion() {
+        if (!state.mode) return;
+        
+        $('explanationBox').classList.add('hidden');
+        $('explainBtn').classList.add('hidden');
+        
+        if (state.mode === 'exam') {
+          const fresh = cloneQuestion(genStaticOrDynamic());
+          state.deck[state.currentIndex] = fresh;
+          delete state.answers[state.currentIndex];
+          delete state.reviewed[state.currentIndex];
+          renderQuestion(state.currentIndex);
+          renderQuestionList();
+          showFeedback('Wylosowano nowe pytanie w tym miejscu.', true);
+          return;
+        }
+        state.endlessHistory.push({ question: state.deck[0], selected: state.answers[0], correct: state.answers[0] === state.deck[0].answerIndex });
+        state.deck = [cloneQuestion(genStaticOrDynamic())];
+        state.currentIndex = 0;
+        
+        $('checkBtn').disabled = false;
+        
+        renderQuestionList();
+        renderQuestion(0);
       }
 
       function finishExam() {
-        $('quizArea').classList.add('hidden');
-        $('summaryArea').classList.remove('hidden');
-        
-        let score = 0;
-        let html = '';
-        state.deck.forEach((q, i) => {
-            const userAns = state.answers[i];
-            const isCorrect = userAns === q.answerIndex;
-            if (isCorrect) score++;
-            
-            const statusText = isCorrect 
-                ? '<span style="color:green; font-weight:bold;">ZALICZONE</span>' 
-                : '<span style="color:red; font-weight:bold;">BŁĄD</span>';
-                
-            const userText = userAns !== undefined 
-                ? `${LETTERS[userAns]}. ${q.choices[userAns]}` 
-                : '<span style="color: #666; font-style: italic;">Brak oddanej odpowiedzi</span>';
-                
-            const correctText = `${LETTERS[q.answerIndex]}. ${q.choices[q.answerIndex]}`;
-            
-            html += `
-              <div class="summary-item">
-                <div class="head">
-                   <span>Pytanie ${i+1} - [${q.type}]</span>
-                   <span>${statusText}</span>
-                </div>
-                <div class="details">
-                  <strong>Pytanie:</strong> ${q.prompt}<br><br>
-                  <strong>Twoja odpowiedź:</strong> ${userText}<br>
-                  <strong>Prawidłowa odpowiedź:</strong> ${correctText}<br>
-                  <hr style="border: 0; border-top: 1px dotted #ccc; margin: 8px 0;">
-                  <span style="color:#000080; font-size: 12px;"><strong>Wyjaśnienie wiedzy:</strong> ${q.explanation}</span>
-                </div>
-              </div>
-            `;
-        });
-        
-        const percent = Math.round((score / state.deck.length) * 100);
-        let scoreColor = percent >= 50 ? '#008000' : '#d00000';
+        const total = state.deck.length;
+        const answered = Object.keys(state.answers).length;
+        let correctCount = 0;
+        const rows = [];
+        for (let i = 0; i < total; i++) {
+          const q = state.deck[i];
+          const user = state.answers[i];
+          const correct = q.answerIndex;
+          const isCorrect = user === correct;
+          if (isCorrect) correctCount++;
+          rows.push({ index: i + 1, q, user, correct, isCorrect });
+        }
+        const pct = Math.round((correctCount / total) * 100);
         $('summaryStats').innerHTML = `
-           <div style="font-size: 16px; font-weight: bold; padding: 10px; border: 2px solid ${scoreColor}; width: 100%; text-align: center; margin-bottom: 15px;">
-              TWÓJ OSTATECZNY WYNIK: ${score} punktów na ${state.deck.length} możliwych. (${percent}%)
-           </div>
+          <span class="badge">Wynik: ${correctCount}/${total} (${pct}%)</span>
+          <span class="badge">Odpowiedziane: ${answered}/${total}</span>
+          <span class="badge">Tryb: 40 pytań</span>
         `;
-        $('summaryList').innerHTML = html;
-        $('progressLabel').innerText = `Zakończono`;
+        const list = $('summaryList');
+        list.innerHTML = rows.map(r => {
+          const userText = r.user === undefined ? 'Brak odpowiedzi' : `${LETTERS[r.user]}. ${r.q.choices[r.user]}`;
+          const correctText = `${LETTERS[r.correct]}. ${r.q.choices[r.correct]}`;
+          return `
+            <div class="summary-item">
+              <div class="head">
+                <div>Pytanie ${r.index} — ${r.q.type}</div>
+                <div>${r.isCorrect ? 'Poprawnie' : 'Błędnie'}</div>
+              </div>
+              <div class="details"><strong>${escapeHtml(r.q.prompt)}</strong>
+
+Twoja odpowiedź: ${escapeHtml(userText)}
+Poprawna odpowiedź: ${escapeHtml(correctText)}
+
+💡 ${escapeHtml(r.q.explanation)}</div>
+            </div>
+          `;
+        }).join('');
+        $('summaryArea').classList.add('visible');
+        $('quizArea').classList.remove('hidden');
+        $('feedback').className = 'feedback good';
+        $('feedback').textContent = 'Test zakończony. Poniżej znajdziesz pełne podsumowanie ze szczegółowymi wyjaśnieniami każdego pytania.';
+        $('modeLabel').textContent = 'podsumowanie';
+        $('progressLabel').textContent = `${total}/${total}`;
+        document.getElementById('summaryArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
-      // Inicjalizacja przycisków sterujących z Windows panelu
-      $('startExamBtn').addEventListener('click', () => {
-          state.mode = 'exam';
-          state.deck = generateDeck(state.examSize);
-          state.currentIndex = 0;
-          state.answers = {};
-          $('modeLabel').innerText = 'Egzamin INF.02 (40 pytań)';
-          $('skipBtn').innerText = 'Zakończ i podlicz egzamin';
-          $('checkBtn').innerText = 'Zapisz odpowiedź';
-          $('summaryArea').classList.add('hidden');
-          $('quizArea').classList.remove('hidden');
-          renderQuestion();
-      });
+      function escapeHtml(text) {
+        return String(text)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
 
-      $('startEndlessBtn').addEventListener('click', () => {
-          state.mode = 'endless';
-          state.deck = [cloneQuestion(genStaticOrDynamic())];
-          state.currentIndex = 0;
+      function bindEvents() {
+        $('startExamBtn').addEventListener('click', startExam);
+        $('startEndlessBtn').addEventListener('click', startEndless);
+        $('resetBtn').addEventListener('click', () => {
+          state.mode = null;
+          state.deck = [];
           state.answers = {};
           state.reviewed = {};
-          $('modeLabel').innerText = 'Trening Bez limitu';
-          $('skipBtn').innerText = 'Następne losowe pytanie ▶';
-          $('checkBtn').innerText = 'Sprawdź odpowiedź';
-          $('summaryArea').classList.add('hidden');
-          $('quizArea').classList.remove('hidden');
-          renderQuestion();
-      });
-
-      $('resetBtn').addEventListener('click', () => {
-          state.mode = null;
+          state.endlessHistory = [];
           $('quizArea').classList.add('hidden');
-          $('summaryArea').classList.add('hidden');
-          $('modeLabel').innerText = 'brak / gotowy';
-          $('progressLabel').innerText = '0/0';
-      });
+          $('summaryArea').classList.remove('visible');
+          $('modeLabel').textContent = 'brak';
+          $('progressLabel').textContent = '0/0';
+          $('questionList').innerHTML = '';
+          $('questionText').textContent = '';
+          $('choices').innerHTML = '';
+          $('feedback').className = 'feedback';
+          $('feedback').textContent = 'Wybierz tryb quizu.';
+          
+          $('explanationBox').classList.add('hidden');
+          $('explainBtn').classList.add('hidden');
+          
+          updateControls();
+        });
 
-      $('prevBtn').addEventListener('click', handlePrev);
-      $('nextBtn').addEventListener('click', handleNext);
-      $('checkBtn').addEventListener('click', handleCheck);
-      $('skipBtn').addEventListener('click', handleSkip);
+        $('prevBtn').addEventListener('click', goPrev);
+        $('nextBtn').addEventListener('click', goNext);
+        $('checkBtn').addEventListener('click', () => {
+          if (state.mode === 'exam') {
+            saveAnswer();
+            refreshNavStates();
+            if (Object.keys(state.answers).length === state.deck.length) {
+              const allAnswered = state.deck.every((_, idx) => state.answers[idx] !== undefined);
+              if (allAnswered) {
+                const total = state.deck.length;
+                const currentAllSet = Object.keys(state.answers).length === total;
+                if (currentAllSet && confirm('Wszystkie pytania mają odpowiedzi. Zakończyć test i zobaczyć wynik wraz z podsumowaniem i dokładnymi wyjaśnieniami?')) {
+                  finishExam();
+                }
+              }
+            }
+            return;
+          }
+          saveAnswer();
+        });
+        $('skipBtn').addEventListener('click', skipToNewQuestion);
+        
+        $('explainBtn').addEventListener('click', () => {
+          $('explanationContent').innerHTML = state.deck[state.currentIndex].explanation;
+          $('explanationBox').classList.remove('hidden');
+        });
+      }
 
-      // Inicjalizacja licznika na start
-      $('bankCount').innerText = staticBank.length + ' + silnik dynamiczny';
+      function init() {
+        $('bankCount').textContent = `${staticBank.length} + generator`;
+        $('feedback').textContent = 'Wybierz tryb quizu.';
+        updateControls();
+        bindEvents();
+      }
 
+      init();
     })();
   </script>
 </body>
