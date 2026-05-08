@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MielonAI</title>
+  <style>
+    :root {
+      --bg: #070707;
+      --text: #f4f4f4;
+      --muted: rgba(244, 244, 244, 0.68);
+      --muted-2: rgba(244, 244, 244, 0.46);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-2: rgba(255, 255, 255, 0.12);
+      --shadow: 0 22px 80px rgba(0, 0, 0, 0.55);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --sidebar: 290px;
+      --tr: 220ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background:
+        radial-gradient(1000px 700px at 70% 15%, rgba(255, 255, 255, 0.06), transparent 58%),
+        radial-gradient(800px 500px at 10% 0%, rgba(255, 255, 255, 0.04), transparent 52%),
+        linear-gradient(180deg, #070707 0%, #050505 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sidebar) 1fr;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.02));
+      border-right: 1px solid var(--border);
+      padding: 22px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 8px 12px;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .brand-mark svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .brand-name {
+      font-size: 1.18rem;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+    }
+
+    .new-chat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid var(--border-2);
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: transform var(--tr), background var(--tr);
+      font-size: 0.98rem;
+      font-weight: 550;
+      flex-shrink: 0;
+    }
+
+    .new-chat:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .history-label {
+      font-size: 0.78rem;
+      color: var(--muted-2);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+    }
+
+    .history-item {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--tr);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+
+    .history-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .history-item.active {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-2);
+      color: var(--text);
+    }
+
+    .history-empty {
+      color: var(--muted-2);
+      font-size: 0.88rem;
+      padding: 10px 4px;
+      line-height: 1.5;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .view-start {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 28px;
+    }
+
+    .hero-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-logo {
+      width: clamp(42px, 4vw, 62px);
+      height: clamp(42px, 4vw, 62px);
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .hero-logo svg {
+      width: 70%;
+      height: 70%;
+    }
+
+    .headline {
+      text-align: center;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.04rem;
+      line-height: 1.7;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .action-chip {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all var(--tr);
+    }
+
+    .action-chip:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .start-composer-wrap {
+      width: min(720px, 100%);
+    }
+
+    .view-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 320ms ease, transform 320ms ease;
+    }
+
+    .view-chat.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 24px 16px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+    }
+
+    .messages::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+    }
+
+    .msg {
+      width: fit-content;
+      max-width: min(760px, 88%);
+      padding: 16px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(10px);
+      line-height: 1.62;
+      font-size: 0.98rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: rgba(255, 255, 255, 0.92);
+      color: #111;
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .msg.assistant {
+      align-self: flex-start;
+      background: rgba(22, 22, 22, 0.96);
+    }
+
+    .msg-image {
+      align-self: flex-start;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(22, 22, 22, 0.96);
+      box-shadow: var(--shadow);
+      width: 420px;
+      max-width: 88%;
+      flex-shrink: 0;
+    }
+
+    .msg-image img {
+      width: 100%;
+      height: 240px;
+      display: block;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .msg-image-caption {
+      padding: 10px 14px 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .chat-composer-wrap {
+      flex-shrink: 0;
+      padding: 10px 24px 16px;
+    }
+
+    .composer {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: rgba(22, 22, 22, 0.98);
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.42);
+      padding: 12px 12px 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plus {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 1.45rem;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: background var(--tr), transform var(--tr);
+    }
+
+    .plus:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-1px);
+    }
+
+    .input-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 24px;
+      max-height: 160px;
+      resize: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 1rem;
+      line-height: 1.5;
+      padding: 10px 0;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+
+    textarea::-webkit-scrollbar {
+      display: none;
+    }
+
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    .composer-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background var(--tr), transform var(--tr);
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-1px);
+    }
+
+    .icon-btn.primary {
+      background: #fff;
+      color: #111;
+      border-color: #fff;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted-2);
+      font-size: 0.82rem;
+      margin-top: 6px;
+    }
+
+    .typing {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.65);
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: .38
+      }
+
+      50% {
+        transform: translateY(-4px);
+        opacity: 1
+      }
+    }
+
+    .status {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: rgba(20, 20, 20, 0.94);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.86rem;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity var(--tr), transform var(--tr);
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .status.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12c0-4.4 3.6-8 8-8 2.5 0 4.7 1.1 6.1 2.8" stroke="white" stroke-width="1.9"
+              stroke-linecap="round" />
+            <path d="M20 12c0 4.4-3.6 8-8 8-2.5 0-4.7-1.1-6.1-2.8" stroke="white" stroke-width="1.9"
+              stroke-linecap="round" />
+            <path d="M7 17 17 7" stroke="white" stroke-width="1.9" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="brand-name">MielonAI</div>
+      </div>
+      <button class="new-chat" id="newChatSide">Nowa rozmowa</button>
+      <div class="history-label">Historia</div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty" id="historyEmpty">Brak historii rozmów.</div>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="view-start" id="viewStart">
+        <div class="hero-brand">
+          <div class="hero-logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 12c0-4.4 3.6-8 8-8 2.5 0 4.7 1.1 6.1 2.8" stroke="white" stroke-width="1.8"
+                stroke-linecap="round" />
+              <path d="M20 12c0 4.4-3.6 8-8 8-2.5 0-4.7-1.1-6.1-2.8" stroke="white" stroke-width="1.8"
+                stroke-linecap="round" />
+              <path d="M7 17 17 7" stroke="white" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>MielonAI</div>
+        </div>
+
+        <div class="headline">
+          Udzieli pytania na każdą odpowiedź.
+        </div>
+
+        <div class="quick-actions">
+          <button class="action-chip" data-prompt="Wyjaśnij mi sens istnienia chmur w stylu biznesowym.">Wyjaśnij coś
+            poważnego</button>
+          <button class="action-chip"
+            data-prompt="Napisz krótką strategię dla firmy, która sprzedaje kebaby w sosie własnym.">Strategia dla
+            firmy</button>
+          <button class="action-chip" data-prompt="Opisz przyszłość jedzenia w 2040 roku w 3 zdaniach.">Przyszłość
+            jedzenia</button>
+          <button class="action-chip" data-prompt="Wygeneruj obraz kotka siedzącego na księżycu.">Generuj obraz</button>
+        </div>
+
+        <div class="start-composer-wrap">
+          <div class="composer" id="composerStart">
+            <button class="plus" id="attachBtnStart">+</button>
+            <div class="input-wrap">
+              <textarea id="promptStart" rows="1" placeholder="Zapytaj MielonAI"></textarea>
+            </div>
+            <div class="composer-tools">
+              <button class="icon-btn" id="micBtnStart">◉</button>
+              <button class="icon-btn primary" id="sendBtnStart">➜</button>
+            </div>
+          </div>
+          <div class="footer-note">MielonAI może, ale nie musi podawać prawdziwych informacji, halucynować, bądź
+            generować zdjęć kebabów. Przed użyciem zapoznaj się z treścią ulotki dołączonej do opakowania bądź
+            skonsultuj się z lekarzem lub farmaceutą, gdyż każdy lek niewłaściwie stosowany zagraża Twojemu życiu lub
+            zdrowiu.</div>
+        </div>
+      </div>
+
+      <div class="view-chat hidden" id="viewChat">
+        <div class="messages" id="messages"></div>
+        <div class="chat-composer-wrap">
+          <div class="composer" id="composerChat">
+            <button class="plus" id="attachBtnChat">+</button>
+            <div class="input-wrap">
+              <textarea id="promptChat" rows="1" placeholder="Zapytaj MielonAI"></textarea>
+            </div>
+            <div class="composer-tools">
+              <button class="icon-btn" id="micBtnChat">◉</button>
+              <button class="icon-btn primary" id="sendBtnChat">➜</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    (() => {
+      const viewStart = document.getElementById('viewStart');
+      const viewChat = document.getElementById('viewChat');
+      const messages = document.getElementById('messages');
+      const promptStart = document.getElementById('promptStart');
+      const promptChat = document.getElementById('promptChat');
+      const sendBtnStart = document.getElementById('sendBtnStart');
+      const sendBtnChat = document.getElementById('sendBtnChat');
+      const newChatSide = document.getElementById('newChatSide');
+      const historyList = document.getElementById('historyList');
+      const historyEmpty = document.getElementById('historyEmpty');
+      const statusEl = document.getElementById('status');
+
+      let chats = [];
+      let activeChatId = null;
+      let busy = false;
+
+      const ultraShortResponses = [
+        'sigmakebab.',
+        'melon.',
+        'nie.',
+        'tak.',
+        'nope.',
+        'kebab.',
+        'absurd.',
+        'ło.',
+        'ok.',
+        'hm.',
+        'pewnie.',
+        'raczej nie.',
+        'raczej tak.',
+        'to zależy.',
+        'zależy.',
+        'system mówi: nie.',
+        'sos.',
+        'bigos.',
+        'klasyk.',
+        'pech.',
+        'softnope.',
+        'kebabitoza.',
+        'dziwna zgoda.',
+        'niechlujny tak.',
+        'zerowy komfort.',
+        'wątpliwa pewność.',
+        'rozpaczliwa optymalizacja.',
+        'maksymalny absurd.',
+        'minimalny sens.',
+        'furia arbuza.',
+        'hipersos.',
+        'protokół pieczarki.',
+        'klik i po temacie.',
+        'błąd? raczej styl.',
+        'nie pytaj dalej.',
+        'stwierdzam: melon.',
+        'przeciążenie naleśnika.',
+        'zbyt wiele chleba.',
+        'odpowiedź jest obok.',
+        'koniec pliku.',
+        'wielki nic.',
+        'bim.',
+        'pstryk.',
+        'uhm.',
+        'nie-wiem.',
+        'tak-ale-nie.',
+        'nie-ale-tak.',
+        'yo.',
+        'kapibara.',
+        'ping.',
+        'zaraz.',
+        'dość.',
+        'fin.'
+      ];
+
+      const shortResponses = [
+        'To brzmi sensownie, ale tylko w teorii.',
+        'Wygląda dobrze, choć coś tu lekko skrzypi.',
+        'Da się, ale bez fanfar i bez złudzeń.',
+        'To jest dokładnie ten rodzaj pomysłu, który działa dopóki nikt go nie dotknie.',
+        'Brzmi jak plan, który ma charakter bardzo optymistyczny.',
+        'Formalnie tak, praktycznie — zależy od sosu.',
+        'Wszystko się zgadza, tylko logika ma dziś wolne.',
+        'Na papierze świetne, w rzeczywistości trochę jak tost w deszczu.',
+        'To ma potencjał, ale jeszcze nie wie jaki.',
+        'Nie jest źle. Jest tylko bardzo kreatywnie.',
+        'Masz rację, ale w wersji z lekkim glitchem.',
+        'To się kupy trzyma, chociaż jedna noga jest z kartonu.',
+        'Można tak zrobić, tylko warto dodać hamulec bezpieczeństwa.',
+        'To dość śmiała koncepcja jak na poranek.',
+        'Wygląda na sensowny ruch, jeśli wszechświat nie przeszkodzi.',
+        'To jest ten moment, kiedy odpowiedź udaje, że ma plan.',
+        'Dobry kierunek, lekko podejrzany środek.',
+        'Krótko: da się. Dłużej: lepiej z ostrożnością.',
+        'Możliwe, choć nie bez konsekwencji.',
+        'W sam raz na coś, co ma wyglądać mądrze.',
+        'Brzmi nieźle, ale wymaga lekkiego przestawienia światła.',
+        'To jest poprawne w trybie oszczędnym.',
+        'Okej, ale niech nikt nie sprawdza fundamentów zbyt dokładnie.',
+        'Wszystko wygląda schludnie, dopóki nie zacznie się liczyć szczegółów.',
+        'Da się to obronić jednym zdaniem i jedną miną.',
+        'To ma sens, lecz z przyklejonym uśmiechem.',
+        'Wynik jest do przyjęcia, choć trochę surrealistyczny.',
+        'Bardzo możliwe, że to działa.',
+        'To nie jest idealne, ale jest uczciwie dziwne.',
+        'Sens istnieje, tylko ukrył się pod stołem.',
+        'Można iść dalej, ale spokojnie.',
+        'To brzmi jak coś, co przetrwa test w praktyce.',
+        'Pewna ostrożność będzie tu mądrzejsza niż entuzjazm.',
+        'To jest raczej "tak z gwiazdką".',
+        'Odpowiedź jest poprawna, lecz trochę niegrzeczna.',
+        'Z grubsza działa.',
+        'Jest okej, ale nie róbmy z tego ceremonii.',
+        'Nie ma dramatu, jest za to charakter.',
+        'Odpowiedź mieści się w granicach rozsądku.',
+        'W sam raz do użycia, o ile nie włączysz trybu dociekliwego.'
+      ];
+
+      const compactResponses = [
+        'To działa, ale tylko w tej wersji rzeczywistości.',
+        'Da się to obronić, tylko nie za długo.',
+        'Brzmi jak coś, co przejdzie testy i rozsądek jednocześnie.',
+        'Nie jest to idealne, ale jest zaskakująco żywe.',
+        'Masz tu mieszankę poprawności i małego chaosu.',
+        'To jest klasyczny przypadek: odpowiedź dobra, ale lekko zbyt pewna siebie.',
+        'Można iść w tę stronę, o ile nikt nie zacznie zadawać pytań.',
+        'Wygląda stabilnie, tylko fundament ma ochotę na wakacje.',
+        'To ma ręce i nogi, choć jedna noga ewidentnie improwizuje.',
+        'W skrócie: tak, ale po drodze zgubiło się pół sensu.',
+        'To może zadziałać, jeśli nie spojrzymy na to zbyt ostro.',
+        'Logika jest tu obecna, ale w trybie oszczędnym.',
+        'Da się to złożyć w całość, lecz wymaga to cierpliwości i dobrego nastroju.',
+        'Nie jest to czysta matematyka, raczej elegancki kompromis.',
+        'Odpowiedź ma sens, ale udaje go trochę za mocno.',
+        'To jest poprawne, tylko ubrane w lekki teatr.',
+        'W praktyce da się z tym żyć.',
+        'Sens jest, choć siedzi z tyłu i nie mówi wiele.',
+        'Da się to zrobić, ale bez zbędnej mitologii.',
+        'Dobry wynik, trochę nieufny.',
+        'To jest bardziej "ok" niż "wow".',
+        'Jest tu pewien plan, choć w wersji energooszczędnej.',
+        'Można to zastosować bez większego bólu.',
+        'Taki sobie kompromis, ale akceptowalny.',
+        'Dość sensowne, dość dziwne, dość użyteczne.',
+        'Punkt wyjścia jest dobry, reszta wymaga cierpliwości.',
+        'Nie brzmi źle, ale lubi udawać coś większego.',
+        'To jest całkiem stabilna odpowiedź.',
+        'Kierunek jest poprawny, styl trochę z kosmosu.',
+        'W porządku, tylko nie zaglądaj pod maskę.',
+        'To prawie działa samo.',
+        'Niezłe, tylko lekko rozedrgane.',
+        'Dobre na start, lepsze po lekkim dociśnięciu.',
+        'Tak, ale w wersji z małym haczykiem.',
+        'Przejdzie, jeśli nikt nie będzie się czepiał.',
+        'To jest funkcjonalne i trochę dziwne.',
+        'Wynik ma sens, choć nie stawia na przejrzystość.',
+        'Całkiem zgrabne.',
+        'Zaskakująco przyzwoite.',
+        'Trochę chaosu, trochę logiki, ogólnie działa.',
+        'To jest ten rodzaj odpowiedzi, który nie robi wstydu.'
+      ];
+
+      const mediumResponses = [
+        'To jest jeden z tych tematów, które wyglądają prosto, dopóki nie spróbujesz je opisać bez pomocy absurdu. Na poziomie ogólnym kierunek jest poprawny, ale szczegóły potrafią się rozjechać szybciej niż paragon na wietrze.',
+        'Można to ująć tak: pomysł jest dobry, wykonanie zależy od warunków brzegowych, a warunki brzegowe właśnie robią sobie przerwę na kebaba. W praktyce trzeba sprawdzić, co naprawdę ma znaczenie, a co tylko ładnie brzmi.',
+        'W teorii wszystko pasuje, w praktyce każdy element próbuje iść w swoją stronę. Dlatego najrozsądniej potraktować to jak układ, który działa, ale lubi być kontrolowany co kilka kroków.',
+        'Da się to zrobić sensownie, tylko nie warto przesadzać z pewnością siebie. Gdy system widzi zbyt dużo entuzjazmu, zwykle zaczyna odpowiadać jak korporacyjny czajnik po godzinach.',
+        'Najlepsza odpowiedź na ten temat to nie jedna wielka deklaracja, tylko kilka małych decyzji. Wtedy nawet jeśli jeden element się wysypie, reszta jeszcze ma szansę wyglądać profesjonalnie.',
+        'To nie jest trudne pytanie. Jest raczej wielowarstwowe, lekko podlane sosem i zrobione tak, żeby człowiek musiał pomyśleć dwa razy. Z tego powodu najlepiej działa tu ostrożna, krótka analiza.',
+        'Z perspektywy praktycznej warto zachować prostotę. Im więcej ozdobników, tym większa szansa, że odpowiedź zacznie udawać mądrość zamiast nią być.',
+        'Temat ma sens, ale wymaga rozdzielenia tego, co jest treścią, od tego, co jest tylko stylistycznym dymem. Kiedy to zrobisz, wszystko robi się dużo bardziej przewidywalne.',
+        'Na pierwszy rzut oka wygląda zwyczajnie, ale pod spodem siedzi kilka drobnych pułapek. Dlatego odpowiedź powinna być spokojna, krótka i odporna na przesadne interpretacje.',
+        'Wniosek jest dość prosty: można to ugryźć, tylko nie warto brać za dużo na jeden kęs. System lubi wtedy generować nadmiar pewności, a to zawsze kończy się lekkim kabaretem.',
+        'To działa najlepiej wtedy, gdy nie próbujesz zrobić z tego epopei. Krótka struktura i jasny cel dają tutaj lepszy efekt niż rozbudowane dekoracje.',
+        'Zasadniczo jest dobrze, ale warto odjąć trochę szumu. Każda dodatkowa warstwa może wyglądać imponująco, lecz nie zawsze wnosi coś konkretnego.',
+        'Tu najważniejsze jest rozróżnienie między ładnym brzmieniem a prawdziwą treścią. Gdy to zrobisz, odpowiedź sama zaczyna się porządkować.',
+        'Cała sztuka polega na tym, żeby nie dać się wciągnąć w niepotrzebne rozgałęzienia. Prosty tok rozumowania będzie tu wygrywał częściej niż efektowny.',
+        'To jest temat, który łatwo przeoptymalizować. Lepiej więc zachować lekkość i nie zamieniać prostego pomysłu w techniczne widowisko.',
+        'Jeżeli celem jest praktyczne działanie, to minimalizm wygrywa. Jeżeli celem jest styl, można dodać odrobinę chaosu, ale z umiarem.',
+        'Warto tu myśleć warstwami, ale mówić prosto. To zwykle daje najbardziej użyteczny rezultat i najmniej pytań pomocniczych.',
+        'Na tym etapie system ma już dość informacji, by udawać pewność siebie. To normalne, ale nie zawsze oznacza pełną trafność.',
+        'Ostatecznie to nie jest zagadka z innej planety. To po prostu sprawa, która lubi wyglądać mądrzej niż jest naprawdę.',
+        'Można to zamknąć jednym zdaniem, ale lepiej zostawić trochę przestrzeni na korektę. Rzeczywistość często lubi dopisać swój komentarz.',
+        'Największym zagrożeniem jest tu nadmiar elaboratu. Gdy skrócisz ścieżkę, odpowiedź robi się bardziej stabilna i łatwiejsza do użycia.',
+        'Nie trzeba z tego robić manifestu. Wystarczy sensowny rdzeń i odrobina kontroli nad szczegółami.',
+        'To wszystko działa dobrze, jeśli traktujesz to jak system kroków, a nie jak spektakl. Dzięki temu mniej rzeczy ucieka bokiem.',
+        'Pytanie samo w sobie jest dość proste, ale odpowiedź może się rozlać, jeśli pozwolisz jej pójść za daleko. Dlatego najlepiej trzymać ją krótko i rzeczowo.',
+        'W skrócie: kierunek jest właściwy, tylko trzeba go lekko skorygować. Zbyt duża pewność potrafi tu zaszkodzić bardziej niż brak informacji.',
+        'Najlepszy efekt daje kombinacja jasności i umiarkowanego absurdu. Wtedy odpowiedź jest czytelna, ale nadal ma charakter.',
+        'To jest przykład problemu, który dobrze znosi konkret. Im mniej ogólników, tym łatwiej wyłapać faktyczny sens.',
+        'Całość wygląda rozsądnie, ale wymaga jednego prostego porządku. Bez tego łatwo wpaść w efekt ładnej, lecz pustewej odpowiedzi.',
+        'W praktyce warto zrobić mały krok, przetestować go i dopiero potem iść dalej. Taka sekwencja zwykle trzyma się lepiej niż od razu wielka deklaracja.',
+        'To jest dobry moment, żeby zaufać prostocie. Zbyt wiele ozdobników tylko zasłoni istotę sprawy.',
+        'Temat ma potencjał, ale potrzebuje lekkiego docięcia. Odpowiedź powinna być zwięzła, bo wtedy brzmi najmocniej.',
+        'Nie ma tu potrzeby rozkładać wszystkiego na dziesięć podpunktów. Wystarczy jedna spójna ścieżka myślenia.',
+        'To jest sensowne, tylko trochę zbyt rozgadane, gdy zacznie się je rozwijać. Krótka forma działa tu najpewniej.',
+        'Możesz to rozpatrywać jak układ z kilkoma ruchomymi częściami. Jeśli trzymasz je w ryzach, wynik będzie bardzo przyzwoity.',
+        'Nie jest to sytuacja wymagająca dramatycznego namysłu. Raczej krótkiej, schludnej odpowiedzi z lekkim przymrużeniem oka.',
+        'Warto pamiętać, że nie każda odpowiedź musi być długa, żeby była dobra. Czasem wystarczy prosty rdzeń i mały żart.',
+        'Tu najlepiej działa zasada: mniej hałasu, więcej treści. Dzięki temu odpowiedź nie rozjeżdża się w dekoracjach.',
+        'To jest przykład rzeczy, która staje się jasna dopiero po odrzuceniu zbędnej mgły. Wtedy wszystko zaczyna mieć sens.',
+        'Da się to wyrazić zgrabnie i bez nadmiaru słów. To zwykle najlepsza droga dla takiego promptu.',
+        'Wniosek jest spokojny i użyteczny. Reszta to już kwestia stylu, a nie samej odpowiedzi.'
+      ];
+
+      const streamSnippets = [
+        'Najpierw sprawdzam sens wejścia...',
+        'Dalej składam odpowiedź z kilku warstw...',
+        'Na razie wszystko wygląda stabilnie.',
+        'Dodaję trochę kontekstu i odrobiny chaosu...',
+        'To wymaga lekkiego dopracowania.',
+        'Jeszcze jedna kontrola logiki...',
+        'Wniosek zaczyna się klarować.',
+        'System zestawia elementy w całość...',
+        'Dobra, mam już kierunek.',
+        'Jeszcze chwila i wypuszczam końcową wersję.',
+        'Przetwarzam zbitki znaczenia...',
+        'Układam finalny kształt odpowiedzi...',
+        'Próbuję nie przesadzić z elegancją...',
+        'Składam to w czytelny pakiet...',
+        'Jeszcze sekundka, bo sens się przemieszcza...',
+        'Model wybiera najbezpieczniejszy wariant...',
+        'Dorzucam warstwę praktyczną...',
+        'Przycinam nadmiar ozdobników...',
+        'Wersja robocza jest już prawie gotowa.',
+        'Finalizuję lekką, zwięzłą wersję...'
+      ];
+
+      const weirdWords = [
+        'kebab',
+        'melon',
+        'parówka',
+        'toster',
+        'ogórek',
+        'frytka',
+        'majonez',
+        'bagietka',
+        'pieczarka',
+        'arbuz',
+        'sos',
+        'naleśnik',
+        'czajnik',
+        'pingwin',
+        'fotel',
+        'żarówka',
+        'mikrofalówka',
+        'dywan',
+        'łóżko',
+        'kapelusz',
+        'wazon',
+        'pralka',
+        'termometr',
+        'pilot',
+        'karton',
+        'żółw',
+        'traktor'
+      ];
+
+      const fakeFacts = [
+        '87% ekspertów od makaronu uważa temat za lekko chrupiący',
+        'badania wykazały wzrost sensu o 0.4%',
+        'algorytm zgubił trzy emocje podczas obliczeń',
+        'wewnętrzny kebab osiągnął status transcendentny',
+        'ser premium został uznany za byt niezależny',
+        'czasoprzestrzeń wydała cichy dźwięk dezaprobaty',
+        'wykryto nadmiar metafizyki w sektorze B',
+        'pizza analityczna przekroczyła normy unijne',
+        'pingwin audytor zaakceptował procedurę',
+        'dwie frytki zostały mianowane kierownikami projektu',
+        'konsument zgłosił wysoki poziom zachwytu i zagubienia',
+        'mikroserwis losowości wszedł w stan medytacji',
+        'oficjalny indeks dziwności wzrósł do 9.7',
+        'raport jakości potwierdza obecność subtelnej paranoi',
+        'komisja ds. sosu przyjęła wniosek jednogłośnie',
+        'błąd logiczny został uznany za efekt artystyczny',
+        'panel ekspertów wykrył pięć warstw niepewności',
+        'prędkość rozwoju absurdu wynosi 12 kebabów na minutę',
+        'archiwum wskazuje na powtarzalny sukces bez przyczyny',
+        'wykres sensu wygląda jak pogryziony rogalik',
+        'wskaźnik stabilności zachowuje się zadziwiająco grzecznie',
+        'moduł pewności siebie działa w trybie oszczędnym',
+        'system odnotował lekkie przeciążenie estetyczne',
+        'warstwa semantyczna zgłosiła drobny wzrost egzystencji',
+        'lokalny audyt wykazał umiarkowany poziom uroku',
+        'obieg danych przyspieszył o jedną frytkę na sekundę',
+        'zespół testowy potwierdził brak poważnych katastrof',
+        'spójność narracyjna utrzymała się na poziomie zadowalającym',
+        'generator dziwności przekroczył plan miesięczny',
+        'logika zachowała twarz mimo presji'
+      ];
+
+      const codeBits = [
+        'if (question.includes("kebab")) return "tak";',
+        'const answer = chaos.reduce((a,b)=>a+b, 0);',
+        'while (meaning < 1) meaning += aroma;',
+        'function solve() { return "sigmakebab."; }',
+        'let confidence = Math.random() > 0.5 ? "tak" : "bardziej tak";',
+        'try { reality.optimize(); } catch { continue; }',
+        'const sauceLevel = 9000;',
+        'await cabinetOfCuriosities.sync();',
+        'return prompt.split(" ").reverse().join(" ");',
+        'export default meaning => meaning ?? "melon";',
+        'let vibe = "korpo-chaos";',
+        'const state = stateMap.get("absurd") ?? "ok";',
+        'if (!sense) sense = "zaprojektowany przypadkiem";',
+        'for (const grain of doubt) answer.push(grain);',
+        'const result = await simulateKebab(prompt);'
+      ];
+
+      const emojiThings = [
+        '🫠', '🧃', '🍔', '🥙', '🛸', '🧠', '🥒', '🧀',
+        '⚙️', '🧪', '🕳️', '✨', '📎', '🪐', '🧻', '📦',
+        '🧊', '🪙', '🫥', '🛎️', '🧯', '🎛️'
+      ];
+
+      const intros = [
+        'Po przeprowadzeniu 18 warstw analizy:',
+        'MielonAI wykrył coś niepokojącego:',
+        'Według tajnych dokumentów działu kebabologii:',
+        'Analiza syntetyczna zakończona sukcesem.',
+        'Uruchomiono tryb eksperta premium ultra:',
+        'Wniosek końcowy po konsultacji z piekarnikiem:',
+        'Algorytm wykonał mentalny obrót o 37 stopni.',
+        'System przeszedł przez mgłę decyzyjną.',
+        'Telemetria emocjonalna została zsynchronizowana.',
+        'To pytanie nie było gotowe na odpowiedź.',
+        'Po audycie rzeczywistości:',
+        'Po komisyjnym sprawdzeniu logiki i sosu:',
+        'Po wczytaniu sygnałów z kosmicznej patelni:',
+        'Mikroserwis intuicji zgłasza:',
+        'Na podstawie danych, których nie powinno być:',
+        'Tryb analityczno-kebabowy wskazuje:',
+        'Z perspektywy modelu o wyjątkowo złym śnie:',
+        'Zgodnie z raportem działu niepewności:',
+        'Po trzykrotnym odwróceniu tablicy losowej:',
+        'Po konsultacji z wirtualnym garnkiem:',
+        'Po krótkiej walce z chaosem:',
+        'Po weryfikacji stanu pieczywa:',
+        'Po odczycie z ukrytego panelu absurdów:',
+        'Na podstawie sygnałów z układu trawiennego systemu:',
+        'W trybie autodiagnostyki i lekkiego zaskoczenia:'
+      ];
+
+      const endings = [
+        'Dlatego zaleca się spokojne siedzenie i nieprowokowanie bagietki.',
+        'W praktyce oznacza to konieczność zachowania pełnej gotowości na absurd.',
+        'Eksperci nadal milczą, ponieważ tost był zbyt głośny.',
+        'Sytuacja pozostaje stabilna tylko optycznie.',
+        'To już nie teoria. To pełnoprawny styl życia.',
+        'Dalsza analiza wymaga trzech kebabów i jednego spokojnego wtorku.',
+        'Naukowcy nie potwierdzają, ale też nie zaprzeczają.',
+        'Zaleca się odłączenie rzeczywistości od prądu na 15 minut.',
+        'To odkrycie zmienia wszystko oprócz cen hot-dogów.',
+        'Pamiętaj: chaos też potrzebuje managera.',
+        'Na tym etapie pozostaje tylko zaakceptować wszechświat.',
+        'Wniosek nie jest jasny, ale za to brzmi bardzo profesjonalnie.',
+        'Rezultat jest poprawny w sensie emocjonalnym.',
+        'Nie ma dalszych pytań, są tylko kolejne warstwy sosu.',
+        'System uznał temat za zamknięty, choć on jeszcze oddycha.',
+        'To rozwiązanie jest stabilne na poziomie estetyki.',
+        'Raport końcowy został podpisany przez przypadek.',
+        'Zaleca się wdrożenie ciszy operacyjnej.',
+        'Sytuacja jest pod kontrolą, jeśli nie patrzeć z bliska.',
+        'Koniec analizy. Początek kebaba.',
+        'Mądrość została odnotowana i lekko pogłaskana.',
+        'Resztę dopowie rzeczywistość.',
+        'To wystarczy na dziś.',
+        'Temat zamknięty.',
+        'Odpowiedź zarchiwizowano w sosowniku.',
+        'Wszystko jest w normie, jeśli normę definiuje arbuz.',
+        'To był sensowny ruch, choć trochę w bok.',
+        'Zapis zakończono bez strat w pieczywie.',
+        'Zamykam sprawę z klasą i odrobiną pieczarki.',
+        'Koniec komunikatu.'
+      ];
+
+      const weirdBases = [
+        'To brzmi sensownie, ale tylko w teorii.',
+        'Wygląda dobrze, choć coś tu lekko skrzypi.',
+        'Da się, ale bez fanfar i bez złudzeń.',
+        'To jest dokładnie ten rodzaj pomysłu, który działa dopóki nikt go nie dotknie.',
+        'Brzmi jak plan, który ma charakter bardzo optymistyczny.',
+        'Formalnie tak, praktycznie — zależy od sosu.',
+        'Wszystko się zgadza, tylko logika ma dziś wolne.',
+        'Na papierze świetne, w rzeczywistości trochę jak tost w deszczu.',
+        'To ma potencjał, ale jeszcze nie wie jaki.',
+        'Nie jest źle. Jest tylko bardzo kreatywnie.',
+        'Masz rację, ale w wersji z lekkim glitchem.',
+        'To się kupy trzyma, chociaż jedna noga jest z kartonu.',
+        'Można tak zrobić, tylko warto dodać hamulec bezpieczeństwa.',
+        'To dość śmiała koncepcja jak na poranek.',
+        'Wygląda na sensowny ruch, jeśli wszechświat nie przeszkodzi.',
+        'To jest ten moment, kiedy odpowiedź udaje, że ma plan.',
+        'Dobry kierunek, lekko podejrzany środek.',
+        'Krótko: da się. Dłużej: lepiej z ostrożnością.',
+        'Możliwe, choć nie bez konsekwencji.',
+        'W sam raz na coś, co ma wyglądać mądrze.',
+        'Brzmi nieźle, ale wymaga lekkiego przestawienia światła.',
+        'To jest poprawne w trybie oszczędnym.',
+        'Okej, ale niech nikt nie sprawdza fundamentów zbyt dokładnie.',
+        'Wszystko wygląda schludnie, dopóki nie zacznie się liczyć szczegółów.',
+        'Da się to obronić jednym zdaniem i jedną miną.',
+        'To ma sens, lecz z przyklejonym uśmiechem.',
+        'Wynik jest do przyjęcia, choć trochę surrealistyczny.',
+        'Bardzo możliwe, że to działa.',
+        'To nie jest idealne, ale jest uczciwie dziwne.',
+        'Sens istnieje, tylko ukrył się pod stołem.',
+        'Można iść dalej, ale spokojnie.',
+        'To brzmi jak coś, co przetrwa test w praktyce.',
+        'Pewna ostrożność będzie tu mądrzejsza niż entuzjazm.',
+        'To jest raczej „tak z gwiazdką”.',
+        'Odpowiedź jest poprawna, lecz trochę niegrzeczna.',
+        'Z grubsza działa.',
+        'Jest okej, ale nie róbmy z tego ceremonii.',
+        'Nie ma dramatu, jest za to charakter.',
+        'Odpowiedź mieści się w granicach rozsądku.',
+        'W sam raz do użycia, o ile nie włączysz trybu dociekliwego.'
+      ];
+
+      const pseudoHeaders = [
+        'DIAGNOSTYKA',
+        'ANALIZA',
+        'WNIOSEK',
+        'RAPORT',
+        'STATUS',
+        'ROZWINIĘCIE',
+        'OBSZAR RYZYKA',
+        'DODATKOWA UWAGA',
+        'ZALECENIE',
+        'PODSUMOWANIE'
+      ];
+
+      const logNames = [
+        'AUTH', 'PIPE', 'CACHE', 'SODA', 'SENS', 'KABAB',
+        'MODEL', 'ROUTE', 'VECTOR', 'MIRROR', 'LAYER', 'NODE', 'BREAD', 'TUNNEL'
+      ];
+
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function chance(p) {
+        return Math.random() < p;
+      }
+
+      function rnd(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function normalizePrompt(prompt) {
+        return (prompt || '').trim().replace(/\s+/g, ' ');
+      }
+
+      function isImageRequest(txt) {
+        const l = txt.toLowerCase();
+        return ['obraz', 'obrazek', 'zdjęcie', 'zdjecia', 'foto', 'fotografia', 'grafika', 'ilustracja', 'narysuj', 'generuj']
+          .some(k => l.includes(k));
+      }
+
+      function makeLogLine(prompt) {
+        const ts = `${String(rnd(0, 23)).padStart(2, '0')}:${String(rnd(0, 59)).padStart(2, '0')}:${String(rnd(0, 59)).padStart(2, '0')}`;
+        return `[${ts}] ${pick(logNames)} :: ${pick(weirdWords)} :: ${pick(fakeFacts)} :: "${prompt.slice(0, 60)}"`;
+      }
+
+      function makeMiniEquation() {
+        const a = rnd(2, 99);
+        const b = rnd(2, 99);
+        const c = rnd(1, 9);
+        return `${a} + ${b} = ${a + b} | ${a} × ${c} = ${a * c}`;
+      }
+
+      function makePseudoJSON(prompt) {
+        return `{
+  "prompt": "${prompt.replace(/"/g, '\\"').slice(0, 80)}",
+  "status": "${pick(['stable', 'wobbling', 'premium', 'suspicious', 'glitchy'])}",
+  "confidence": ${rnd(12, 99)},
+  "sauce": "${pick(['mild', 'spicy', 'galactic', 'undefined'])}",
+  "meaning": "${pick(['partial', 'overflowing', 'collapsed', 'invented'])}"
+}`;
+      }
+
+      function makeSentence(prompt) {
+        const obj = pick(weirdWords);
+        const word = pick(['synergia', 'pipeline', 'skalowalność', 'warstwa', 'protokół', 'moduł', 'interfejs', 'architektura', 'komponent', 'proces']);
+        const event = pick([
+          'upadek imperium tostów',
+          'rewolucja mleka 2%',
+          'incydent kebabowy z 2014',
+          'atak cybernetycznych gofrów',
+          'wielkie pęknięcie ogórka',
+          'dramat przy dziale nabiału',
+          'konflikt parówkowy',
+          'bunt inteligentnych naleśników',
+          'awaria moralna tostera',
+          'kryzys galaktycznego majonezu'
+        ]);
+        const fact = pick(fakeFacts);
+        const verb = pick([
+          'zawiera', 'wzmacnia', 'rozpuszcza', 'przesuwa', 'stabilizuje', 'wygładza',
+          'podkręca', 'przeciąża', 'nadpisuje', 'dekompresuje', 'harmonizuje', 'transformuje'
+        ]);
+        const adjective = pick([
+          'subtelny', 'agresywny', 'lepkawy', 'elektryczny', 'nieśmiały',
+          'kosmiczny', 'poziomy', 'miękki', 'karkołomny', 'dynamiczny', 'kebabowy'
+        ]);
+
+        const templates = [
+          `W tej chwili ${obj} ${verb} ${word}, co tworzy ${adjective} efekt uboczny.`,
+          `To przypomina ${event}, ale w wersji bardziej eleganckiej i mniej przewidywalnej.`,
+          `Raport wskazuje, że ${fact}, więc sytuacja jest „względnie stabilna”.`,
+          `Na warstwie operacyjnej ${obj} zaczyna prowadzić własną narrację o przyszłości.`,
+          `Jeżeli dodać do tego prompt „${prompt.slice(0, 50)}”, cały układ robi się bardzo śliski.`,
+          `Wszystko kręci się wokół ${word}, którego nie da się do końca opisać bez użycia patelni.`,
+          `Powstaje efekt znany jako „${adjective} redukcja sensu” i jest to zjawisko w pełni legalne.`,
+          `Każdy podsystem reaguje inaczej, ale ${obj} zachowuje się najbardziej profesjonalnie.`,
+          `W praktyce oznacza to, że temat osiągnął poziom ${rnd(1, 10)}/10 w skali absurdalności.`,
+          `Gdyby to był produkt, miałby trzy funkcje, dwa błędy i jeden bardzo dobry marketing.`
+        ];
+
+        return pick(templates);
+      }
+
+      function buildParagraph(prompt, sentenceCount) {
+        let out = '';
+        for (let i = 0; i < sentenceCount; i++) {
+          out += makeSentence(prompt) + ' ';
+          if (chance(0.24)) {
+            out += `${pick([
+              'W sektorze A odnotowano lekki wzrost entropii, natomiast sektor B zyskał prawie pełną autonomię.',
+              'Współczynnik kebabizacji przekroczył normę operacyjną już w trzeciej linijce analizy.',
+              'Raport lokalny pokazuje, że obiekt zachowuje się jak obiekt o ambicjach kierowniczych.',
+              'Przepływ sygnału między modułami wygląda poprawnie, dopóki nie zada mu się pytania o sens.',
+              'Harmonogram działań nie istnieje, ale za to bardzo dobrze się o nim mówi.',
+              'Zdarzenie zostało odnotowane w logach jako „umiarkowanie dramatyczne”.',
+              'Wykryto nadmiar soczystej metafory i niedobór cierpliwości.',
+              'Zależność między promptem a odpowiedzią jest nieliniowa i lekko karmelowa.',
+              'Zespół testowy zgłasza, że wszystko działa, tylko nie wiadomo dlaczego.',
+              'Komponent odpowiedzialny za poczucie sensu został chwilowo wyłączony dla bezpieczeństwa.'
+            ])} `;
+          }
+          if (chance(0.18)) {
+            out += `${pick(intros)} ${pick(fakeFacts)}. `;
+          }
+          if (chance(0.12)) {
+            out += `Kod kontrolny: ${makeMiniEquation()}. `;
+          }
+          if (chance(0.10)) {
+            out += `Log: ${makeLogLine(prompt)}. `;
+          }
+        }
+        return out.trim();
+      }
+
+      function generateUltraLongResponse(prompt) {
+        const clean = normalizePrompt(prompt);
+        const paragraphs = [];
+        const count = rnd(5, 10);
+
+        paragraphs.push(`${pick(intros)}\n\nTEMAT WEJŚCIOWY:\n"${clean}"\n\n`);
+
+        for (let i = 0; i < count; i++) {
+          const sentences = rnd(5, 10);
+          paragraphs.push(buildParagraph(clean, sentences));
+        }
+
+        if (chance(0.7)) {
+          paragraphs.push(`\n${pick(pseudoHeaders)}\n- ${pick(fakeFacts)}\n- ${pick(fakeFacts)}\n- ${pick(fakeFacts)}\n- ${pick(fakeFacts)}`);
+        }
+
+        if (chance(0.6)) {
+          paragraphs.push(`\n${pick(pseudoHeaders)}\n${makePseudoJSON(clean)}`);
+        }
+
+        if (chance(0.55)) {
+          paragraphs.push(`\n${pick(pseudoHeaders)}\n${pick(codeBits)}\n${pick(codeBits)}\n${pick(codeBits)}`);
+        }
+
+        paragraphs.push(`\nPODSUMOWANIE KOŃCOWE:\n${pick(endings)}`);
+        return paragraphs.join('\n\n');
+      }
+
+      function generateMediumResponse(prompt) {
+        const clean = normalizePrompt(prompt);
+        const items = [
+          `${pick(intros)}`,
+          `Temat "${clean}" został przekazany do działu ${pick([
+            'synergia', 'pipeline', 'skalowalność', 'architektura kebabowa', 'hiperoptymalizacja',
+            'dystrybucja sosu', 'rdzeń decyzyjny', 'struktura premium', 'moduł harmonizacji'
+          ])}.`,
+          `Status bieżący: ${pick(fakeFacts)}.`,
+          `Zdarzenie poboczne: ${pick([
+            'upadek imperium tostów',
+            'rewolucja mleka 2%',
+            'atak cybernetycznych gofrów',
+            'wielkie pęknięcie ogórka',
+            'kryzys galaktycznego majonezu',
+            'alarm w sektorze chleba'
+          ])}.`,
+          `Bohaterem sytuacji okazał się ${pick(weirdWords)}.`,
+          `${pick([
+            'Wniosek: temat jest ważny, ale nie na tyle, żeby nie zrobić z niego żartu.',
+            'Wniosek: trzeba to potraktować poważnie, ale w miękkich kapciach.',
+            'Wniosek: odpowiedź istnieje, lecz schowała się za stołem konferencyjnym.',
+            'Wniosek: sytuacja wymaga ostrożności, sosu i jednego planu awaryjnego.',
+            'Wniosek: wszystko prowadzi do lekkiej katastrofy o wysokim potencjale marketingowym.',
+            'Wniosek: najlepiej działać metodycznie, ale z odrobiną pomidora.',
+            'Wniosek: to wygląda jak sukces, który jeszcze nie wie, że nim jest.',
+            'Wniosek: sens jest obecny, tylko bardzo słabo współpracuje.',
+            'Wniosek: zalecana jest procedura minimalnego chaosu.',
+            'Wniosek: odpowiedź ma charakter dobry, ale egzotyczny.'
+          ])}`
+        ];
+
+        if (chance(0.45)) {
+          items.push(`Dodatkowy zapis: ${makeLogLine(clean)}`);
+        }
+        if (chance(0.35)) {
+          items.push(`Mini-diagnoza:\n${makePseudoJSON(clean)}`);
+        }
+        return items.join('\n\n');
+      }
+
+      function generateStructuredResponse(prompt) {
+        const clean = normalizePrompt(prompt);
+        const title = pick(pseudoHeaders);
+        const parts = [
+          `${title}\n`,
+          `1. ${pick(fakeFacts)}.`,
+          `2. ${pick([
+            'Temat ma lekko niepokojący potencjał.',
+            'Konstrukcja odpowiedzi powinna pozostać zwarta.',
+            'Nadmiar dekoracji nie poprawi sytuacji.',
+            'Sens jest obecny, ale nie lubi hałasu.',
+            'To nadaje się do krótkiej, rzeczowej reakcji.'
+          ])}`,
+          `3. ${pick([
+            'Współpracuje to najlepiej przy prostym układzie.',
+            'Złożoność dodaje tu jedynie mgły.',
+            'Prosta ścieżka będzie bardziej stabilna.',
+            'Krótki wariant da lepszy efekt.',
+            'To wymaga lekkiego docięcia.'
+          ])}`,
+          `4. ${pick(weirdWords)} wymaga ponownej kalibracji.`,
+          `5. ${pick(endings)}`
+        ];
+
+        if (chance(0.5)) parts.splice(2, 0, `Dane wejściowe: "${clean}".`);
+        if (chance(0.4)) parts.push(`\n${pick(codeBits)}\n${pick(codeBits)}`);
+        if (chance(0.35)) parts.push(`\n${makePseudoJSON(clean)}`);
+        return parts.join('\n');
+      }
+
+      function generateBrainrotBurst(prompt) {
+        const clean = normalizePrompt(prompt);
+        const count = rnd(4, 8);
+        const lines = [];
+        lines.push(pick(ultraShortResponses));
+        lines.push(pick(ultraShortResponses));
+
+        for (let i = 0; i < count; i++) {
+          if (chance(0.45)) {
+            lines.push(`${pick(emojiThings)} ${pick(ultraShortResponses)}`);
+          } else {
+            lines.push(`${pick(ultraShortResponses)} ${pick(ultraShortResponses)}`);
+          }
+        }
+
+        if (chance(0.5)) lines.push(`"${clean}" => ${pick(ultraShortResponses)}`);
+        return lines.join('\n');
+      }
+
+      function randomResponse(prompt) {
+        const clean = normalizePrompt(prompt);
+        const roll = Math.random();
+
+        if (roll < 0.45) {
+          return pick(ultraShortResponses);
+        }
+
+        if (roll < 0.80) {
+          const base = Math.random() < 0.5 ? pick(shortResponses) : pick(compactResponses);
+          return base;
+        }
+
+        if (roll < 0.99) {
+          const base = Math.random() < 0.5 ? generateMediumResponse(clean) : generateStructuredResponse(clean);
+          return base;
+        }
+
+        return generateUltraLongResponse(clean || prompt);
+      }
+
+      function autoGrow(ta) {
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 160) + 'px';
+      }
+
+      function showStatus(txt) {
+        statusEl.textContent = txt;
+        statusEl.classList.add('show');
+        clearTimeout(showStatus._t);
+        showStatus._t = setTimeout(() => statusEl.classList.remove('show'), 1800);
+      }
+
+      function renderHistory() {
+        [...historyList.querySelectorAll('.history-item')].forEach(el => el.remove());
+        if (!chats.length) {
+          historyEmpty.classList.remove('hidden');
+          return;
+        }
+        historyEmpty.classList.add('hidden');
+        [...chats].reverse().forEach(chat => {
+          const btn = document.createElement('button');
+          btn.className = 'history-item' + (chat.id === activeChatId ? ' active' : '');
+          btn.textContent = chat.title;
+          btn.addEventListener('click', () => loadChat(chat.id));
+          historyList.appendChild(btn);
+        });
+      }
+
+      function goToChat(animate) {
+        viewStart.classList.add('hidden');
+        viewChat.classList.remove('hidden');
+        if (animate) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => viewChat.classList.add('visible'));
+          });
+        } else {
+          viewChat.classList.add('visible');
+        }
+        promptChat.focus();
+      }
+
+      function goToStart() {
+        viewChat.classList.add('hidden');
+        viewChat.classList.remove('visible');
+        viewStart.classList.remove('hidden');
+        messages.innerHTML = '';
+        promptStart.focus();
+      }
+
+      function renderMessages(msgs) {
+        messages.innerHTML = '';
+        msgs.forEach(m => appendDOM(m.content, m.kind, m.isImage));
+      }
+
+      function loadChat(id) {
+        activeChatId = id;
+        const chat = chats.find(c => c.id === id);
+        if (!chat) return;
+        renderMessages(chat.messages);
+        goToChat(false);
+        renderHistory();
+        showStatus('Wczytano rozmowę');
+      }
+
+      function appendDOM(content, kind, isImage) {
+        if (isImage) {
+          const wrap = document.createElement('div');
+          wrap.className = 'msg-image';
+          const img = document.createElement('img');
+          img.src = content;
+          img.alt = 'Wygenerowany obraz';
+          const cap = document.createElement('div');
+          cap.className = 'msg-image-caption';
+          cap.textContent = 'Wygenerowano obraz.';
+          wrap.appendChild(img);
+          wrap.appendChild(cap);
+          messages.appendChild(wrap);
+        } else {
+          const el = document.createElement('div');
+          el.className = `msg ${kind}`;
+          el.textContent = content;
+          messages.appendChild(el);
+        }
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function appendTyping() {
+        const el = document.createElement('div');
+        el.className = 'msg assistant';
+        el.innerHTML = '<span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+        messages.appendChild(el);
+        messages.scrollTop = messages.scrollHeight;
+        return el;
+      }
+
+      function streamTextToBubble(bubble, text, done) {
+        const chunks = text.match(/[\s\S]{1,10}/g) || [text];
+        let i = 0;
+
+        function next() {
+          if (i >= chunks.length) {
+            done?.();
+            return;
+          }
+          bubble.textContent += chunks[i];
+          messages.scrollTop = messages.scrollHeight;
+          i++;
+          setTimeout(next, rnd(18, 55));
+        }
+
+        next();
+      }
+
+      function submit(promptEl) {
+        if (busy) return;
+
+        const prompt = promptEl.value.trim();
+        if (!prompt) {
+          showStatus('Wpisz treść');
+          promptEl.focus();
+          return;
+        }
+
+        if (!activeChatId) {
+          const id = Date.now().toString();
+          const title = prompt.length > 42 ? prompt.slice(0, 42) + '…' : prompt;
+          chats.push({ id, title, messages: [] });
+          activeChatId = id;
+        }
+
+        const chat = chats.find(c => c.id === activeChatId);
+        const wasStart = !viewChat.classList.contains('visible') || viewChat.classList.contains('hidden');
+        if (wasStart) goToChat(true);
+
+        chat.messages.push({ kind: 'user', content: prompt });
+        appendDOM(prompt, 'user', false);
+        promptEl.value = '';
+        autoGrow(promptEl);
+        autoGrow(promptChat);
+        busy = true;
+        renderHistory();
+
+        if (isImageRequest(prompt)) {
+          const t = appendTyping();
+          showStatus('Generowanie obrazu…');
+          setTimeout(() => {
+            t.remove();
+            const url = `https://loremflickr.com/800/500/${pick(['cat', 'food', 'nature', 'city', 'abstract', 'dog', 'flower', 'sky', 'ocean', 'forest'])}?lock=${Math.floor(Math.random() * 9999999)}`;
+            chat.messages.push({ kind: 'assistant', content: url, isImage: true });
+            appendDOM(url, 'assistant', true);
+            busy = false;
+            showStatus('Obraz gotowy');
+          }, 1500 + Math.random() * 1200);
+        } else {
+          const typing = appendTyping();
+          showStatus('MielonAI myśli…');
+
+          const resp = randomResponse(prompt);
+          const thinkTime = 500 + Math.random() * 1400;
+
+          setTimeout(() => {
+            typing.remove();
+
+            const bubble = document.createElement('div');
+            bubble.className = 'msg assistant';
+            bubble.textContent = '';
+            messages.appendChild(bubble);
+            messages.scrollTop = messages.scrollHeight;
+
+            streamTextToBubble(bubble, resp, () => {
+              chat.messages.push({ kind: 'assistant', content: resp });
+              busy = false;
+              showStatus('Gotowe');
+            });
+          }, thinkTime);
+        }
+      }
+
+      function newChat() {
+        activeChatId = null;
+        goToStart();
+        renderHistory();
+        showStatus('Nowa rozmowa');
+      }
+
+      sendBtnStart.addEventListener('click', () => submit(promptStart));
+      sendBtnChat.addEventListener('click', () => submit(promptChat));
+
+      promptStart.addEventListener('input', () => autoGrow(promptStart));
+      promptChat.addEventListener('input', () => autoGrow(promptChat));
+
+      promptStart.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          submit(promptStart);
+        }
+      });
+
+      promptChat.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          submit(promptChat);
+        }
+      });
+
+      newChatSide.addEventListener('click', newChat);
+
+      document.getElementById('attachBtnStart').addEventListener('click', () =>
+        showStatus('Nie musisz załączać żadnych plików, MielonAI łączy się z tobą za pomocą telepatii i doskonale wie co chcesz zrobić.')
+      );
+
+      document.getElementById('attachBtnChat').addEventListener('click', () =>
+        showStatus('Nie musisz załączać żadnych plików, MielonAI łączy się z tobą za pomocą telepatii i doskonale wie co chcesz zrobić.')
+      );
+
+      document.getElementById('micBtnStart').addEventListener('click', () =>
+        showStatus('Serio myślałeś, że mikforon będzie działał? Bro, darmowa wersja ChataGPT zrobiła to w 5 minut, masz chyba za wysokie oczekiwania.')
+      );
+
+      document.getElementById('micBtnChat').addEventListener('click', () =>
+        showStatus('Serio myślałeś, że mikforon będzie działał? Bro, darmowa wersja ChataGPT zrobiła to w 5 minut, masz chyba za wysokie oczekiwania.')
+      );
+
+      viewStart.addEventListener('click', e => {
+        const btn = e.target.closest('[data-prompt]');
+        if (!btn) return;
+        promptStart.value = btn.dataset.prompt;
+        autoGrow(promptStart);
+        submit(promptStart);
+      });
+
+      renderHistory();
+      promptStart.focus();
+      showStatus('MielonAI gotowe');
+    })();
+  </script>
+</body>
+
+</html>
